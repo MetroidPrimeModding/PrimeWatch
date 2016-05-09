@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <script src="jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
+  </head>
+
+  <body>
+    <!Lighter bar at the very top>
+    <div id="topGap_div"></div>
+
+    <!Custom frameless topbar and minimize/exit buttons.>
+    <div id="topBar_div">
+      <span id="title_span">Metroid Prime Randomizer</span>
+      <button id="min_button">-</button>
+      <button id="close_button">x</button>
+    </div>
+
+    <!The game selection buttons and divider lines.>
+    <div id="gameSelect_div">
+      <button id="gameSelectPrime1_button">
+        <img src="prime1logo.png" alt="Metroid Prime" title="Metroid Prime">
+      </button>
+      <button id="gameSelectPrime2_button">
+        <img src="prime2logo.png" alt="Metroid Prime 2: Echoes" title="Metroid Prime 2: Echoes">
+      </button>
+      <div id="gameSelectSeparator_div"></div>
+      <div id="middleSeparator_div"></div>
+    </div>
+
+    <!Left side, contains form for picking excluded items.>
+    <div id="left_div">
+      <span id="excludedTitle_span">Excluded Items</span>
+    </div>
+
+    <!Right side, contains all options besides excluded items.>
+    <div id="right_div">
+
+      <span id="optionalSectionTitle_span">Optional</span>
+      
+      <div id="optionalSectionDividerContainer_div">
+        <div class="arrow_box"></div>
+      </div>
+
+      <input id="seed_in" type="text" name="seed" title="Seed" value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
+
+      <div class="dividerLine_div"></div>
+
+      <div class=optionalRow_div>
+        <span class="innerText">Warp Randomizer</span>
+        <input id="warp_check" type="checkbox">
+      </div>
+
+      <div class="dividerLine_div"></div>
+
+      <div class=optionalRow_div>
+        <span class="innerText">Item Loss Skip</span>
+        <input id="ils_check" type="checkbox">
+      </div>
+
+      <div class="dividerLine_div"></div>
+
+      <div class=optionalRow_div>
+        <span class="innerText">HUD Popup Removal</span>
+        <input id="popup_check" type="checkbox">
+      </div>
+
+      <div class="dividerLine_div"></div>
+
+      <div class=optionalRow_div>
+        <span class="innerText">Music Randomizer</span>
+        <input id="music_check" type="checkbox">
+      </div>
+    </div>
+
+    <!The Randomize button.>
+    <div id="randomize_div">
+      <button id="randomize_button">Randomize</button>
+    </div>
+
+    <!The darker background area.>
+    <div id="background_div"></div>
+
+  </body>
+</html>

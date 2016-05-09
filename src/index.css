@@ -1,0 +1,378 @@
+html
+{
+  margin: 0px;
+  padding: 0px;
+}
+
+body
+{
+  padding: 0px;
+  margin: 0px;
+  background: #1a1a1a;
+  z-index: -1;
+}
+
+.mainFormText
+{
+  font-size: 12pt;
+  color: #7382a4;
+  z-index: 2;
+}
+
+.innerText
+{
+  padding: 0px;
+  margin: 0px;
+  color: #050505;
+}
+
+.dividerLine_div
+{
+  height: 4px;
+  border: 2px;
+  border-color: #262626;
+  z-index: 3;
+}
+
+#topGap_div
+{
+  padding: 0px;
+  margin: 0px;
+  background-color: #262626;
+  z-index: 2;
+  height: 4px;
+}
+
+#title_span
+{
+  -webkit-app-region: drag;
+  padding: none;
+  margin: 0px;
+  position: relative;
+  top: 8px;
+  left: 12px;
+  color: #aaaaaa;
+  z-index: 1;
+}
+
+#topBar_div
+{
+  -webkit-app-region: drag;
+  position: relative;
+  height: 32px;
+  background-color: #1a1a1a;
+  padding: none;
+  margin: 0px;
+  z-index: 1;
+}
+
+#min_button
+{
+  -webkit-app-region: no-drag;
+  border-radius: 6px;
+  outline: 0;
+  position: absolute;
+  width: 32px;
+  top: 4px;
+  right: 34px;
+  background-color: #262626;
+  color: #7382a4;
+  border: none;
+  z-index: 2;
+}
+
+#min_button:hover
+{
+  cursor: pointer;
+  background-color: #404040;
+  color: #d9d9d9;
+}
+
+#close_button
+{
+  -webkit-app-region: no-drag;
+  border-radius: 6px;
+  outline: 0;
+  position: absolute;
+  width: 24px;
+  top: 4px;
+  right: 6px;
+  background-color: #262626;
+  color: #7382a4;
+  border: none;
+  z-index: 2;
+}
+
+#close_button:hover
+{
+  cursor: pointer;
+  background-color: #404040;
+  color: #d9d9d9;
+}
+
+#gameSelect_div
+{
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 36px;
+}
+
+#gameSelectPrime1_button
+{
+  border-radius: 8px;
+  background-color: #0d0d0d;
+  position: absolute;
+  border: none;
+  left: 12px;
+  top: 12px;
+  z-index: 2;
+}
+
+#gameSelectPrime1_button:hover
+{
+  background-color: #1d1d1d;
+  border: none;
+}
+
+#gameSelectPrime1_button:focus
+{
+  cursor: pointer;
+  background-color: #333333;
+  color: #8490ae;
+  font-weight: bold;
+  outline-color: transparent;
+  outline: none;
+}
+
+#gameSelectPrime2_button
+{
+  background-color: #0d0d0d;
+  position: absolute;
+  border: none;
+  right: 12px;
+  top: 12px;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+#gameSelectPrime2_button:hover
+{
+  background-color: #1d1d1d;
+  border: none;
+}
+
+#gameSelectPrime2_button:focus
+{
+  cursor: pointer;
+  background-color: #333333;
+  color: #8490ae;
+  font-weight: bold;
+  outline-color: transparent;
+  outline: none;
+}
+
+#gameSelectSeparator_div
+{
+  position: absolute;
+  background-color: #090909;
+  z-index: 2;
+  top: 200px;
+  left: 4px;
+  right: 4px;
+  height: 6px;
+}
+
+#middleSeparator_div
+{
+  position: absolute;
+  background-color: #090909;
+  z-index: 2;
+  top: 200px;
+  left: 294px;
+  right: 294px;
+  bottom: 48px;
+  height: 516px;
+  width: 6px;
+}
+
+#right_div
+{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: flex-start;
+  align-content: stretch;
+  top: 242px;
+  right: 8px;
+  width: 286px;
+  height: 508px;
+}
+
+#optionalSectionDividerContainer_div
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: stretch;
+  top: 242px;
+  right: 8px;
+  width: 286px;
+  height: 10px;
+}
+
+.arrow_box
+{
+  flex-grow: 2;
+  height: 4px;
+  background: #606060;
+  border: none;
+}
+
+.arrow_box:after
+{
+  left: 10px;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  pointer-events: none;
+}
+
+.arrow_box:after
+{
+  border-color: #60606000;
+  border-top-color: #606060;
+  border-width: 3px;
+  margin-left: -3px;
+}
+
+.optionalRow_div
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  align-content: space-between;
+}
+
+#seed_in
+{
+  background-color: #303030;
+  width: 100%;
+  border: none;
+  color: #050505;
+  border-color: #303030;
+  z-index: 2;
+}
+
+#seed_in:focus
+{
+  cursor: text;
+  background-color: #3a3a3a;
+  color: #050505;
+}
+
+#warp_check
+{
+  flex-grow: 1;
+}
+
+#ils_check
+{
+  flex-grow: 1;
+}
+
+#popup_check
+{
+  flex-grow: 1;
+}
+
+#music_check
+{
+  flex-grow: 1;
+}
+
+#left_div
+{
+  position: absolute;
+  top: 242px;
+  left: 12px;
+}
+
+#excludedItems_span
+{
+  position: absolute;
+  color: #7382a4;
+  z-index: 4;
+}
+
+#randomize_div
+{
+  padding: 0px;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+  align-content: stretch;
+  border-radius: 6px;
+
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  margin: 0px;
+  background: #0d0d0d;
+  z-index: -1;
+}
+
+#randomize_button
+{
+  border-radius: 4px;
+  flex-grow: 1;
+  height: 32px;
+  padding: 0px;
+  bottom: 6px;
+  background-color: #262626;
+  border: none;
+  color: #7382a4;
+  font-weight: bold;
+  z-index: 2;
+}
+
+#randomize_button:hover
+{
+  cursor: pointer;
+  background-color: #404040;
+  font-size: 11pt;
+  color: #8490ae;
+}
+
+#randomize_button:focus
+{
+  cursor: pointer;
+  background-color: #333333;
+  color: #8490ae;
+  font-weight: bold;
+  outline-color: transparent;
+  outline: none;
+}
+
+#background_div
+{
+  padding: 0px;
+  position: absolute;
+  border-radius: 6px;
+  top: 32px;
+  left: 6px;
+  right: 6px;
+  bottom: 48px;
+  margin: 0px;
+  background: #0d0d0d;
+  z-index: -1;
+}
