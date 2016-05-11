@@ -28,7 +28,6 @@
         <img src="../img/prime2logo.png" alt="Metroid Prime 2: Echoes" title="Metroid Prime 2: Echoes">
       </button>
       <div id="gameSelectSeparator_div"></div>
-      <div id="middleSeparator_div"></div>
     </div>
 
     <!Left side, contains form for picking excluded items.>
@@ -38,42 +37,32 @@
 
     <!Right side, contains all options besides excluded items.>
     <div id="right_div">
-
-      <span id="optionalSectionTitle_span">Optional</span>
-      
-      <div id="optionalSectionDividerContainer_div">
+      <div id="optional_div">
+        <div id="optionalHeader_div"></div>
+        <span id="optionalSectionTitle_span">Optional</span>
         <div class="arrow_box"></div>
-      </div>
 
-      <input id="seed_in" type="text" name="seed" title="Seed" value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
-
-      <div class="dividerLine_div"></div>
-
-      <div class=optionalRow_div>
-        <span class="innerText">Warp Randomizer</span>
+        <input id="seed_in" type="text" title="Seed" value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
+        <div id="dividerSpacer_div"></div>
+        <span id="warp_span">Warp Randomizer</span>
         <input id="warp_check" type="checkbox">
-      </div>
 
-      <div class="dividerLine_div"></div>
+        <div class="dividerLine_div"></div>
 
-      <div class=optionalRow_div>
-        <span class="innerText">Item Loss Skip</span>
+        <span id="ils_span">Item Loss Skip</span>
         <input id="ils_check" type="checkbox">
-      </div>
 
-      <div class="dividerLine_div"></div>
+        <div class="dividerLine_div"></div>
 
-      <div class=optionalRow_div>
-        <span class="innerText">HUD Popup Removal</span>
+        <span id="popup_span">HUD Popup Removal</span>
         <input id="popup_check" type="checkbox">
-      </div>
 
-      <div class="dividerLine_div"></div>
+        <div class="dividerLine_div"></div>
 
-      <div class=optionalRow_div>
-        <span class="innerText">Music Randomizer</span>
+        <span id="music_span">Music Randomizer</span>
         <input id="music_check" type="checkbox">
       </div>
+
     </div>
 
     <!The Randomize button.>
@@ -82,7 +71,9 @@
     </div>
 
     <!The darker background area.>
-    <div id="background_div"></div>
+    <div id="background_div">
+      <div id="middleSeparator_div"></div>
+    </div>
 
   </body>
 </html>

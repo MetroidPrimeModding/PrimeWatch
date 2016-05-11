@@ -14,6 +14,7 @@ body
 
 .mainFormText
 {
+  font-family: "Arial", Arial, sans-serif;
   font-size: 12pt;
   color: #7382a4;
   z-index: 2;
@@ -21,17 +22,28 @@ body
 
 .innerText
 {
+  font-family: "Arial", Arial, sans-serif;
   padding: 0px;
   margin: 0px;
   color: #050505;
 }
 
+#dividerSpacer_div
+{
+  position: relative;
+  height: 4px;
+  top: 12px;
+  background-color: #141414;
+  z-index: 2;
+}
+
 .dividerLine_div
 {
-  height: 4px;
-  border: 2px;
-  border-color: #262626;
-  z-index: 3;
+  position: relative;
+  height: 2px;
+  top: 10px;
+  background-color: #202020;
+  z-index: 2;
 }
 
 #topGap_div
@@ -45,6 +57,7 @@ body
 
 #title_span
 {
+  font-family: "Arial", Arial, sans-serif;
   -webkit-app-region: drag;
   padding: none;
   margin: 0px;
@@ -121,7 +134,7 @@ body
 #gameSelectPrime1_button
 {
   border-radius: 8px;
-  background-color: #0d0d0d;
+  background-color: #0e0e0d;
   position: absolute;
   border: none;
   left: 12px;
@@ -131,14 +144,14 @@ body
 
 #gameSelectPrime1_button:hover
 {
-  background-color: #1d1d1d;
+  background-color: #1e1e1d;
   border: none;
 }
 
 #gameSelectPrime1_button:focus
 {
   cursor: pointer;
-  background-color: #333333;
+  background-color: #343433;
   color: #8490ae;
   font-weight: bold;
   outline-color: transparent;
@@ -147,7 +160,7 @@ body
 
 #gameSelectPrime2_button
 {
-  background-color: #0d0d0d;
+  background-color: #0e0e0d;
   position: absolute;
   border: none;
   right: 12px;
@@ -165,7 +178,7 @@ body
 #gameSelectPrime2_button:focus
 {
   cursor: pointer;
-  background-color: #333333;
+  background-color: #343433;
   color: #8490ae;
   font-weight: bold;
   outline-color: transparent;
@@ -188,113 +201,175 @@ body
   position: absolute;
   background-color: #090909;
   z-index: 2;
-  top: 200px;
-  left: 294px;
-  right: 294px;
-  bottom: 48px;
-  height: 516px;
+  left: 50%;
+  right: 50%;
+  top: 210px;
+  bottom: 0%;
   width: 6px;
 }
 
 #right_div
 {
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
-  align-items: flex-start;
-  align-content: stretch;
   top: 242px;
   right: 8px;
+  left: 51%;
   width: 286px;
-  height: 508px;
+  bottom: 48px;
 }
 
-#optionalSectionDividerContainer_div
+#optional_div
 {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  align-content: stretch;
-  top: 242px;
+  position: absolute;
+  background-color: #151514;
+  bottom: 8px;
+  left: 8px;
   right: 8px;
-  width: 286px;
-  height: 10px;
+  height: 28%;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+#optionalHeader_div
+{
+  position: absolute;
+  background-color: #1b1b1a;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 25px;
+  border-radius: 8px 8px 0px 0px;
+  z-index: 1;
+}
+
+#optionalSectionTitle_span
+{
+  font-family: "Arial", Arial, sans-serif;
+  position: relative;
+  color: #b0b0b0;
+  left: 8px;
+  top: 2px;
+  z-index: 2;
 }
 
 .arrow_box
 {
-  flex-grow: 2;
+  position: relative;
+  width: 100%;
   height: 4px;
-  background: #606060;
+  top: 4px;
+  background: #404040;
   border: none;
+  z-index: 3;
 }
 
 .arrow_box:after
 {
-  left: 10px;
+  top: 100%;
+  left: 1.5%;
   border: solid transparent;
   content: " ";
   height: 0;
   width: 0;
+  position: absolute;
   pointer-events: none;
 }
 
 .arrow_box:after
 {
-  border-color: #60606000;
-  border-top-color: #606060;
-  border-width: 3px;
-  margin-left: -3px;
-}
-
-.optionalRow_div
-{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-  align-content: space-between;
+  border-color: #40404000;
+  border-top-color: #404040;
+  border-width: 4px;
+  margin-left: -4px;
 }
 
 #seed_in
 {
+  font-family: "Arial", Arial, sans-serif;
+  font-weight: bold;
+  position: relative;
   background-color: #303030;
-  width: 100%;
+  width: 93%;
   border: none;
-  color: #050505;
+  color: #a0a0a0;
   border-color: #303030;
+  left: 8px;
+  top: 12px;
   z-index: 2;
 }
 
 #seed_in:focus
 {
+  font-family: "Arial", Arial, sans-serif;
   cursor: text;
   background-color: #3a3a3a;
   color: #050505;
+  border: none;
+}
+
+#warp_span
+{
+  font-family: "Arial", Arial, sans-serif;
+  color: #a0a0a0;
+  position: relative;
+  left: 8px;
+  top: 10px;
 }
 
 #warp_check
 {
-  flex-grow: 1;
+  position: relative;
+  left: 40.5%;
+  top: 12px;
+}
+
+#ils_span
+{
+  font-family: "Arial", Arial, sans-serif;
+  color: #a0a0a0;
+  position: relative;
+  left: 8px;
+  top: 8px;
 }
 
 #ils_check
 {
-  flex-grow: 1;
+  position: relative;
+  left: 49.2%;
+  top: 12px;
+}
+
+#popup_span
+{
+  font-family: "Arial", Arial, sans-serif;
+  color: #a0a0a0;
+  position: relative;
+  left: 8px;
+  top: 8px;
 }
 
 #popup_check
 {
-  flex-grow: 1;
+  border: none;
+  position: relative;;
+  left: 31.5%;
+  top: 12px;
+}
+
+#music_span
+{
+  font-family: "Arial", Arial, sans-serif;
+  color: #a0a0a0;
+  position: relative;
+  left: 8px;
+  top: 8px;
 }
 
 #music_check
 {
-  flex-grow: 1;
+  position: relative;
+  left: 39%;
+  top: 12px;
 }
 
 #left_div
@@ -302,13 +377,15 @@ body
   position: absolute;
   top: 242px;
   left: 12px;
+  right: 51%
 }
 
 #excludedItems_span
 {
+  font-family: "Arial", Arial, sans-serif;
   position: absolute;
   color: #7382a4;
-  z-index: 4;
+  z-index: 2;
 }
 
 #randomize_div
@@ -333,6 +410,7 @@ body
 
 #randomize_button
 {
+  font-family: "Arial Black", Arial Black, sans-serif;
   border-radius: 4px;
   flex-grow: 1;
   height: 32px;
@@ -373,6 +451,6 @@ body
   right: 6px;
   bottom: 48px;
   margin: 0px;
-  background: #0d0d0d;
+  background: #0e0e0d;
   z-index: -1;
 }

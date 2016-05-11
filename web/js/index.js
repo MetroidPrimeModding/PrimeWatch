@@ -3,7 +3,7 @@ function inputFocus(i)
   if(i.value==i.defaultValue)
   {
     i.value="";
-    i.style.color="#050505";
+    i.style.color="#a0a0a0";
   }
 }
 
@@ -12,7 +12,7 @@ function inputBlur(i)
   if(i.value=="")
   {
     i.value=i.defaultValue;
-    i.style.color="#050505";
+    i.style.color="#a0a0a0";
   }
 }
 
