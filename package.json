@@ -1,0 +1,7 @@
+{
+  "name": "MPRandomizerGUI",
+  "version": "0.0.1",
+  "main": "app/mainForm.js",
+  "dependencies": {
+  }
+}
