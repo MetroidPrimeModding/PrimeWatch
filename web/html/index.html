@@ -68,23 +68,37 @@
         <div id="optionsHeaderDivider_div"></div>
 
         <input id="seed_in" type="text" title="Seed" value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
+
         <div id="dividerSpacer_div"></div>
-        <span id="warp_span">Warp Randomizer</span>
+
+        <span id="warp_span" class="tooltip" onclick="warp_check.checked = !warp_check.checked">
+          <span class="tooltiptext">Teleports you to a random room when you pick an item up</span>
+          Warp Randomizer
+        </span>
         <input id="warp_check" type="checkbox">
 
         <div class="dividerLine_div"></div>
 
-        <span id="ils_span">Item Loss Skip</span>
+        <span id="ils_span" class="tooltip" onclick="ils_check.checked = !ils_check.checked">
+          <span class="tooltiptext">Skip losing all your stuff at the beginning of the game</span>
+          Item Loss Skip
+        </span>
         <input id="ils_check" type="checkbox">
 
         <div class="dividerLine_div"></div>
 
-        <span id="popup_span">HUD Popup Removal</span>
+        <span id="popup_span", class="tooltip" onclick="popup_check.checked = !popup_check.checked">
+          <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up</span>
+          HUD Popup Removal
+        </span>
         <input id="popup_check" type="checkbox">
 
         <div class="dividerLine_div"></div>
 
-        <span id="music_span">Music Randomizer</span>
+        <span id="music_span", class="tooltip" onclick="music_check.checked = !music_check.checked">
+          <span class="tooltiptext">Randomizes where songs play</span>
+          Music Randomizer
+        </span>
         <input id="music_check" type="checkbox">
       </div>
 

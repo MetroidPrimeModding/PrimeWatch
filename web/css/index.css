@@ -352,13 +352,69 @@ body
   background-color: #505050;
 }
 
+.tooltip
+{
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext
+{
+  visibility: hidden;
+  background-color: #080808;
+  color: #a0a0a0;
+  font-family: "Arial", Arial, sans-serif;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 3;
+  width: 310px;
+  top: -20px;
+  right: 105%;
+}
+
+.tooltip:hover .tooltiptext
+{
+  visibility: visible;
+}
+
 #warp_span
 {
+  cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
   position: relative;
   left: 8px;
   top: 10px;
+}
+
+#warpHelpText_span
+{
+  font-family: "Arial", Arial, sans-serif;
+  position: absolute;
+  color: #909090;
+  left: 20%;
+  top: 5%;
+  z-index: 2;
+}
+
+#warpHelpText_span:hover
+{
+  background-color: #
+}
+
+#warpHelp_button
+{
+  border: none;
+  cursor: pointer;
+  position: relative;
+  height: 15px;
+  width: 15px;
+  top: 10px;
+  left: 3%;
+  border-radius: 2px;
+  background-color: #1f1f1f;
 }
 
 #warp_check
@@ -382,6 +438,7 @@ body
 
 #ils_span
 {
+  cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
   position: relative;
@@ -410,6 +467,7 @@ body
 
 #popup_span
 {
+  cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
   position: relative;
@@ -439,6 +497,7 @@ body
 
 #music_span
 {
+  cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
   position: relative;
