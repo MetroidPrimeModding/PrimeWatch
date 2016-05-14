@@ -9,17 +9,6 @@
   </head>
 
   <body>
-    <!Modals for help>
-    <div id="darken_div">
-      <button id="fakeClose_button">X</button>
-        <span id="warpHelp_span">
-          Warp Randomizer teleports you to a random room when you collect a pickup.
-          Warps are always the same for each item within a single randomizer.
-          For example, if you pick up the missile expansion behind your ship in Prime,
-          reset, and pick it up again, it will teleport you to the same room until
-          you generate a new randomizer.
-        </span>
-    </div>
 
     <!Lighter bar at the very top>
     <div id="topGap_div"></div>
@@ -33,60 +22,125 @@
 
     <!The game selection buttons and divider lines.>
     <div id="gameSelect_div">
-      <button id="gameSelectPrime1_button">
-        <img src="../img/prime1logo.png" alt="Metroid Prime" title="Metroid Prime">
-      </button>
-      <button id="gameSelectPrime2_button">
-        <img src="../img/prime2logo.png" alt="Metroid Prime 2: Echoes" title="Metroid Prime 2: Echoes">
-      </button>
+      <div id="gameSelectPrime1_div" onmouseup="prime1OnMouseUp()">
+        <img class="image" src="../img/prime1logo.png" alt="Metroid Prime" title="Metroid Prime">
+      </div>
+      <div id="gameSelectPrime2_div" onmouseup="prime2OnMouseUp()">
+        <img class="image" src="../img/prime2logo.png" alt="Metroid Prime 2: Echoes" title="Metroid Prime 2: Echoes">
+      </div>
       <div id="gameSelectSeparator_div"></div>
     </div>
 
     <!Left side, contains form for picking excluded items.>
     <div id="left_div">
-      <span id="excludedItems_span">Excluded Items</span>
+
     </div>
 
     <!Right side, contains all options besides excluded items.>
     <div id="right_div">
-      <div id="options_div">
-        <div id="optionsHeader_div"></div>
-        <span id="optionsSectionTitle_span">Options</span>
-        <div id="optionsHeaderDivider_div"></div>
+      <!Prime>
+      <div id="primeOptions_div">
+        <div id="primeOptionsHeader_div"></div>
+        <span id="primeOptionsSectionTitle_span">Metroid Prime Options</span>
+        <div id="primeOptionsHeaderDivider_div"></div>
 
-        <input id="seed_in" type="text" title="Seed" value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
+        <input id="primeSeed_in" type="text" title="Seed for the randomizer's item scrambling.
+Seeds can be a combination of letters and numbers.
+The same seed will always produce the same results." value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
 
         <div id="dividerSpacer_div"></div>
 
-        <span id="warp_span" class="tooltip" onclick="warp_check.checked = !warp_check.checked">
-          <span class="tooltiptext">Teleports you to a random room when you pick an item up, where an item warps you will not change until a new seed is generated</span>
-          Warp Randomizer
+        <span id="primeFrigate_span" class="tooltip" onclick="primeFrigate_check.checked = !primeFrigate_check.checked">
+          <span class="tooltiptext">New save files will start at the ship on Tallon IV</span>
+          Skip Frigate
         </span>
-        <input id="warp_check" type="checkbox">
+        <input id="primeFrigate_check" type="checkbox">
 
         <div class="dividerLine_div"></div>
 
-        <span id="ils_span" class="tooltip" onclick="ils_check.checked = !ils_check.checked">
+        <span id="primeWarp_span" class="tooltip" onclick="primeWarp_check.checked = !primeWarp_check.checked">
+          <span class="tooltiptext">Teleports you to a random room when you pick an item up<br><br>Where an item warps you will not change until a new seed is generated</span>
+          Warp Randomizer
+        </span>
+        <input id="primeWarp_check" type="checkbox">
+
+        <div class="dividerLine_div"></div>
+
+        <span id="primeIls_span" class="tooltip" onclick="primeIls_check.checked = !primeIls_check.checked">
           <span class="tooltiptext">You don't lose all your items at the beginning of the game</span>
           Item Loss Skip
         </span>
-        <input id="ils_check" type="checkbox">
+        <input id="primeIls_check" type="checkbox">
 
         <div class="dividerLine_div"></div>
 
-        <span id="popup_span", class="tooltip" onclick="popup_check.checked = !popup_check.checked">
-          <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up, displays unobtrusive text saying what you got at the top of the screen instead.  Works on most items</span>
+        <span id="primePopup_span", class="tooltip" onclick="primePopup_check.checked = !primePopup_check.checked">
+          <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up, displays text saying what you got at the top of the screen instead<br><br>Works on most items</span>
           Item Cutscene Removal
         </span>
-        <input id="popup_check" type="checkbox">
+        <input id="primePopup_check" type="checkbox">
 
         <div class="dividerLine_div"></div>
 
-        <span id="music_span", class="tooltip" onclick="music_check.checked = !music_check.checked">
+        <span id="primeMusic_span", class="tooltip" onclick="primeMusic_check.checked = !primeMusic_check.checked">
           <span class="tooltiptext">Randomizes where songs play</span>
           Music Randomizer
         </span>
-        <input id="music_check" type="checkbox">
+        <input id="primeMusic_check" type="checkbox">
+
+      </div>
+
+
+
+      <!Prime 2>
+      <div id="prime2Options_div">
+        <div id="prime2OptionsHeader_div"></div>
+        <span id="prime2OptionsSectionTitle_span">Metroid Prime 2: Echoes Options</span>
+        <div id="prime2OptionsHeaderDivider_div"></div>
+
+        <input id="prime2Seed_in" type="text" title="Seed for the randomizer's item scrambling.
+Seeds can be a combination of letters and numbers.
+The same seed will always produce the same results." value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
+
+        <div id="dividerSpacer_div"></div>
+
+        <span id="prime2Physics_span" class="tooltip" onclick="prime2Physics_check.checked = !prime2Physics_check.checked">
+          <span class="tooltiptext">Removes the sideways movement speed cap, so dashes behave like they do in Prime</span>
+          Prime Physics
+        </span>
+        <input id="prime2Physics_check" type="checkbox">
+
+        <div class="dividerLine_div"></div>
+
+        <span id="prime2Warp_span" class="tooltip" onclick="prime2Warp_check.checked = !prime2Warp_check.checked">
+          <span class="tooltiptext">Teleports you to a random room when you pick an item up<br><br>Where an item warps you will not change until a new seed is generated</span>
+          Warp Randomizer
+        </span>
+        <input id="prime2Warp_check" type="checkbox">
+
+        <div class="dividerLine_div"></div>
+
+        <span id="prime2Ils_span" class="tooltip" onclick="prime2Ils_check.checked = !prime2Ils_check.checked">
+          <span class="tooltiptext">You don't lose all your items at the beginning of the game</span>
+          Item Loss Skip
+        </span>
+        <input id="prime2Ils_check" type="checkbox">
+
+        <div class="dividerLine_div"></div>
+
+        <span id="prime2Popup_span", class="tooltip" onclick="prime2Popup_check.checked = !prime2Popup_check.checked">
+          <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up, displays text saying what you got at the top of the screen instead<br><br>Works on most items</span>
+          Item Cutscene Removal
+        </span>
+        <input id="prime2Popup_check" type="checkbox">
+
+        <div class="dividerLine_div"></div>
+
+        <span id="prime2Music_span", class="tooltip" onclick="prime2Music_check.checked = !prime2Music_check.checked">
+          <span class="tooltiptext">Randomizes where songs play</span>
+          Music Randomizer
+        </span>
+        <input id="prime2Music_check" type="checkbox">
       </div>
 
     </div>
