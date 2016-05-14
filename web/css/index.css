@@ -14,6 +14,7 @@ body
 
 .mainFormText
 {
+  -webkit-user-select: none;
   font-family: "Arial", Arial, sans-serif;
   font-size: 12pt;
   color: #7382a4;
@@ -22,6 +23,7 @@ body
 
 .innerText
 {
+  -webkit-user-select: none;
   font-family: "Arial", Arial, sans-serif;
   padding: 0px;
   margin: 0px;
@@ -30,6 +32,7 @@ body
 
 #dividerSpacer_div
 {
+  -webkit-user-select: none;
   position: relative;
   height: 4px;
   top: 12px;
@@ -39,6 +42,7 @@ body
 
 .dividerLine_div
 {
+  -webkit-user-select: none;
   position: relative;
   height: 2px;
   top: 10px;
@@ -48,6 +52,7 @@ body
 
 #topGap_div
 {
+  -webkit-user-select: none;
   padding: 0px;
   margin: 0px;
   background-color: #262626;
@@ -57,6 +62,7 @@ body
 
 #title_span
 {
+  -webkit-user-select: none;
   font-family: "Arial", Arial, sans-serif;
   -webkit-app-region: drag;
   padding: none;
@@ -70,6 +76,7 @@ body
 
 #topBar_div
 {
+  -webkit-user-select: none;
   -webkit-app-region: drag;
   position: relative;
   height: 32px;
@@ -81,6 +88,7 @@ body
 
 #min_button
 {
+  -webkit-user-select: none;
   -webkit-app-region: no-drag;
   border-radius: 6px;
   outline: 0;
@@ -103,6 +111,7 @@ body
 
 #close_button
 {
+  -webkit-user-select: none;
   -webkit-app-region: no-drag;
   border-radius: 6px;
   outline: 0;
@@ -125,6 +134,7 @@ body
 
 #gameSelect_div
 {
+  -webkit-user-select: none;
   position: absolute;
   left: 4px;
   right: 4px;
@@ -133,6 +143,7 @@ body
 
 #gameSelectPrime1_button
 {
+  -webkit-user-select: none;
   border-radius: 8px;
   background-color: #0e0e0d;
   position: absolute;
@@ -160,6 +171,7 @@ body
 
 #gameSelectPrime2_button
 {
+  -webkit-user-select: none;
   background-color: #0e0e0d;
   position: absolute;
   border: none;
@@ -187,6 +199,7 @@ body
 
 #gameSelectSeparator_div
 {
+  -webkit-user-select: none;
   position: absolute;
   background-color: #090909;
   z-index: 2;
@@ -198,6 +211,7 @@ body
 
 #middleSeparator_div
 {
+  -webkit-user-select: none;
   position: absolute;
   background-color: #090909;
   z-index: 2;
@@ -210,6 +224,7 @@ body
 
 #right_div
 {
+  -webkit-user-select: none;
   position: absolute;
   top: 242px;
   right: 8px;
@@ -220,6 +235,7 @@ body
 
 #options_div
 {
+  -webkit-user-select: none;
   position: absolute;
   background-color: #151514;
   bottom: 8px;
@@ -232,6 +248,7 @@ body
 
 #optionsHeader_div
 {
+  -webkit-user-select: none;
   position: absolute;
   background-color: #1b1b1a;
   top: 0px;
@@ -244,6 +261,7 @@ body
 
 #optionsSectionTitle_span
 {
+  -webkit-user-select: none;
   font-family: "Arial", Arial, sans-serif;
   position: relative;
   color: #b0b0b0;
@@ -254,6 +272,7 @@ body
 
 #optionsHeaderDivider_div
 {
+  -webkit-user-select: none;
   position: relative;
   width: 100%;
   height: 4px;
@@ -265,6 +284,7 @@ body
 
 .arrow_box
 {
+  -webkit-user-select: none;
   position: relative;
   width: 100%;
   height: 4px;
@@ -272,26 +292,6 @@ body
   background: #404040;
   border: none;
   z-index: 3;
-}
-
-.arrow_box:after
-{
-  top: 100%;
-  left: 1.5%;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-}
-
-.arrow_box:after
-{
-  border-color: #40404000;
-  border-top-color: #404040;
-  border-width: 4px;
-  margin-left: -4px;
 }
 
 #seed_in
@@ -333,6 +333,7 @@ body
 
 #fakeClose_button
 {
+  -webkit-user-select: none;
   display: none;
   position: absolute;
   border: none;
@@ -354,12 +355,14 @@ body
 
 .tooltip
 {
+  -webkit-user-select: none;
   position: relative;
   display: inline-block;
 }
 
 .tooltip .tooltiptext
 {
+  -webkit-user-select: none;
   visibility: hidden;
   background-color: #080808;
   color: #a0a0a0;
@@ -376,11 +379,13 @@ body
 
 .tooltip:hover .tooltiptext
 {
+  -webkit-user-select: none;
   visibility: visible;
 }
 
 #warp_span
 {
+  -webkit-user-select: none;
   cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
@@ -389,55 +394,18 @@ body
   top: 10px;
 }
 
-#warpHelpText_span
-{
-  font-family: "Arial", Arial, sans-serif;
-  position: absolute;
-  color: #909090;
-  left: 20%;
-  top: 5%;
-  z-index: 2;
-}
-
-#warpHelpText_span:hover
-{
-  background-color: #
-}
-
-#warpHelp_button
-{
-  border: none;
-  cursor: pointer;
-  position: relative;
-  height: 15px;
-  width: 15px;
-  top: 10px;
-  left: 3%;
-  border-radius: 2px;
-  background-color: #1f1f1f;
-}
-
 #warp_check
 {
+  -webkit-user-select: none;
   position: relative;
+  cursor: pointer;
   left: 40.5%;
   top: 12px;
 }
 
-#warpHelp_span
-{
-  display: none;
-  position: absolute;
-  width: 50%;
-  top: 40%;
-  left: 25%;
-  color: #a1a1a1;
-  font-family: "Arial", Arial, sans-serif;
-  text-align: center;
-}
-
 #ils_span
 {
+  -webkit-user-select: none;
   cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
@@ -448,25 +416,16 @@ body
 
 #ils_check
 {
+  -webkit-user-select: none;
+  cursor: pointer;
   position: relative;
   left: 49.2%;
   top: 12px;
 }
 
-#ilsHelp_span
-{
-  display: none;
-  position: absolute;
-  width: 50%;
-  top: 50%;
-  left: 25%;
-  color: #a1a1a1;
-  font-family: "Arial", Arial, sans-serif;
-  text-align: center;
-}
-
 #popup_span
 {
+  -webkit-user-select: none;
   cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
@@ -477,26 +436,16 @@ body
 
 #popup_check
 {
-  background-color: #000000;
+  -webkit-user-select: none;
+  cursor: pointer;
   position: relative;
   left: 31.5%;
   top: 12px;
 }
 
-#popupHelp_span
-{
-  display: none;
-  position: absolute;
-  width: 50%;
-  top: 45%;
-  left: 25%;
-  color: #a1a1a1;
-  font-family: "Arial", Arial, sans-serif;
-  text-align: center;
-}
-
 #music_span
 {
+  -webkit-user-select: none;
   cursor: pointer;
   font-family: "Arial", Arial, sans-serif;
   color: #a0a0a0;
@@ -507,25 +456,16 @@ body
 
 #music_check
 {
+  -webkit-user-select: none;
+  cursor: pointer;
   position: relative;
   left: 39%;
   top: 12px;
 }
 
-#musicHelp_span
-{
-  display: none;
-  position: absolute;
-  width: 50%;
-  top: 50%;
-  left: 25%;
-  color: #a1a1a1;
-  font-family: "Arial", Arial, sans-serif;
-  text-align: center;
-}
-
 #left_div
 {
+  -webkit-user-select: none;
   position: absolute;
   top: 242px;
   left: 12px;
@@ -534,6 +474,7 @@ body
 
 #excludedItems_span
 {
+  -webkit-user-select: none;
   font-family: "Arial", Arial, sans-serif;
   position: absolute;
   color: #a1a1a1;
@@ -542,6 +483,7 @@ body
 
 #randomize_div
 {
+  -webkit-user-select: none;
   padding: 0px;
   position: absolute;
   display: flex;
@@ -561,6 +503,7 @@ body
 
 #randomize_button
 {
+  -webkit-user-select: none;
   font-family: "Arial Black", Arial Black, sans-serif;
   border-radius: 4px;
   flex-grow: 1;
@@ -594,6 +537,7 @@ body
 
 #background_div
 {
+  -webkit-user-select: none;
   padding: 0px;
   position: absolute;
   border-radius: 6px;

@@ -19,19 +19,6 @@
           reset, and pick it up again, it will teleport you to the same room until
           you generate a new randomizer.
         </span>
-
-        <span id="ilsHelp_span">
-          Skips the item loss at the beginning of the game.
-        </span>
-
-        <span id="popupHelp_span">
-          Removes the item pickup cutscenes and text boxes, and instead displays
-          text informing you of what you picked up at the top of the screen.
-        </span>
-
-        <span id="musicHelp_span">
-          Randomizes the music played in each area that has its own, unique music.
-        </span>
     </div>
 
     <!Lighter bar at the very top>
@@ -72,7 +59,7 @@
         <div id="dividerSpacer_div"></div>
 
         <span id="warp_span" class="tooltip" onclick="warp_check.checked = !warp_check.checked">
-          <span class="tooltiptext">Teleports you to a random room when you pick an item up</span>
+          <span class="tooltiptext">Teleports you to a random room when you pick an item up, where an item warps you will not change until a new seed is generated</span>
           Warp Randomizer
         </span>
         <input id="warp_check" type="checkbox">
@@ -80,7 +67,7 @@
         <div class="dividerLine_div"></div>
 
         <span id="ils_span" class="tooltip" onclick="ils_check.checked = !ils_check.checked">
-          <span class="tooltiptext">Skip losing all your stuff at the beginning of the game</span>
+          <span class="tooltiptext">You don't lose all your items at the beginning of the game</span>
           Item Loss Skip
         </span>
         <input id="ils_check" type="checkbox">
@@ -88,8 +75,8 @@
         <div class="dividerLine_div"></div>
 
         <span id="popup_span", class="tooltip" onclick="popup_check.checked = !popup_check.checked">
-          <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up</span>
-          HUD Popup Removal
+          <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up, displays unobtrusive text saying what you got at the top of the screen instead.  Works on most items</span>
+          Item Cutscene Removal
         </span>
         <input id="popup_check" type="checkbox">
 

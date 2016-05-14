@@ -23,16 +23,6 @@ function inputBlur(i)
 
   function init()
   {
-    document.getElementById("darken_div").addEventListener("click", function(e)
-    {
-      darken_div.style.display = 'none';
-      fakeClose_button.style.display = 'none';
-      warpHelp_span.style.display= 'none';
-      ilsHelp_span.style.display = 'none';
-      popupHelp_span.style.display = 'none';
-      musicHelp_span.style.display = 'none';
-    });
-
     document.getElementById("min_button").addEventListener("click", function(e)
     {
       var window = BrowserWindow.getFocusedWindow();
