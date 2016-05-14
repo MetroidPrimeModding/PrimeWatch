@@ -35,6 +35,20 @@ body
   -webkit-user-select: none;
 }
 
+#prime1_image
+{
+  position: relative;
+  top: 20%;
+  left: 5%;
+}
+
+#prime2_image
+{
+  position: relative;
+  top: 20%;
+  left: 5%;
+}
+
 #dividerSpacer_div
 {
   -webkit-user-select: none;
@@ -149,6 +163,7 @@ body
 #gameSelectPrime1_div
 {
   -webkit-user-select: none;
+  cursor: pointer;
   border-radius: 8px;
   background-color: #0e0e0d;
   position: absolute;
@@ -159,16 +174,10 @@ body
   z-index: 2;
 }
 
-#gameSelectPrime1_div:hover
-{
-  cursor: pointer;
-  background-color: #1e1e1d;
-  border: none;
-}
-
 #gameSelectPrime2_div
 {
   -webkit-user-select: none;
+  cursor: pointer;
   background-color: #0e0e0d;
   position: absolute;
   border: none;
@@ -177,13 +186,6 @@ body
   top: 12px;
   border-radius: 8px;
   z-index: 2;
-}
-
-#gameSelectPrime2_div:hover
-{
-  cursor: pointer;
-  background-color: #1d1d1d;
-  border: none;
 }
 
 #gameSelectSeparator_div

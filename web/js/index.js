@@ -131,6 +131,7 @@ function prime2OnMouseUp()
     if(document.readyState = "complete")
     {
       init();
+      prime1OnMouseUp();
     }
   };
 })();
