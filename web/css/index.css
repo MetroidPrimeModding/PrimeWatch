@@ -35,6 +35,142 @@ body
   -webkit-user-select: none;
 }
 
+#primeISOFile_input
+{
+  visibility: hidden;
+}
+
+#prime2ISOFile_input
+{
+  visibility: hidden;
+}
+
+#primeISO_span
+{
+  position: absolute;
+  left: 28%;
+  top: 45%;
+  font-size: 10pt;
+  color: #a0a0a0;
+  z-index: 3;
+}
+
+#primeISO_button
+{
+  position: absolute;
+  border: none;
+  top: 50%;
+  left: 2%;
+  width: 50px;
+  height: 50px;
+  background-color: #171715;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+#primeISO_button:hover
+{
+  background-color: #252524;
+}
+
+#primeISO_button:active
+{
+  outline: none;
+  border: none;
+  border-color: transparent;
+}
+
+#primeArrowHead_div
+{
+  position: absolute;
+  border-right: 4px solid #0a0a0a;
+  border-bottom: 4px solid #0a0a0a;
+  width: 20px;
+  height: 20px;
+  top: -4px;
+  transform: rotate(-135deg);
+  margin-top: 12px;
+  left: 28%;
+  z-index: 2;
+}
+
+#primeArrowBody_div
+{
+  position: absolute;
+  border-left: 4px solid #0a0a0a;
+  width: 25px;
+  height: 38px;
+  bottom: 4px;
+  margin-left: 25px;
+  margin-top: 3px;
+  left: -1%;
+  z-index: 2;
+}
+
+
+#prime2ISO_span
+{
+  position: absolute;
+  left: 28%;
+  top: 45%;
+  font-size: 10pt;
+  color: #a0a0a0;
+  z-index: 3;
+}
+
+#prime2ISO_button
+{
+  position: absolute;
+  border: none;
+  right: 2%;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  background-color: #171715;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+#prime2ISO_button:hover
+{
+  background-color: #252524;
+}
+
+#prime2ISO_button:active
+{
+  outline: none;
+  border: none;
+  border-color: transparent;
+}
+
+#prime2ArrowHead_div
+{
+  position: absolute;
+  border-right: 4px solid #0a0a0a;
+  border-bottom: 4px solid #0a0a0a;
+  width: 20px;
+  height: 20px;
+  top: -4px;
+  transform: rotate(-135deg);
+  margin-top: 12px;
+  left: 28%;
+  z-index: 2;
+}
+
+#prime2ArrowBody_div
+{
+  position: absolute;
+  border-left: 4px solid #0a0a0a;
+  width: 25px;
+  height: 38px;
+  bottom: 4px;
+  margin-left: 25px;
+  margin-top: 3px;
+  left: -2%;
+  z-index: 2;
+}
+
+
 #prime1_image
 {
   position: relative;
@@ -301,7 +437,7 @@ body
   position: relative;
   color: #b0b0b0;
   top: 2px;
-  left: 20%;
+  left: 30%;
   text-align: center;
   z-index: 2;
 }
@@ -478,7 +614,7 @@ body
   font-family: "Arial", Arial, sans-serif;
   position: relative;
   color: #b0b0b0;
-  left: 6%;
+  left: 30%;
   top: 2px;
   z-index: 2;
 }

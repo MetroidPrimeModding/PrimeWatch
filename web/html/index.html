@@ -16,8 +16,8 @@
     <!Custom frameless topbar and minimize/exit buttons.>
     <div id="topBar_div">
       <span id="title_span">Metroid Prime Randomizer</span>
-      <button id="min_button">-</button>
-      <button id="close_button">x</button>
+      <button id="min_button" onmouseup="minimizeWindow()">-</button>
+      <button id="close_button" onmouseup="closeWindow()">x</button>
     </div>
 
     <!The game selection buttons and divider lines.>
@@ -29,6 +29,20 @@
         <img class="image" id="prime2_image" src="../img/prime2logo.png" alt="Metroid Prime 2: Echoes" title="Metroid Prime 2: Echoes">
       </div>
       <div id="gameSelectSeparator_div"></div>
+
+      <input type="file", id="primeISOFile_input">
+      <button id="primeISO_button" onmouseup="primeISOFileInput()">
+        <span id="primeISO_span">ISO</span>
+        <div id="primeArrowHead_div"></div>
+        <div id="primeArrowBody_div"></div>
+      </button>
+
+      <input type="file", id="prime2ISOFile_input">
+      <button id="prime2ISO_button" onmouseup="prime2ISOFileInput()">
+        <span id="prime2ISO_span">ISO</span>
+        <div id="prime2ArrowHead_div"></div>
+        <div id="prime2ArrowBody_div"></div>
+      </button>
     </div>
 
     <!Left side, contains form for picking excluded items.>
@@ -41,7 +55,7 @@
       <!Prime>
       <div id="primeOptions_div">
         <div id="primeOptionsHeader_div"></div>
-        <span id="primeOptionsSectionTitle_span">Metroid Prime Options</span>
+        <span id="primeOptionsSectionTitle_span">Prime Options</span>
         <div id="primeOptionsHeaderDivider_div"></div>
 
         <input id="primeSeed_in" type="text" title="Seed for the randomizer's item scrambling.
@@ -95,7 +109,7 @@ The same seed will always produce the same results." value="Seed" onfocus="input
       <!Prime 2>
       <div id="prime2Options_div">
         <div id="prime2OptionsHeader_div"></div>
-        <span id="prime2OptionsSectionTitle_span">Metroid Prime 2: Echoes Options</span>
+        <span id="prime2OptionsSectionTitle_span">Prime 2 Options</span>
         <div id="prime2OptionsHeaderDivider_div"></div>
 
         <input id="prime2Seed_in" type="text" title="Seed for the randomizer's item scrambling.

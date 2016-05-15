@@ -94,6 +94,32 @@ function prime2OnMouseUp()
   console.log("prime 2");
 }
 
+function primeISOFileInput()
+{
+  document.getElementById("primeISOFile_input").click();
+}
+
+function prime2ISOFileInput()
+{
+  document.getElementById("prime2ISOFile_input").click();
+}
+
+function minimizeWindow()
+{
+  var remote = require('remote');
+  var BrowserWindow = remote.require('browser-window');
+  var window = BrowserWindow.getFocusedWindow();
+  window.minimize();
+}
+
+function closeWindow()
+{
+  var remote = require('remote');
+  var BrowserWindow = remote.require('browser-window');
+  var window = BrowserWindow.getFocusedWindow();
+  window.close();
+}
+
 (function()
 {
   var remote = require('remote');
@@ -101,18 +127,6 @@ function prime2OnMouseUp()
 
   function init()
   {
-    document.getElementById("min_button").addEventListener("click", function(e)
-    {
-      var window = BrowserWindow.getFocusedWindow();
-      window.minimize();
-    });
-
-    document.getElementById("close_button").addEventListener("click", function(e)
-    {
-      var window = BrowserWindow.getFocusedWindow();
-      window.close();
-    });
-
     document.addEventListener('drop', function(e)
     {
       e.preventDefault();
@@ -131,7 +145,6 @@ function prime2OnMouseUp()
     if(document.readyState = "complete")
     {
       init();
-      prime1OnMouseUp();
     }
   };
 })();
