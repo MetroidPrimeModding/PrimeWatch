@@ -62,29 +62,33 @@
   The same seed will always produce the same results." value="Seed" onfocus="inputFocus(this)" onblur="inputBlur(this)">
 
             <div id="dividerSpacer_div"></div>
-            
+
             <div id="text_div">
-              <span id="primeFrigate_span" class="tooltip" onclick="primeFrigate_check.checked = !primeFrigate_check.checked">
+              <span class="tooltip" onclick="primeCheckCompleteability_check.checked = !primeCheckCompleteability_check.checked">
+                Check For Completeability
+              </span>
+              <br>
+              <span class="tooltip" onclick="primeFrigate_check.checked = !primeFrigate_check.checked">
                 <span class="tooltiptext">New save files will start at the ship on Tallon IV</span>
                 Skip Frigate
               </span>
               <br>
-              <span id="primeWarp_span" class="tooltip" onclick="primeWarp_check.checked = !primeWarp_check.checked">
+              <span class="tooltip" onclick="primeWarp_check.checked = !primeWarp_check.checked">
                 <span class="tooltiptext">Teleports you to a random room when you pick an item up<br><br>Where an item warps you will not change until a new seed is generated</span>
                 Warp Randomizer
               </span>
               <br>
-              <span id="primeIls_span" class="tooltip" onclick="primeIls_check.checked = !primeIls_check.checked">
+              <span class="tooltip" onclick="primeIls_check.checked = !primeIls_check.checked">
                 <span class="tooltiptext">You don't lose all your items at the beginning of the game</span>
                 Item Loss Skip
               </span>
               <br>
-              <span id="primePopup_span", class="tooltip" onclick="primePopup_check.checked = !primePopup_check.checked">
+              <span class="tooltip" onclick="primePopup_check.checked = !primePopup_check.checked">
                 <span class="tooltiptext">Removes the cutscene and box that show when you pick an item up, displays text saying what you got at the top of the screen instead<br><br>Works on most items</span>
                 Item Cutscene Removal
               </span>
               <br>
-              <span id="primeMusic_span", class="tooltip" onclick="primeMusic_check.checked = !primeMusic_check.checked">
+              <span class="tooltip" onclick="primeMusic_check.checked = !primeMusic_check.checked">
                 <span class="tooltiptext">Randomizes where songs play</span>
                 Music Randomizer
               </span>
@@ -101,6 +105,8 @@
             </div>
 
             <div id="checkboxes_div">
+              <input id="primeCheckCompleteability_check" type="checkbox">
+              <br>
               <input id="primeFrigate_check" type="checkbox">
               <br>
               <input id="primeWarp_check" type="checkbox">

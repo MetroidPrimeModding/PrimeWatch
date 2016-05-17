@@ -198,9 +198,7 @@ body
 .dividerLine_div
 {
   -webkit-user-select: none;
-  position: relative;
   height: 2px;
-  top: 10px;
   background-color: #202020;
   z-index: 2;
 }
@@ -222,7 +220,7 @@ body
   -webkit-app-region: drag;
   padding: none;
   margin: 0px;
-  position: relative;
+  position: absolute;
   top: 8px;
   left: 12px;
   color: #aaaaaa;
@@ -418,6 +416,8 @@ body
   -webkit-user-select: none;
   position: relative;
   display: inline-block;
+  color: #b0b0b0;
+  font-family: "Arial", Arial, sans-serif;
 }
 
 .tooltip .tooltiptext
@@ -446,6 +446,7 @@ body
 /*Prime*/
 #primeOptions_div
 {
+  visibility: visible;
   -webkit-user-select: none;
   flex-grow: 1;
   background-color: #151514;
@@ -516,104 +517,40 @@ body
   border: none;
 }
 
-#primeFrigate_span
+#primeCheckCompleteability_check
 {
   -webkit-user-select: none;
   cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 10px;
 }
 
 #primeFrigate_check
 {
   -webkit-user-select: none;
-  position: relative;
   cursor: pointer;
-  left: 56.5%;
-  top: 12px;
-}
-
-#primeWarp_span
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 10px;
 }
 
 #primeWarp_check
 {
   -webkit-user-select: none;
-  position: relative;
   cursor: pointer;
-  left: 40.5%;
-  top: 12px;
-}
-
-#primeIls_span
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 8px;
 }
 
 #primeIls_check
 {
   -webkit-user-select: none;
   cursor: pointer;
-  position: relative;
-  left: 49.2%;
-  top: 12px;
-}
-
-#primePopup_span
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 8px;
 }
 
 #primePopup_check
 {
   -webkit-user-select: none;
   cursor: pointer;
-  position: relative;
-  left: 25%;
-  top: 12px;
-}
-
-#primeMusic_span
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 8px;
 }
 
 #primeMusic_check
 {
   -webkit-user-select: none;
   cursor: pointer;
-  position: relative;
-  left: 39%;
-  top: 12px;
 }
 
 /*Prime 2*/
