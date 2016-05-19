@@ -12,197 +12,7 @@ body
   z-index: -1;
 }
 
-.mainFormText
-{
-  -webkit-user-select: none;
-  font-family: "Arial", Arial, sans-serif;
-  font-size: 12pt;
-  color: #7382a4;
-  z-index: 2;
-}
-
-.innerText
-{
-  -webkit-user-select: none;
-  font-family: "Arial", Arial, sans-serif;
-  padding: 0px;
-  margin: 0px;
-  color: #050505;
-}
-
-.image
-{
-  -webkit-user-select: none;
-}
-
-#primeISOFile_input
-{
-  visibility: hidden;
-}
-
-#prime2ISOFile_input
-{
-  visibility: hidden;
-}
-
-#primeISO_span
-{
-  position: absolute;
-  left: 28%;
-  top: 45%;
-  font-size: 10pt;
-  color: #a0a0a0;
-  z-index: 3;
-}
-
-#primeISO_button
-{
-  position: absolute;
-  border: none;
-  top: 0%;
-  left: 0%;
-  width: 50px;
-  height: 50px;
-  background-color: #171715;
-  border-radius: 8px;
-  z-index: 2;
-}
-
-#primeISO_button:hover
-{
-  background-color: #252524;
-}
-
-#primeISO_button:active
-{
-  outline: none;
-  border: none;
-  border-color: transparent;
-}
-
-#primeArrowHead_div
-{
-  position: absolute;
-  border-right: 4px solid #0a0a0a;
-  border-bottom: 4px solid #0a0a0a;
-  width: 20px;
-  height: 20px;
-  top: -4px;
-  transform: rotate(-135deg);
-  margin-top: 12px;
-  left: 28%;
-  z-index: 2;
-}
-
-#primeArrowBody_div
-{
-  position: absolute;
-  border-left: 4px solid #0a0a0a;
-  width: 25px;
-  height: 38px;
-  bottom: 4px;
-  margin-left: 25px;
-  margin-top: 3px;
-  left: -1%;
-  z-index: 2;
-}
-
-
-#prime2ISO_span
-{
-  position: absolute;
-  left: 28%;
-  top: 45%;
-  font-size: 10pt;
-  color: #a0a0a0;
-  z-index: 3;
-}
-
-#prime2ISO_button
-{
-  position: absolute;
-  border: none;
-  right: 0%;
-  top: 0%;
-  width: 50px;
-  height: 50px;
-  background-color: #171715;
-  border-radius: 8px;
-  z-index: 2;
-}
-
-#prime2ISO_button:hover
-{
-  background-color: #252524;
-}
-
-#prime2ISO_button:active
-{
-  outline: none;
-  border: none;
-  border-color: transparent;
-}
-
-#prime2ArrowHead_div
-{
-  position: absolute;
-  border-right: 4px solid #0a0a0a;
-  border-bottom: 4px solid #0a0a0a;
-  width: 20px;
-  height: 20px;
-  top: -4px;
-  transform: rotate(-135deg);
-  margin-top: 12px;
-  left: 28%;
-  z-index: 2;
-}
-
-#prime2ArrowBody_div
-{
-  position: absolute;
-  border-left: 4px solid #0a0a0a;
-  width: 25px;
-  height: 38px;
-  bottom: 4px;
-  margin-left: 25px;
-  margin-top: 3px;
-  left: -2%;
-  z-index: 2;
-}
-
-
-#prime1_image
-{
-  position: absolute;
-  top: 0%;
-  left: 0%;
-}
-
-#prime2_image
-{
-  position: absolute;
-  top: 0%;
-  right: 0%;
-}
-
-#dividerSpacer_div
-{
-  -webkit-user-select: none;
-  position: relative;
-  height: 4px;
-  top: 12px;
-  background-color: #141414;
-  z-index: 2;
-}
-
-.dividerLine_div
-{
-  -webkit-user-select: none;
-  height: 2px;
-  background-color: #202020;
-  z-index: 2;
-}
-
+/*Top Bar*/
 #topGap_div
 {
   -webkit-user-select: none;
@@ -284,7 +94,9 @@ body
   background-color: #404040;
   color: #d9d9d9;
 }
+/**/
 
+/*Game Select*/
 #gameSelect_div
 {
   -webkit-user-select: none;
@@ -297,13 +109,78 @@ body
   top: 36px;
 }
 
+/**/
+
+/*Prime 1 Game Select*/
+#primeISO_span
+{
+  position: absolute;
+  left: 31%;
+  top: 45%;
+  font-size: 10pt;
+  color: #a0a0a0;
+  z-index: 3;
+}
+
+#primeISO_div
+{
+  position: absolute;
+  border: none;
+  top: 0%;
+  left: 0%;
+  width: 50px;
+  height: 50px;
+  background-color: #171715;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+#primeISO_div:hover
+{
+  background-color: #252524;
+}
+
+#primeArrowHead_div
+{
+  position: absolute;
+  border-right: 4px solid #0a0a0a;
+  border-bottom: 4px solid #0a0a0a;
+  width: 20px;
+  height: 20px;
+  top: -4px;
+  transform: rotate(-135deg);
+  margin-top: 12px;
+  left: 28%;
+  z-index: 2;
+}
+
+#primeArrowBody_div
+{
+  position: absolute;
+  border-left: 4px solid #0a0a0a;
+  width: 25px;
+  height: 38px;
+  bottom: 4px;
+  margin-left: 25px;
+  margin-top: 3px;
+  left: -1.5%;
+  z-index: 2;
+}
+
+#primeISOFile_input
+{
+  visibility: hidden;
+}
+
 #gameSelectPrime1_div
 {
   -webkit-user-select: none;
   cursor: pointer;
+  display: block;
   border-radius: 8px;
   background-color: #0e0e0d;
   position: absolute;
+  margin: auto;
   height: 180px;
   border: none;
   width: 48%;
@@ -312,12 +189,87 @@ body
   z-index: 2;
 }
 
+#prime1_image
+{
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/**/
+
+/*Prime 2 Game Select*/
+#prime2ISO_span
+{
+  position: absolute;
+  left: 31%;
+  top: 45%;
+  font-size: 10pt;
+  color: #a0a0a0;
+  z-index: 3;
+}
+
+#prime2ISO_div
+{
+  position: absolute;
+  border: none;
+  right: 0%;
+  top: 0%;
+  width: 50px;
+  height: 50px;
+  background-color: #171715;
+  border-radius: 8px;
+  z-index: 2;
+}
+
+#prime2ISO_div:hover
+{
+  background-color: #252524;
+}
+
+#prime2ArrowHead_div
+{
+  position: absolute;
+  border-right: 4px solid #0a0a0a;
+  border-bottom: 4px solid #0a0a0a;
+  width: 20px;
+  height: 20px;
+  top: -4px;
+  transform: rotate(-135deg);
+  margin-top: 12px;
+  left: 28%;
+  z-index: 2;
+}
+
+#prime2ArrowBody_div
+{
+  position: absolute;
+  border-left: 4px solid #0a0a0a;
+  width: 25px;
+  height: 38px;
+  bottom: 4px;
+  margin-left: 25px;
+  margin-top: 3px;
+  left: -1.5%;
+  z-index: 2;
+}
+
+#prime2ISOFile_input
+{
+  visibility: hidden;
+}
+
 #gameSelectPrime2_div
 {
   -webkit-user-select: none;
   cursor: pointer;
   background-color: #0e0e0d;
+  display: block;
   position: absolute;
+  height: 180px;
   border: none;
   width: 48%;
   right: 12px;
@@ -326,6 +278,18 @@ body
   z-index: 2;
 }
 
+#prime2_image
+{
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/**/
+
 #gameSelectSeparator_div
 {
   -webkit-user-select: none;
@@ -333,8 +297,8 @@ body
   background-color: #090909;
   z-index: 2;
   top: 200px;
-  left: 4px;
-  right: 4px;
+  left: 6px;
+  right: 6px;
   height: 6px;
 }
 
@@ -351,55 +315,44 @@ body
   width: 6px;
 }
 
-#right_div
+/*Generic Lowere Elements*/
+.lowerSub_div
 {
   -webkit-user-select: none;
-  position: absolute;
-  display: block;
-  margin: 8px;
-  top: 242px;
-  right: 6px;
-  left: 51%;
-  bottom: 48px;
-}
-
-#text_div
-{
-  -webkit-user-select: none;
-  position: absolute;
-  left: 8px;
-  display: block;
-  height: auto;
-  width: 200px;
-  border: none;
-  z-index: 2;
-}
-
-#dividers_div
-{
-  -webkit-user-select: none;
-  position: absolute;
-  display: block;
-  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-content: stretch;
+  background-color: #151514;
+  height: 100%;
   width: 100%;
-  border: none;
+  border-radius: 8px;
   z-index: 2;
 }
 
-#checkboxes_div
+.lowerSubHeader_div
 {
   -webkit-user-select: none;
+  background-color: #1b1b1a;
   position: absolute;
-  right: 32px;
-  display: block;
-  height: auto;
-  width: 0px;
-  border: none;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 25px;
+  border-radius: 8px 8px 0px 0px;
+  z-index: 1;
+}
+
+.lowerSubSectionTitle_span
+{
+  -webkit-user-select: none;
+  font-family: "Arial", Arial, sans-serif;
+  padding-top: 2px;
+  color: #b0b0b0;
+  text-align: center;
   z-index: 2;
 }
 
-/*Generic*/
-.arrow_box
+.lowerSubHeaderDivider_div
 {
   -webkit-user-select: none;
   position: relative;
@@ -411,9 +364,47 @@ body
   z-index: 3;
 }
 
+.options_table
+{
+  -webkit-user-select: none;
+  flex-grow: 1;
+  margin-top: 4px;
+  border-collapse: collapse;
+  z-index: 2;
+}
+
+.optionsTextCells
+{
+  padding: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  border-bottom: 1px solid #404040;
+  width: 100%;
+}
+
+.optionsCheckCells
+{
+  padding-right: 8px;
+  border-bottom: 1px solid #404040;
+}
+
+.optionsTextCellsNoBorder
+{
+  padding: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  width: 100%;
+}
+
+.optionsCheckCellsNoBorder
+{
+  padding-right: 8px;
+}
+
 .tooltip
 {
   -webkit-user-select: none;
+  cursor: pointer;
   position: relative;
   display: inline-block;
   color: #b0b0b0;
@@ -443,72 +434,20 @@ body
   visibility: visible;
 }
 
-/*Prime*/
-#primeOptions_div
-{
-  visibility: visible;
-  -webkit-user-select: none;
-  flex-grow: 1;
-  background-color: #151514;
-  height: 100%;
-  width: 100%;
-  border-radius: 8px;
-  z-index: 2;
-}
-
-#primeOptionsHeader_div
-{
-  -webkit-user-select: none;
-  background-color: #1b1b1a;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  height: 25px;
-  border-radius: 8px 8px 0px 0px;
-  z-index: 1;
-}
-
-#primeOptionsSectionTitle_span
-{
-  -webkit-user-select: none;
-  font-family: "Arial", Arial, sans-serif;
-  position: relative;
-  color: #b0b0b0;
-  top: 2px;
-  left: 30%;
-  text-align: center;
-  z-index: 2;
-}
-
-#primeOptionsHeaderDivider_div
-{
-  -webkit-user-select: none;
-  position: relative;
-  width: 100%;
-  height: 4px;
-  top: 4px;
-  background: #404040;
-  border: none;
-  z-index: 3;
-}
-
-#primeSeed_in
+.seed_in
 {
   font-family: "Arial", Arial, sans-serif;
+  margin-top: 12px;
   font-weight: bold;
-  position: relative;
   background-color: #303030;
-  width: 93%;
   border: none;
   color: #a0a0a0;
   border-color: #303030;
-  left: 8px;
-  top: 12px;
+  width: auto;
   z-index: 2;
 }
 
-#primeSeed_in:focus
+.seed_in:focus
 {
   font-family: "Arial", Arial, sans-serif;
   cursor: text;
@@ -517,249 +456,42 @@ body
   border: none;
 }
 
-#primeCheckCompleteability_check
+.checkboxes
 {
   -webkit-user-select: none;
   cursor: pointer;
 }
+/**/
 
-#primeFrigate_check
+/*Options Section*/
+#right_div
 {
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-
-#primeWarp_check
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-
-#primeIls_check
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-
-#primePopup_check
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-
-#primeMusic_check
-{
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-
-/*Prime 2*/
-#prime2Options_div
-{
-  visibility: hidden;
   -webkit-user-select: none;
   position: absolute;
-  background-color: #151514;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
-  height: 48%;
-  border-radius: 8px;
-  z-index: 2;
+  display: block;
+  margin: 8px;
+  top: 242px;
+  right: 6px;
+  left: 51%;
+  bottom: 48px;
 }
+/**/
 
-#prime2OptionsHeader_div
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  position: absolute;
-  background-color: #1b1b1a;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  height: 25px;
-  border-radius: 8px 8px 0px 0px;
-  z-index: 1;
-}
-
-#prime2OptionsSectionTitle_span
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  font-family: "Arial", Arial, sans-serif;
-  position: relative;
-  color: #b0b0b0;
-  left: 30%;
-  top: 2px;
-  z-index: 2;
-}
-
-#prime2OptionsHeaderDivider_div
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  position: relative;
-  width: 100%;
-  height: 4px;
-  top: 4px;
-  background: #404040;
-  border: none;
-  z-index: 3;
-}
-
-#prime2Seed_in
-{
-  visibility: hidden;
-  font-family: "Arial", Arial, sans-serif;
-  font-weight: bold;
-  position: relative;
-  background-color: #303030;
-  width: 93%;
-  border: none;
-  color: #a0a0a0;
-  border-color: #303030;
-  left: 8px;
-  top: 12px;
-  z-index: 2;
-}
-
-#prime2Seed_in:focus
-{
-  font-family: "Arial", Arial, sans-serif;
-  cursor: text;
-  background-color: #3a3a3a;
-  color: #050505;
-  border: none;
-}
-
-#prime2Physics_span
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 10px;
-}
-
-#prime2Physics_check
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  position: relative;
-  cursor: pointer;
-  left: 50.5%;
-  top: 12px;
-}
-
-#prime2Warp_span
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 10px;
-}
-
-#prime2Warp_check
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  position: relative;
-  cursor: pointer;
-  left: 40.5%;
-  top: 12px;
-}
-
-#prime2Ils_span
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 8px;
-}
-
-#prime2Ils_check
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  position: relative;
-  left: 49.2%;
-  top: 12px;
-}
-
-#prime2Popup_span
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 8px;
-}
-
-#prime2Popup_check
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  position: relative;
-  left: 25%;
-  top: 12px;
-}
-
-#prime2Music_span
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  font-family: "Arial", Arial, sans-serif;
-  color: #a0a0a0;
-  position: relative;
-  left: 8px;
-  top: 8px;
-}
-
-#prime2Music_check
-{
-  visibility: hidden;
-  -webkit-user-select: none;
-  cursor: pointer;
-  position: relative;
-  left: 39%;
-  top: 12px;
-}
-
+/*Excluded Items*/
 #left_div
 {
   -webkit-user-select: none;
   position: absolute;
+  display: block;
+  margin: 8px;
   top: 242px;
-  left: 12px;
-  right: 50%
+  left: 6px;
+  right: 50%;
+  bottom: 48px;
 }
+/**/
 
-#excludedItems_span
-{
-  -webkit-user-select: none;
-  font-family: "Arial", Arial, sans-serif;
-  position: absolute;
-  color: #a1a1a1;
-  z-index: 2;
-}
-
+/*Randomize*/
 #randomize_div
 {
   -webkit-user-select: none;
@@ -813,6 +545,7 @@ body
   outline-color: transparent;
   outline: none;
 }
+/**/
 
 #background_div
 {

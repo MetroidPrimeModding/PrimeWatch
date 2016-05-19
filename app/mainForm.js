@@ -12,6 +12,6 @@ app.on('ready', () =>
 {
   mainWindow = new BrowserWindow({width: 600, height: 700, frame: false, title: "Metroid Prime Randomizer"});
   mainWindow.loadURL('file://' + __dirname + '/../web/html/index.html');
-  mainWindow.webContents.openDevTools({mode: "undocked"});
+  //mainWindow.webContents.openDevTools({mode: "undocked"});
   mainWindow.on('closed', () => {mainWindow = null;});
 });
