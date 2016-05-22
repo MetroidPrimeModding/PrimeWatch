@@ -57,6 +57,7 @@ body
   outline: 0;
   position: absolute;
   width: 32px;
+  height: 24px;
   top: 4px;
   right: 34px;
   background-color: #262626;
@@ -79,6 +80,7 @@ body
   border-radius: 6px;
   outline: 0;
   position: absolute;
+  height: 24px;
   width: 24px;
   top: 4px;
   right: 6px;
@@ -89,6 +91,30 @@ body
 }
 
 #close_button:hover
+{
+  cursor: pointer;
+  background-color: #404040;
+  color: #d9d9d9;
+}
+
+#refresh_button
+{
+  -webkit-user-select: none;
+  -webkit-app-region: no-drag;
+  border-radius: 6px;
+  outline: 0;
+  position: absolute;
+  width: 28px;
+  height: 24px;
+  top: 4px;
+  right: 72px;
+  background-color: #262626;
+  color: #7382a4;
+  border: none;
+  z-index: 2;
+}
+
+#refresh_button:hover
 {
   cursor: pointer;
   background-color: #404040;
