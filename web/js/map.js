@@ -75,13 +75,6 @@ $(() => {
       color: 0xFFFFFF
     });
     samus = new THREE.Mesh(samusGeom, samusMat);
-
-    electron.ipcRenderer.on('primeDump', (event, data) => {
-      latestSamusUpdate = data;
-      samus.position.set(data.pos[0], data.pos[1], data.pos[2]);
-      camera.position.set(data.pos[0], data.pos[1], data.pos[2] + 100);
-      camera.lookAt(samus.position);
-    });
   }
   scene.add(samus);
   samus.position.set(0, 0, 0);
@@ -110,6 +103,54 @@ $(() => {
         }
       })
     }
+  });
+
+  electron.ipcRenderer.on('primeDump', (event, data) => {
+    latestSamusUpdate = data;
+    samus.position.set(data.pos[0], data.pos[1], data.pos[2]);
+    camera.position.set(data.pos[0], data.pos[1], data.pos[2] + 100);
+    camera.lookAt(samus.position);
+
+    function showIfNonZero(itemID, imageID) {
+      var img = $(`#${imageID}`);
+      if (data.inventory[itemID * 2 + 1] > 0) {
+        if (!img.is(":visible")) {
+          console.log(`Showing ${itemID} ${imageID}`);
+          img.show();
+        }
+      } else {
+        if (img.is(":visible")) {
+          console.log(`Hiding ${itemID} ${imageID}`);
+          img.hide();
+        }
+      }
+    }
+
+    showIfNonZero(0x0F, "img-space-jump");
+
+    showIfNonZero(0x10, "img-morph-ball");
+    showIfNonZero(0x12, "img-boost-ball");
+    showIfNonZero(0x13, "img-spider-ball");
+
+    showIfNonZero(0x06, "img-bombs");
+    showIfNonZero(0x07, "img-power-bombs");
+
+    showIfNonZero(0x0A, "img-charge-beam");
+    showIfNonZero(0x02, "img-wave-beam");
+    showIfNonZero(0x01, "img-ice-beam");
+    showIfNonZero(0x03, "img-plasma-beam");
+
+    showIfNonZero(0x0B, "img-super-missile");
+    showIfNonZero(0x1C, "img-wavebuster");
+    showIfNonZero(0x0E, "img-ice-spreader");
+    showIfNonZero(0x08, "img-flamethrower");
+
+    showIfNonZero(0x16, "img-varia-suit");
+    showIfNonZero(0x15, "img-gravity-suit");
+    showIfNonZero(0x17, "img-phazon-suit");
+
+    showIfNonZero(0x09, "img-thermal-visor");
+    showIfNonZero(0x0D, "img-xray-visor");
   });
 
   electron.ipcRenderer.on('pakRead', (event, data) => {
