@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const utils = require('./utils');
 
 let files = fs.readdirSync('./app/offsets/').filter(f => f.toLowerCase().endsWith('pak.json'));
 
@@ -12,9 +13,7 @@ files.forEach(file => {
       .map(item => {
         item.offset = parseInt(item.offset);
         item.size = parseInt(item.size);
-        let typNum = parseInt(item.typ);
-        item.humanName = item.id.substr(2) + "." +
-            [(typNum >> 24) & 0xFF, (typNum >> 16) & 0xFF, (typNum >> 8) & 0xFF, (typNum >> 0) & 0xFF].map(String.fromCharCode).join('');
+        item.humanName = utils.getNameOfFile(item);
         return item;
       })
       .sort((a, b) => a.offset - b.offset);

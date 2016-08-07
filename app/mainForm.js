@@ -16,7 +16,7 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
   mainWindow = new BrowserWindow({width: 600, height: 700, frame: false, title: "Metroid Prime Randomizer"});
   mainWindow.loadURL('file://' + __dirname + '/../web/html/index.html');
-  //mainWindow.webContents.openDevTools({mode: "undocked"});
+  // mainWindow.webContents.openDevTools({mode: "undocked"});
   mainWindow.on('closed', () => {mainWindow = null;});
 
   // mapWindow = new BrowserWindow({width: 600, height: 700, frame: false, title: "Metroid Prime Randomizer"});
@@ -27,7 +27,8 @@ app.on('ready', () => {
   // });
 });
 
-const offsets = require("./offsets.js");
+const offsets = require("./offsets");
+const areas = require("./areas");
 
 let server = udp.server();
 udp.messages.on('data', data => {
@@ -50,6 +51,13 @@ udp.messages.on('read', data => {
         pak: readFile.rawName,
         file: pakRead
       });
+
+      let depOf = areas.dgrpLookup.get(pakRead.humanName);
+      if (depOf != null && depOf != undefined) {
+        mapWindow.webContents.send('depRead', {
+          owners: depOf
+        })
+      }
     }
   } else {
     // console.log("Read non-pak file", readFile.name);

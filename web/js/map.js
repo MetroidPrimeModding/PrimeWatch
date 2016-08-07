@@ -44,7 +44,7 @@ function loadRoom(world, area, callback) {
       }
     }
     geom.computeBoundingBox();
-    geom.computeFaceNormals();
+    geom.computeVertexNormals();
     // geom.computeVertexNormals();
     callback(world, area, geom);
   }, 'text');
@@ -67,6 +67,7 @@ $(() => {
   controls.dampingFactor = 1;
   controls.enableZoom = true;
 
+  let latestSamusUpdate = {};
   let samus;
   {
     let samusGeom = new THREE.SphereGeometry(1, 15, 15);
@@ -76,6 +77,7 @@ $(() => {
     samus = new THREE.Mesh(samusGeom, samusMat);
 
     electron.ipcRenderer.on('primeDump', (event, data) => {
+      latestSamusUpdate = data;
       samus.position.set(data.pos[0], data.pos[1], data.pos[2]);
       camera.position.set(data.pos[0], data.pos[1], data.pos[2] + 100);
       camera.lookAt(samus.position);
@@ -98,8 +100,19 @@ $(() => {
   let worlds = {};
   let currentWorld = null;
 
+  electron.ipcRenderer.on('depRead', (event, data) => {
+    let world = worlds[currentWorld];
+    if (world) {
+      data.owners.forEach(owner => {
+        let area = world.rooms[owner.mrea];
+        if (area) {
+          area.refCount += 1;
+        }
+      })
+    }
+  });
+
   electron.ipcRenderer.on('pakRead', (event, data) => {
-    let fileID = data.file.id.substr(2).toLowerCase();
     let pak = data.pak.toLowerCase();
     if (pak == "metroid1.pak") {
       showWorld("158efe17");
@@ -130,14 +143,25 @@ $(() => {
     scene.add(worlds[id].object);
   }
 
-  loadAndAddWorld("3ef8237c");
-  loadAndAddWorld("13d79165");
-  loadAndAddWorld("39f2de28");
-  loadAndAddWorld("83f6ff6f");
-  loadAndAddWorld("158efe17");
-  loadAndAddWorld("a8be6291");
-  loadAndAddWorld("b1ac4d65");
-  loadAndAddWorld("c13b09d1");
+  let vertShader;
+  let fragShader;
+
+  //TODO: less dumb. Promises, maybe?
+  $.get("../shaders/geom.vert", data => {
+    vertShader = data;
+    $.get("../shaders/geom.frag", data => {
+      fragShader = data;
+      loadAndAddWorld("3ef8237c");
+      loadAndAddWorld("13d79165");
+      loadAndAddWorld("39f2de28");
+      loadAndAddWorld("83f6ff6f");
+      loadAndAddWorld("158efe17");
+      loadAndAddWorld("a8be6291");
+      loadAndAddWorld("b1ac4d65");
+      loadAndAddWorld("c13b09d1");
+      showWorld("3ef8237c");
+    })
+  });
 
   function loadAndAddWorld(id) {
     let rooms = {};
@@ -147,13 +171,22 @@ $(() => {
       object: object
     };
     loadWorld(id, (world, areaID, geom, area) => {
-      const mat = new THREE.MeshPhongMaterial({
-        color: Math.floor(Math.random() * 0xFFFFFF)
+      const color = new THREE.Color(Math.floor(Math.random() * 0xFFFFFF));
+      let uniforms = {
+        hotness: {value: 0.0},
+        lightDirection: {value: new THREE.Vector3(0, 0.1, 1)},
+        ambientColor: {value: color.multiplyScalar(0.2)},
+        directionalColor: {value: color}
+      };
+      const mat = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertShader,
+        fragmentShader: fragShader,
       });
       const mesh = new THREE.Mesh(geom, mat);
 
       const bbMat = new THREE.LineBasicMaterial({
-        color: mat.color,
+        color: color,
         linewidth: 5
       });
       let transform = area.transform;
@@ -207,7 +240,10 @@ $(() => {
       rooms[areaID] = {
         mesh: mesh,
         area: area,
-        bbMesh: bbMesh
+        bbMesh: bbMesh,
+        refCount: 0,
+        hotness: 0,
+        uniforms: uniforms
       };
       console.log("Loaded room " + areaID);
     });
@@ -222,6 +258,37 @@ $(() => {
     camera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
   }
 
+  function updateAreaHotness() {
+    let world = worlds[currentWorld];
+    if (world) {
+      for (let roomID in world.rooms) {
+        if (world.rooms.hasOwnProperty(roomID)) {
+          let room = world.rooms[roomID];
+          if (room.refCount > 30) {
+            room.refCount = 30;
+          } else if (room.refCount > 0) {
+            room.refCount -= 0.1;
+            room.hotness += 0.1;
+          }
+
+          if (room.area.index == (latestSamusUpdate || {}).room) {
+            room.hotness += 0.2;
+          }
+
+          if (room.hotness > 2) {
+            room.hotness = 2;
+          } else if (room.hotness > 0) {
+            room.hotness -= 0.03;
+          }
+
+          let hotness = (room.hotness / 20);
+          room.uniforms.hotness.value = hotness;
+          room.mesh.material.uniforms = room.uniforms;
+        }
+      }
+    }
+  }
+
   resize();
   $(window).resize(resize);
 
@@ -229,6 +296,7 @@ $(() => {
   (function render() {
     stats.update();
     frame++;
+    updateAreaHotness();
     // camera.lookAt(new THREE.Vector3(0, 0, 0));
     // camera.position.x = Math.sin(frame / 500) * 500;
     // camera.position.y = Math.cos(frame / 500) * 500;
