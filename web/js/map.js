@@ -93,6 +93,19 @@ $(() => {
   let worlds = {};
   let currentWorld = null;
 
+  electron.ipcRenderer.on('showConnectPrompt', () => {
+    smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
+      .then(function(ipPort) {
+        localStorage['lastIpPort'] = ipPort;
+        let split = ipPort.split(':');
+        let ip = split[0];
+        let port = split.length >= 2 ? Number(split[1]) : 43673;
+        electron.ipcRenderer.send('connectToWii', ip, port);
+      }, function() {
+        console.log('cancel');
+      });
+  });
+
   electron.ipcRenderer.on('depRead', (event, data) => {
     let world = worlds[currentWorld];
     if (world) {
@@ -110,6 +123,34 @@ $(() => {
     samus.position.set(data.pos[0], data.pos[1], data.pos[2]);
     camera.position.set(data.pos[0], data.pos[1], data.pos[2] + 100);
     camera.lookAt(samus.position);
+
+    let currentWorldString = data["current_mlvl"].toString(16);
+    showWorld(currentWorldString);
+    $('#current-world').text(currentWorldString);
+    let timer = data['timer'];
+    let seconds = (timer % 60).toFixed(3);
+    let minutes = Math.floor(timer / 60) % 60;
+    let hours = Math.floor(minutes / 60);
+
+    let time = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    $('#timer').text(time);
+
+    let currentWorldState = data["current_world_state"];
+    let currentWorldStateString = 'Unknown';
+    if (currentWorldState == 0) {
+      currentWorldStateString = 'Loading';
+    } else if (currentWorldState == 1) {
+      currentWorldStateString = 'Loading Map';
+    } else if (currentWorldState == 2) {
+      currentWorldStateString = 'Loading Map Areas';
+    } else if (currentWorldState == 3) {
+      currentWorldStateString = 'Loading Sky Box';
+    } else if (currentWorldState == 4) {
+      currentWorldStateString = 'Loading Sound Groups';
+    } else if (currentWorldState == 5) {
+      currentWorldStateString = 'Ready';
+    }
+    $('#current-world-status').text(currentWorldStateString);
 
     function showIfNonZero(itemID, imageID) {
       var img = $(`#${imageID}`);
@@ -155,23 +196,23 @@ $(() => {
 
   electron.ipcRenderer.on('pakRead', (event, data) => {
     let pak = data.pak.toLowerCase();
-    if (pak == "metroid1.pak") {
-      showWorld("158efe17");
-    } else if (pak == "metroid2.pak") {
-      showWorld("83f6ff6f");
-    } else if (pak == "metroid3.pak") {
-      showWorld("a8be6291");
-    } else if (pak == "metroid4.pak") {
-      showWorld("39f2de28");
-    } else if (pak == "metroid5.pak") {
-      showWorld("b1ac4d65");
-    } else if (pak == "metroid6.pak") {
-      showWorld("3ef8237c");
-    } else if (pak == "metroid7.pak") {
-      showWorld("c13b09d1");
-    } else if (pak == "metroid8.pak") {
-      showWorld("13d79165");
-    }
+    // if (pak == "metroid1.pak") {
+    //   showWorld("158efe17");
+    // } else if (pak == "metroid2.pak") {
+    //   showWorld("83f6ff6f");
+    // } else if (pak == "metroid3.pak") {
+    //   showWorld("a8be6291");
+    // } else if (pak == "metroid4.pak") {
+    //   showWorld("39f2de28");
+    // } else if (pak == "metroid5.pak") {
+    //   showWorld("b1ac4d65");
+    // } else if (pak == "metroid6.pak") {
+    //   showWorld("3ef8237c");
+    // } else if (pak == "metroid7.pak") {
+    //   showWorld("c13b09d1");
+    // } else if (pak == "metroid8.pak") {
+    //   showWorld("13d79165");
+    // }
   });
 
   function showWorld(id) {
@@ -233,10 +274,10 @@ $(() => {
       let transform = area.transform;
       const transformMatrix = new THREE.Matrix4();
       transformMatrix.set(
-          transform[0], transform[1], transform[2], transform[3],
-          transform[4], transform[5], transform[6], transform[7],
-          transform[8], transform[9], transform[10], transform[11],
-          0, 0, 0, 1
+        transform[0], transform[1], transform[2], transform[3],
+        transform[4], transform[5], transform[6], transform[7],
+        transform[8], transform[9], transform[10], transform[11],
+        0, 0, 0, 1
       );
       const bbGeom = new THREE.Geometry();
       {
@@ -271,7 +312,7 @@ $(() => {
           new THREE.Vector3(x1, y2, z1)
 
         ].map(v => v.applyMatrix4(transformMatrix))
-            .forEach(v => bbGeom.vertices.push(v));
+          .forEach(v => bbGeom.vertices.push(v));
       }
       const bbMesh = new THREE.Line(bbGeom, bbMat);
 
@@ -325,6 +366,9 @@ $(() => {
           let hotness = (room.hotness / 20);
           room.uniforms.hotness.value = hotness;
           room.mesh.material.uniforms = room.uniforms;
+
+          //Disabled for now
+          room.hotness = 1;
         }
       }
     }

@@ -4,10 +4,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <script src="../lib/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script src="../../node_modules/smalltalk/dist/smalltalk.min.js"></script>
     <script src="../lib/three.js"></script>
     <script src="../lib/OrbitControls.js"></script>
     <script src="../js/map.js"></script>
     <script src="../lib/stats.min.js"></script>
+    <link rel="stylesheet" href="../../node_modules/smalltalk/dist/smalltalk.min.css">
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/map.css">
 </head>
@@ -28,6 +30,12 @@
     <canvas id="render-canvas">
 
     </canvas>
+</div>
+
+<div id="status-div">
+    <div>Timer:<span id="timer"></span></div>
+  <div>Current world: <span id="current-world"></span></div>
+  <div>Current world status: <span id="current-world-status"></span></div>
 </div>
 
 <div id="item-div">

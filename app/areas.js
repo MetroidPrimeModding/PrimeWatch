@@ -5,12 +5,14 @@ const utils = require('./utils');
 
 let files = fs.readdirSync('./app/areas/');
 let dgrpLookup = new Map();
+let areaHeaders = [];
 
 files.forEach(file => {
   let src = fs.readFileSync(`./app/areas/${file}`, {encoding: 'UTF-8'});
   let json = JSON.parse(src);
 
   json.forEach((area, i) => {
+    areaHeaders.push(area.header);
     function handleDep(dep) {
       let humanName = utils.getNameOfFile(dep);
       let areas = dgrpLookup.get(humanName);
@@ -24,7 +26,6 @@ files.forEach(file => {
         mrea: utils.padId(area.header.MREA.toLowerCase().substr(2))
       });
     }
-
     area.dependencies1.dependencies.forEach(handleDep);
     area.dependencies2.dependencies.forEach(handleDep);
   })
