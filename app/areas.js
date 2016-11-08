@@ -3,12 +3,12 @@
 const fs = require('fs');
 const utils = require('./utils');
 
-let files = fs.readdirSync('./app/areas/');
+let files = fs.readdirSync(__dirname + '/areas/');
 let dgrpLookup = new Map();
 let areaHeaders = [];
 
 files.forEach(file => {
-  let src = fs.readFileSync(`./app/areas/${file}`, {encoding: 'UTF-8'});
+  let src = fs.readFileSync(__dirname + `/areas/${file}`, {encoding: 'UTF-8'});
   let json = JSON.parse(src);
 
   json.forEach((area, i) => {

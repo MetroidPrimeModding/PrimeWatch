@@ -1,14 +1,14 @@
 'use strict';
 
 const fs = require('fs');
-const utils = require('./utils');
+const utils = require(__dirname + '/utils');
 
-let files = fs.readdirSync('./app/offsets/').filter(f => f.toLowerCase().endsWith('pak.json'));
+let files = fs.readdirSync(__dirname + '/offsets/').filter(f => f.toLowerCase().endsWith('pak.json'));
 
 let pakOffsets = {};
 
 files.forEach(file => {
-  let src = fs.readFileSync(`./app/offsets/${file}`, {encoding: 'UTF-8'});
+  let src = fs.readFileSync(__dirname + `/offsets/${file}`, {encoding: 'UTF-8'});
   pakOffsets[file.replace('.json', '')] = JSON.parse(src)
       .map(item => {
         item.offset = parseInt(item.offset);
@@ -20,7 +20,7 @@ files.forEach(file => {
 });
 
 let fstOffsets = (() => {
-  let src = fs.readFileSync('./app/offsets/fst.json');
+  let src = fs.readFileSync(__dirname + '/offsets/fst.json');
   let json = JSON.parse(src);
 
   function recursiveDirectoryFlatten(dir, namePrefix) {
