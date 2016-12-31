@@ -226,7 +226,7 @@ app.on('ready', () => {
   // mainWindow.webContents.openDevTools({mode: "undocked"});
   // mainWindow.on('closed', () => {mainWindow = null;});
 
-  mapWindow = new BrowserWindow({width: 600, height: 700, frame: false, title: "Metroid Prime Randomizer"});
+  mapWindow = new BrowserWindow({width: 600, height: 700, title: "Prime Watch"});
   mapWindow.loadURL('file://' + __dirname + '/../web/html/map.html');
   // mapWindow.webContents.openDevTools({mode: "undocked"});
   mapWindow.on('closed', () => {
