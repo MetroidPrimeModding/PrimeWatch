@@ -40,7 +40,11 @@ function loadRoom(world, area, callback) {
         geom.vertices.push(new THREE.Vector3(Number(split[1]), Number(split[2]), Number(split[3])));
       } else if (line[0] == 'f') {
         let split = line.split(' ');
-        geom.faces.push(new THREE.Face3(Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1));
+        geom.faces.push(new THREE.Face3(
+            Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
+            null,
+            new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
+        ));
       }
     }
     geom.computeBoundingBox();
@@ -65,7 +69,7 @@ $(() => {
   //controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
   controls.enableDamping = true;
   controls.dampingFactor = 1;
-  controls.enableZoom = true;
+  controls.enableZoom = false;
 
   let latestSamusUpdate = {};
   let samus;
@@ -253,15 +257,19 @@ $(() => {
       object: object
     };
     loadWorld(id, (world, areaID, geom, area) => {
-      const color = new THREE.Color(Math.floor(Math.random() * 0xFFFFFF));
+      let r = Math.random() / 5 + 0.5;
+      let g = Math.random() / 5 + 0.5;
+      let b = Math.random() / 5 + 0.5;
+      const color = new THREE.Color(r, g, b);
       let uniforms = {
         hotness: {value: 0.0},
         lightDirection: {value: new THREE.Vector3(0, 0.1, 1)},
-        ambientColor: {value: color.multiplyScalar(0.2)},
+        ambientColor: {value: color.multiplyScalar(0.5)},
         directionalColor: {value: color}
       };
       const mat = new THREE.ShaderMaterial({
         uniforms: uniforms,
+        vertexColors: THREE.FaceColors,
         vertexShader: vertShader,
         fragmentShader: fragShader,
       });
