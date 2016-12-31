@@ -13,7 +13,7 @@ const {dialog} = require('electron');
 module.exports = {
   'PACKET_TYPE': PACKET_TYPE,
   'messages': messages,
-  'connect': function(ip, port) {
+  'connect': function (ip, port) {
     const net = require('net');
     const socket = new net.Socket();
     socket.pause();
@@ -33,6 +33,10 @@ module.exports = {
       .array('pos', {
         type: 'floatbe',
         length: 3
+      })
+      .array('aabb', {
+        type: 'floatbe',
+        length: 6
       })
       .uint32be('current_mlvl')
       .uint32be('current_world_state')

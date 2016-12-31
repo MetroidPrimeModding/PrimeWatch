@@ -155,6 +155,7 @@ $(() => {
       currentWorldStateString = 'Ready';
     }
     $('#current-world-status').text(currentWorldStateString);
+    $('#aabb').text(data["aabb"]);
 
     function showIfNonZero(itemID, imageID) {
       var img = $(`#${imageID}`);
