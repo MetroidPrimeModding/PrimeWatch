@@ -2,16 +2,16 @@
 const electron = require('electron');
 
 function minimizeWindow() {
-  var remote = require('remote');
-  var BrowserWindow = remote.require('browser-window');
-  var window = BrowserWindow.getFocusedWindow();
+  const remote = require('remote');
+  const BrowserWindow = remote.require('browser-window');
+  const window = BrowserWindow.getFocusedWindow();
   window.minimize();
 }
 
 function closeWindow() {
-  var remote = require('remote');
-  var BrowserWindow = remote.require('browser-window');
-  var window = BrowserWindow.getFocusedWindow();
+  const remote = require('remote');
+  const BrowserWindow = remote.require('browser-window');
+  const window = BrowserWindow.getFocusedWindow();
   window.close();
 }
 
@@ -48,7 +48,7 @@ function loadRoom(world, area, callback) {
       }
     }
     geom.computeBoundingBox();
-    geom.computeVertexNormals();
+    geom.computeFaceNormals();
     // geom.computeVertexNormals();
     callback(world, area, geom);
   }, 'text');
@@ -72,16 +72,26 @@ $(() => {
   controls.enableZoom = false;
 
   let latestSamusUpdate = {};
-  let samus;
+  let samusBox;
+  let samusSphere;
   {
-    let samusGeom = new THREE.SphereGeometry(1, 15, 15);
+    let samusGeom = new THREE.BoxGeometry(1, 1, 1);
     let samusMat = new THREE.MeshPhongMaterial({
       color: 0xFFFFFF
     });
-    samus = new THREE.Mesh(samusGeom, samusMat);
+    samusBox = new THREE.Mesh(samusGeom, samusMat);
   }
-  scene.add(samus);
-  samus.position.set(0, 0, 0);
+  {
+    let samusGeom = new THREE.SphereGeometry(1, 32, 32);
+    let samusMat = new THREE.MeshPhongMaterial({
+      color: 0xFFFFFF
+    });
+    samusSphere = new THREE.Mesh(samusGeom, samusMat);
+  }
+  scene.add(samusBox);
+  scene.add(samusSphere);
+  samusBox.position.set(0, 0, 0);
+  samusSphere.position.set(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas
@@ -99,15 +109,15 @@ $(() => {
 
   electron.ipcRenderer.on('showConnectPrompt', () => {
     smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
-      .then(function(ipPort) {
-        localStorage['lastIpPort'] = ipPort;
-        let split = ipPort.split(':');
-        let ip = split[0];
-        let port = split.length >= 2 ? Number(split[1]) : 43673;
-        electron.ipcRenderer.send('connectToWii', ip, port);
-      }, function() {
-        console.log('cancel');
-      });
+        .then(function (ipPort) {
+          localStorage['lastIpPort'] = ipPort;
+          let split = ipPort.split(':');
+          let ip = split[0];
+          let port = split.length >= 2 ? Number(split[1]) : 43673;
+          electron.ipcRenderer.send('connectToWii', ip, port);
+        }, function () {
+          console.log('cancel');
+        });
   });
 
   electron.ipcRenderer.on('depRead', (event, data) => {
@@ -124,9 +134,21 @@ $(() => {
 
   electron.ipcRenderer.on('primeDump', (event, data) => {
     latestSamusUpdate = data;
-    samus.position.set(data.pos[0], data.pos[1], data.pos[2]);
-    camera.position.set(data.pos[0], data.pos[1], data.pos[2] + 100);
-    camera.lookAt(samus.position);
+    const isMorphed = data["morphStatus"] == 1 || data["morphStatus"] == 3;
+
+    const bbXDim = data.aabb[3] - data.aabb[0];
+    const bbYDim = data.aabb[4] - data.aabb[1];
+    const bbZDim = data.aabb[5] - data.aabb[2];
+    samusBox.position.set(data.aabb[0] + bbXDim / 2, data.aabb[1] + bbYDim / 2, data.aabb[2] + bbZDim / 2);
+    samusBox.scale.set(bbXDim, bbYDim, bbZDim);
+    samusSphere.position.set(data.morphedPos[0], data.morphedPos[1], data.morphedPos[2]);
+    samusSphere.scale.set(data.morphedRadius, data.morphedRadius, data.morphedRadius);
+
+    samusBox.visible = !isMorphed;
+    samusSphere.visible = isMorphed;
+
+    camera.position.set(data.pos[0] - 2, data.pos[1] - 2, data.pos[2] + 2);
+    camera.lookAt(new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]));
 
     let currentWorldString = data["current_mlvl"].toString(16);
     showWorld(currentWorldString);
@@ -155,7 +177,14 @@ $(() => {
       currentWorldStateString = 'Ready';
     }
     $('#current-world-status').text(currentWorldStateString);
-    $('#aabb').text(data["aabb"]);
+    if (isMorphed) {
+      $('#pos').text(data["morphedPos"].map(v => Number(v).toFixed(3)));
+      $('#aabb').text(data["morphedRadius"].toFixed(3));
+    } else {
+      $('#pos').text(data["pos"].map(v => Number(v).toFixed(3)));
+      $('#aabb').text(data["aabb"].map(v => Number(v).toFixed(3)));
+    }
+    $('#room').text(data["room"].toString(16));
 
     function showIfNonZero(itemID, imageID) {
       var img = $(`#${imageID}`);
@@ -283,10 +312,10 @@ $(() => {
       let transform = area.transform;
       const transformMatrix = new THREE.Matrix4();
       transformMatrix.set(
-        transform[0], transform[1], transform[2], transform[3],
-        transform[4], transform[5], transform[6], transform[7],
-        transform[8], transform[9], transform[10], transform[11],
-        0, 0, 0, 1
+          transform[0], transform[1], transform[2], transform[3],
+          transform[4], transform[5], transform[6], transform[7],
+          transform[8], transform[9], transform[10], transform[11],
+          0, 0, 0, 1
       );
       const bbGeom = new THREE.Geometry();
       {
@@ -321,7 +350,7 @@ $(() => {
           new THREE.Vector3(x1, y2, z1)
 
         ].map(v => v.applyMatrix4(transformMatrix))
-          .forEach(v => bbGeom.vertices.push(v));
+            .forEach(v => bbGeom.vertices.push(v));
       }
       const bbMesh = new THREE.Line(bbGeom, bbMat);
 

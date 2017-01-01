@@ -20,43 +20,49 @@ module.exports = {
     const binary = require('binary-parser');
 
     const fmtPacketType = new binary.Parser()
-      .uint8('packetType');
+        .uint8('packetType');
 
     const fmtData = new binary.Parser()
-      .uint8('packetType')
-      .uint32be('gameID')
-      .uint16be('makerCode')
-      .array('speed', {
-        type: 'floatbe',
-        length: 3
-      })
-      .array('pos', {
-        type: 'floatbe',
-        length: 3
-      })
-      .array('aabb', {
-        type: 'floatbe',
-        length: 6
-      })
-      .uint32be('current_mlvl')
-      .uint32be('current_world_state')
-      .uint32be('room')
-      // .uint32be('area_count')
-      // .uint32be('area_count_max')
-      // .uint32be('area_ptr')
-      .uint32be('health')
-      .array('inventory', {
-        type: 'int32be',
-        length: 0x29 * 2
-      })
-      .doublebe('timer');
+        .uint8('packetType')
+        .uint32be('gameID')
+        .uint16be('makerCode')
+        .array('speed', {
+          type: 'floatbe',
+          length: 3
+        })
+        .array('pos', {
+          type: 'floatbe',
+          length: 3
+        })
+        .uint32be('morphStatus')
+        .array('aabb', {
+          type: 'floatbe',
+          length: 6
+        })
+        .array('morphedPos', {
+          type: 'floatbe',
+          length: 3
+        })
+        .floatbe('morphedRadius')
+        .uint32be('current_mlvl')
+        .uint32be('current_world_state')
+        .uint32be('room')
+        // .uint32be('area_count')
+        // .uint32be('area_count_max')
+        // .uint32be('area_ptr')
+        .uint32be('health')
+        .array('inventory', {
+          type: 'int32be',
+          length: 0x29 * 2
+        })
+        .doublebe('timer');
 
     const fmtRead = new binary.Parser()
-      .uint8('packetType')
-      .uint32be('offsetHigh')
-      .uint32be('offsetLow')
-      .uint32be('lenHigh')
-      .uint32be('lenLow');
+        .uint8('packetType')
+        .uint32be('offsetHigh')
+        .uint32be('offsetLow')
+        .uint32be('lenHigh')
+        .uint32be('lenLow');
 
     let closed = false;
 
