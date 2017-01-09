@@ -41,9 +41,9 @@ function loadRoom(world, area, callback) {
       } else if (line[0] == 'f') {
         let split = line.split(' ');
         geom.faces.push(new THREE.Face3(
-          Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
-          null,
-          new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
+            Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
+            null,
+            new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
         ));
       }
     }
@@ -109,15 +109,15 @@ $(() => {
 
   electron.ipcRenderer.on('showConnectPrompt', () => {
     smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
-      .then(function(ipPort) {
-        localStorage['lastIpPort'] = ipPort;
-        let split = ipPort.split(':');
-        let ip = split[0];
-        let port = split.length >= 2 ? Number(split[1]) : 43673;
-        electron.ipcRenderer.send('connectToWii', ip, port);
-      }, function() {
-        console.log('cancel');
-      });
+        .then(function (ipPort) {
+          localStorage['lastIpPort'] = ipPort;
+          let split = ipPort.split(':');
+          let ip = split[0];
+          let port = split.length >= 2 ? Number(split[1]) : 43673;
+          electron.ipcRenderer.send('connectToWii', ip, port);
+        }, function () {
+          console.log('cancel');
+        });
   });
 
   electron.ipcRenderer.on('depRead', (event, data) => {
@@ -132,48 +132,74 @@ $(() => {
     }
   });
 
-  let lastPos = [0,0,0];
+  let lastPos = [0, 0, 0];
 
   electron.ipcRenderer.on('primeDump', (event, data) => {
     latestSamusUpdate = data;
-    const player = data.player;
-    const isMorphed = player["morph_state"] == 1 || player["morph_state"] == 3;
+    const player = data.player_raw;
+    const camData = data.camera;
+    const isMorphed = player["morph_state"] == 1/* || player["morph_state"] == 2*/;
 
-    const pos = [
-      player.transform[3],
-      player.transform[7],
-      player.transform[11]
-    ];
-    if (pos[0] != lastPos[0] ||pos[1] != lastPos[1] || pos[2].toPrecision(3) != lastPos[2].toPrecision(3)) {
-      console.log("Pos changed", pos);
-      lastPos = pos;
+    const intArray = new Int32Array(1);
+    const floatArray = new Float32Array(intArray.buffer);
+
+    function itf(val) {
+      intArray[0] = val;
+      return floatArray[0];
     }
-    const aabb = player.collision_primitive;
+
+    // const pos = [
+    //   itf(player.transform[3]),
+    //   itf(player.transform[7]),
+    //   itf(player.transform[11])
+    // ];
+
+    const pos = player.translation.map(itf);
+    const aabb = player.collision_primitive.map(itf);
     const bbXDim = aabb[3] - aabb[0];
     const bbYDim = aabb[4] - aabb[1];
     const bbZDim = aabb[5] - aabb[2];
     samusBox.position.set(
-      pos[0] + aabb[0] + bbXDim / 2,
-      pos[1] + aabb[1] + bbYDim / 2,
-      pos[2] + aabb[2] + bbZDim / 2
+        pos[0] + aabb[0] + bbXDim / 2,
+        pos[1] + aabb[1] + bbYDim / 2,
+        pos[2] + aabb[2] + bbZDim / 2
     );
     samusBox.scale.set(bbXDim, bbYDim, bbZDim);
     let morphPrimitive = player.morphball.collision_primitive;
     samusSphere.position.set(
-      pos[0] + morphPrimitive.origin[0],
-      pos[1] + morphPrimitive.origin[1],
-      pos[2] + morphPrimitive.origin[2]
+        pos[0] + itf(morphPrimitive.origin[0]),
+        pos[1] + itf(morphPrimitive.origin[1]),
+        pos[2] + itf(morphPrimitive.origin[2])
     );
     samusSphere.scale.set(
-      morphPrimitive.radius,
-      morphPrimitive.radius,
-      morphPrimitive.radius
+        morphPrimitive.radius,
+        morphPrimitive.radius,
+        morphPrimitive.radius
     );
 
     function renderVec(vec) {
-      return vec.map(v => v.toFixed(3));
+      return vec.map(v => itf(v).toFixed(3));
     }
-    $("#physics").text(`Physics stats (cam ${player.camera_state}):
+
+    let camStats = `Camera Stats (state: ${player.camera_state}):`;
+    if (camData) {
+      camStats += `
+Ball:
+Watching: ${camData.ball.watched.toString(16)}
+Perspective: ${renderVec(camData.ball.perspective_raw)}
+Transform: ${renderVec(camData.ball.transform_raw)} @ ${camData.ball.transform_addr.toString(16)}
+Cam Transform: ${renderVec(camData.ball.transform_cam_raw)}
+
+First Person:
+Watching: ${camData.first_person.watched.toString(16)}
+Perspective: ${renderVec(camData.first_person.perspective_raw)}
+Transform: ${renderVec(camData.first_person.transform_raw)} @ ${camData.first_person.transform_addr.toString(16)}
+Cam Transform: ${renderVec(camData.first_person.transform_cam_raw)}
+Gun Follow: ${renderVec(camData.first_person.gun_follow_raw)}`;
+    }
+
+    $("#physics").text(camStats + `\n
+Physics stats:
 Velocity: ${renderVec(player.velocity)}
 Const Force: ${renderVec(player.constant_force)}
 Force: ${renderVec(player.force)}
@@ -184,6 +210,7 @@ Ang Imp: ${renderVec(player.angular_impulse)}
 Ang Mom: ${renderVec(player.angular_momentum)}
 Ang Vel: ${renderVec(player.angular_velocity)}
 Orient: ${renderVec(player.orientation)}
+Bob Mag: ${itf(player.camera_bob.magnitude)} Timescale: ${itf(player.camera_bob.time_scale)} Transform: ${renderVec(player.camera_bob.transform)}
 Transform: ${renderVec(player.transform)}
 Translation: ${renderVec(player.translation)}
 `);
@@ -191,7 +218,7 @@ Translation: ${renderVec(player.translation)}
     samusBox.visible = !isMorphed;
     samusSphere.visible = isMorphed;
 
-    camera.position.set(pos[0] - 2, pos[1] - 2, pos[2] + 2);
+    camera.position.set(pos[0] + 2, pos[1] + 0, pos[2] + 4);
     camera.lookAt(new THREE.Vector3(pos[0], pos[1], pos[2]));
 
     const world = data.world;
@@ -351,10 +378,10 @@ Translation: ${renderVec(player.translation)}
       let transform = area.transform;
       const transformMatrix = new THREE.Matrix4();
       transformMatrix.set(
-        transform[0], transform[1], transform[2], transform[3],
-        transform[4], transform[5], transform[6], transform[7],
-        transform[8], transform[9], transform[10], transform[11],
-        0, 0, 0, 1
+          transform[0], transform[1], transform[2], transform[3],
+          transform[4], transform[5], transform[6], transform[7],
+          transform[8], transform[9], transform[10], transform[11],
+          0, 0, 0, 1
       );
       const bbGeom = new THREE.Geometry();
       {
@@ -389,7 +416,7 @@ Translation: ${renderVec(player.translation)}
           new THREE.Vector3(x1, y2, z1)
 
         ].map(v => v.applyMatrix4(transformMatrix))
-          .forEach(v => bbGeom.vertices.push(v));
+            .forEach(v => bbGeom.vertices.push(v));
       }
       const bbMesh = new THREE.Line(bbGeom, bbMat);
 
