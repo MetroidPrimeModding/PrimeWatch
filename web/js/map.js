@@ -170,6 +170,24 @@ $(() => {
       morphPrimitive.radius
     );
 
+    function renderVec(vec) {
+      return vec.map(v => v.toFixed(3));
+    }
+    $("#physics").text(`Physics stats (cam ${player.camera_state}):
+Velocity: ${renderVec(player.velocity)}
+Const Force: ${renderVec(player.constant_force)}
+Force: ${renderVec(player.force)}
+Imp: ${renderVec(player.impulse)}
+Mom: ${renderVec(player.momentum)}
+Torque: ${renderVec(player.torque)}
+Ang Imp: ${renderVec(player.angular_impulse)}
+Ang Mom: ${renderVec(player.angular_momentum)}
+Ang Vel: ${renderVec(player.angular_velocity)}
+Orient: ${renderVec(player.orientation)}
+Transform: ${renderVec(player.transform)}
+Translation: ${renderVec(player.translation)}
+`);
+
     samusBox.visible = !isMorphed;
     samusSphere.visible = isMorphed;
 
