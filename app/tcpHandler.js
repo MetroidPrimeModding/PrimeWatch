@@ -13,81 +13,53 @@ const {dialog} = require('electron');
 module.exports = {
   'PACKET_TYPE': PACKET_TYPE,
   'messages': messages,
-  'connect': function (ip, port) {
+  'connect': function(ip, port) {
     const net = require('net');
     const socket = new net.Socket();
     socket.pause();
     const binary = require('binary-parser');
 
-    const fmtPacketType = new binary.Parser()
-        .uint8('packetType');
+    const fmtSize = new binary.Parser()
+      .uint32be('size');
 
-    const fmtData = new binary.Parser()
-        .uint8('packetType')
-        .uint32be('gameID')
-        .uint16be('makerCode')
-        .array('speed', {
-          type: 'floatbe',
-          length: 3
-        })
-        .array('pos', {
-          type: 'floatbe',
-          length: 3
-        })
-        .uint32be('morphStatus')
-        .array('aabb', {
-          type: 'floatbe',
-          length: 6
-        })
-        .array('morphedPos', {
-          type: 'floatbe',
-          length: 3
-        })
-        .floatbe('morphedRadius')
-        .uint32be('current_mlvl')
-        .uint32be('current_world_state')
-        .uint32be('room')
-        // .uint32be('area_count')
-        // .uint32be('area_count_max')
-        // .uint32be('area_ptr')
-        .uint32be('health')
-        .array('inventory', {
-          type: 'int32be',
-          length: 0x29 * 2
-        })
-        .doublebe('timer');
-
-    const fmtRead = new binary.Parser()
-        .uint8('packetType')
-        .uint32be('offsetHigh')
-        .uint32be('offsetLow')
-        .uint32be('lenHigh')
-        .uint32be('lenLow');
-
-    let closed = false;
-
+    let midPacketSize = undefined;
     socket.on('readable', () => {
       readPacket();
     });
 
+    // setInterval(() => {
+    //   readPacket(); //Dumb hack to fix stuff
+    // }, 100);
+
+    let firstError = true;
     function readPacket() {
-      const size = fmtData.sizeOf();
-      let buff;
-      while ((buff = socket.read(size)) != null) {
-        if (buff.length != size) {
-          console.log(`Unexpected size: ${buff.length}`);
-        }
-        try {
-          const type = fmtPacketType.parse(buff).packetType;
-          let dump;
-          if (type === PACKET_TYPE.PACKET_TYPE_GAME_DATA) {
-            dump = fmtData.parse(buff);
-            messages.emit('data', dump)
-          } else if (type === PACKET_TYPE.PACKET_TYPE_RAW_DISC_READ) {
-            dump = fmtRead.parse(buff);
-            messages.emit('read', dump)
+      if (midPacketSize == undefined) {
+        const sizeBuff = socket.read(4);
+        if (sizeBuff != null) {
+          if (sizeBuff.length != 4) {
+            console.error("FAILED");
           }
-        } catch (e) {
+          midPacketSize = fmtSize.parse(sizeBuff).size;
+          setTimeout(readPacket);
+        }
+      } else {
+        let buff = socket.read(midPacketSize);
+        if (buff != null) {
+          if (buff.length != midPacketSize) {
+            console.log(`Unexpected size: ${buff.length}`);
+          }
+          midPacketSize = undefined;
+          const str = buff.toString("ascii");
+          try {
+            const json = JSON.parse(str);
+            messages.emit('data', json);
+            setTimeout(readPacket);
+          } catch (e) {
+            if (firstError) {
+              console.error(`${midPacketSize} Error parsing data`, e, str, buff);
+              firstError = false;
+            }
+          }
         }
       }
     }

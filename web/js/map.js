@@ -41,9 +41,9 @@ function loadRoom(world, area, callback) {
       } else if (line[0] == 'f') {
         let split = line.split(' ');
         geom.faces.push(new THREE.Face3(
-            Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
-            null,
-            new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
+          Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
+          null,
+          new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
         ));
       }
     }
@@ -109,15 +109,15 @@ $(() => {
 
   electron.ipcRenderer.on('showConnectPrompt', () => {
     smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
-        .then(function (ipPort) {
-          localStorage['lastIpPort'] = ipPort;
-          let split = ipPort.split(':');
-          let ip = split[0];
-          let port = split.length >= 2 ? Number(split[1]) : 43673;
-          electron.ipcRenderer.send('connectToWii', ip, port);
-        }, function () {
-          console.log('cancel');
-        });
+      .then(function(ipPort) {
+        localStorage['lastIpPort'] = ipPort;
+        let split = ipPort.split(':');
+        let ip = split[0];
+        let port = split.length >= 2 ? Number(split[1]) : 43673;
+        electron.ipcRenderer.send('connectToWii', ip, port);
+      }, function() {
+        console.log('cancel');
+      });
   });
 
   electron.ipcRenderer.on('depRead', (event, data) => {
@@ -132,28 +132,55 @@ $(() => {
     }
   });
 
+  let lastPos = [0,0,0];
+
   electron.ipcRenderer.on('primeDump', (event, data) => {
     latestSamusUpdate = data;
-    const isMorphed = data["morphStatus"] == 1 || data["morphStatus"] == 3;
+    const player = data.player;
+    const isMorphed = player["morph_state"] == 1 || player["morph_state"] == 3;
 
-    const bbXDim = data.aabb[3] - data.aabb[0];
-    const bbYDim = data.aabb[4] - data.aabb[1];
-    const bbZDim = data.aabb[5] - data.aabb[2];
-    samusBox.position.set(data.aabb[0] + bbXDim / 2, data.aabb[1] + bbYDim / 2, data.aabb[2] + bbZDim / 2);
+    const pos = [
+      player.transform[3],
+      player.transform[7],
+      player.transform[11]
+    ];
+    if (pos[0] != lastPos[0] ||pos[1] != lastPos[1] || pos[2].toPrecision(3) != lastPos[2].toPrecision(3)) {
+      console.log("Pos changed", pos);
+      lastPos = pos;
+    }
+    const aabb = player.collision_primitive;
+    const bbXDim = aabb[3] - aabb[0];
+    const bbYDim = aabb[4] - aabb[1];
+    const bbZDim = aabb[5] - aabb[2];
+    samusBox.position.set(
+      pos[0] + aabb[0] + bbXDim / 2,
+      pos[1] + aabb[1] + bbYDim / 2,
+      pos[2] + aabb[2] + bbZDim / 2
+    );
     samusBox.scale.set(bbXDim, bbYDim, bbZDim);
-    samusSphere.position.set(data.morphedPos[0], data.morphedPos[1], data.morphedPos[2]);
-    samusSphere.scale.set(data.morphedRadius, data.morphedRadius, data.morphedRadius);
+    let morphPrimitive = player.morphball.collision_primitive;
+    samusSphere.position.set(
+      pos[0] + morphPrimitive.origin[0],
+      pos[1] + morphPrimitive.origin[1],
+      pos[2] + morphPrimitive.origin[2]
+    );
+    samusSphere.scale.set(
+      morphPrimitive.radius,
+      morphPrimitive.radius,
+      morphPrimitive.radius
+    );
 
     samusBox.visible = !isMorphed;
     samusSphere.visible = isMorphed;
 
-    camera.position.set(data.pos[0] - 2, data.pos[1] - 2, data.pos[2] + 2);
-    camera.lookAt(new THREE.Vector3(data.pos[0], data.pos[1], data.pos[2]));
+    camera.position.set(pos[0] - 2, pos[1] - 2, pos[2] + 2);
+    camera.lookAt(new THREE.Vector3(pos[0], pos[1], pos[2]));
 
-    let currentWorldString = data["current_mlvl"].toString(16);
+    const world = data.world;
+    let currentWorldString = world.mlvl.toString(16);
     showWorld(currentWorldString);
     $('#current-world').text(currentWorldString);
-    let timer = data['timer'];
+    let timer = player.timer;
     let seconds = (timer % 60).toFixed(3);
     let minutes = Math.floor(timer / 60) % 60;
     let hours = Math.floor(minutes / 60);
@@ -161,7 +188,7 @@ $(() => {
     let time = `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     $('#timer').text(time);
 
-    let currentWorldState = data["current_world_state"];
+    let currentWorldState = world.phase;
     let currentWorldStateString = 'Unknown';
     if (currentWorldState == 0) {
       currentWorldStateString = 'Loading';
@@ -177,18 +204,12 @@ $(() => {
       currentWorldStateString = 'Ready';
     }
     $('#current-world-status').text(currentWorldStateString);
-    if (isMorphed) {
-      $('#pos').text(data["morphedPos"].map(v => Number(v).toFixed(3)));
-      $('#aabb').text(data["morphedRadius"].toFixed(3));
-    } else {
-      $('#pos').text(data["pos"].map(v => Number(v).toFixed(3)));
-      $('#aabb').text(data["aabb"].map(v => Number(v).toFixed(3)));
-    }
-    $('#room').text(data["room"].toString(16));
+    $('#pos').text(pos.map(v => Number(v).toFixed(3)));
+    $('#room').text(world.area.toString(16));
 
     function showIfNonZero(itemID, imageID) {
       var img = $(`#${imageID}`);
-      if (data.inventory[itemID * 2 + 1] > 0) {
+      if (player.inventory[itemID * 2 + 1] > 0) {
         if (!img.is(":visible")) {
           console.log(`Showing ${itemID} ${imageID}`);
           img.show();
@@ -312,10 +333,10 @@ $(() => {
       let transform = area.transform;
       const transformMatrix = new THREE.Matrix4();
       transformMatrix.set(
-          transform[0], transform[1], transform[2], transform[3],
-          transform[4], transform[5], transform[6], transform[7],
-          transform[8], transform[9], transform[10], transform[11],
-          0, 0, 0, 1
+        transform[0], transform[1], transform[2], transform[3],
+        transform[4], transform[5], transform[6], transform[7],
+        transform[8], transform[9], transform[10], transform[11],
+        0, 0, 0, 1
       );
       const bbGeom = new THREE.Geometry();
       {
@@ -350,7 +371,7 @@ $(() => {
           new THREE.Vector3(x1, y2, z1)
 
         ].map(v => v.applyMatrix4(transformMatrix))
-            .forEach(v => bbGeom.vertices.push(v));
+          .forEach(v => bbGeom.vertices.push(v));
       }
       const bbMesh = new THREE.Line(bbGeom, bbMat);
 

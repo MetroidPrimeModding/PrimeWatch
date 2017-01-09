@@ -236,7 +236,6 @@ app.on('ready', () => {
   setupMenu();
 });
 
-const offsets = require("./offsets");
 const areas = require("./areas");
 
 ipcMain.on('connectToWii', (event, ip, port) => {
@@ -248,35 +247,8 @@ ipcMain.on('connectToWii', (event, ip, port) => {
   currentClient = tcp.connect(ip, port);
 });
 
+let count = 0;
 tcp.messages.on('data', data => {
+  count++;
   mapWindow.webContents.send('primeDump', data);
-});
-
-tcp.messages.on('read', data => {
-  let readFile = offsets.binarySearchForOffset(offsets.fstOffsets, data.offsetLow);
-
-  if (readFile == undefined) {
-    console.log("Unable to find file");
-  } else if (readFile.name.toLowerCase().endsWith(".pak")) {
-    let pak = offsets.pakOffsets[readFile.rawName];
-    let pakRead = offsets.binarySearchForOffset(pak, data.offsetLow - readFile.offset);
-    if (pakRead == null || pakRead == undefined) {
-      console.log("Unable to read PAK", readFile.name, data.offsetLow - readFile.offset);
-    } else {
-      // console.log("Read PAK", readFile.name, pakRead.humanName);
-      mapWindow.webContents.send('pakRead', {
-        pak: readFile.rawName,
-        file: pakRead
-      });
-
-      let depOf = areas.dgrpLookup.get(pakRead.humanName);
-      if (depOf != null && depOf != undefined) {
-        mapWindow.webContents.send('depRead', {
-          owners: depOf
-        })
-      }
-    }
-  } else {
-    // console.log("Read non-pak file", readFile.name);
-  }
 });
