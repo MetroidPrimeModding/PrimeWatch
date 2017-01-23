@@ -51,7 +51,8 @@ module.exports = {
           midPacketSize = undefined;
           const str = buff.toString("ascii");
           try {
-            const json = JSON.parse(str);
+            let json = JSON.parse(str);
+            json["packet_size"] = buff.length;
             messages.emit('data', json);
             setTimeout(readPacket);
           } catch (e) {

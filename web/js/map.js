@@ -169,7 +169,7 @@ $(() => {
     samusSphere.position.set(
         pos[0] + itf(morphPrimitive.origin[0]),
         pos[1] + itf(morphPrimitive.origin[1]),
-        pos[2] + itf(morphPrimitive.origin[2])
+        pos[2] + itf(morphPrimitive.origin[2]) + 0.7
     );
     samusSphere.scale.set(
         morphPrimitive.radius,
@@ -180,6 +180,12 @@ $(() => {
     function renderVec(vec) {
       return vec.map(v => itf(v).toFixed(3));
     }
+
+    samusBox.visible = !isMorphed;
+    samusSphere.visible = isMorphed;
+
+    camera.position.set(pos[0] + 2, pos[1] + 1, pos[2] + 1);
+    camera.lookAt(new THREE.Vector3(pos[0], pos[1], pos[2]));
 
     let camStats = `Camera Stats (state: ${player.camera_state}):`;
     if (camData) {
@@ -198,11 +204,16 @@ Cam Transform: ${renderVec(camData.first_person.transform_cam_raw)}
 Gun Follow: ${renderVec(camData.first_person.gun_follow_raw)}`;
     }
 
+    let forceMag = Math.sqrt(
+        itf(player.force[0]) * itf(player.force[0]) +
+        itf(player.force[1]) * itf(player.force[1]) +
+        itf(player.force[2]) * itf(player.force[2])
+    ).toFixed(3);
     $("#physics").text(camStats + `\n
 Physics stats:
 Velocity: ${renderVec(player.velocity)}
 Const Force: ${renderVec(player.constant_force)}
-Force: ${renderVec(player.force)}
+Force: ${renderVec(player.force)} | ${forceMag}
 Imp: ${renderVec(player.impulse)}
 Mom: ${renderVec(player.momentum)}
 Torque: ${renderVec(player.torque)}
@@ -214,12 +225,6 @@ Bob Mag: ${itf(player.camera_bob.magnitude)} Timescale: ${itf(player.camera_bob.
 Transform: ${renderVec(player.transform)}
 Translation: ${renderVec(player.translation)}
 `);
-
-    samusBox.visible = !isMorphed;
-    samusSphere.visible = isMorphed;
-
-    camera.position.set(pos[0] + 2, pos[1] + 0, pos[2] + 4);
-    camera.lookAt(new THREE.Vector3(pos[0], pos[1], pos[2]));
 
     const world = data.world;
     let currentWorldString = world.mlvl.toString(16);
@@ -251,6 +256,23 @@ Translation: ${renderVec(player.translation)}
     $('#current-world-status').text(currentWorldStateString);
     $('#pos').text(pos.map(v => Number(v).toFixed(3)));
     $('#room').text(world.area.toString(16));
+    $('#resource-status').text(`${data.pool_summary.count}`);
+    $('#packet-size').text(`${data.packet_size}`);
+    // {
+    //   "heap_size": 17983936,
+    //     "unused_count": 711,
+    //     "unused_size": 14120534,
+    //     "used_count": 33247,
+    //     "used_size": 3810920
+    // }
+    function memReadable(v) {
+      let k = v / 1024;
+      let m = k / 1024;
+
+      return m.toFixed(2);
+    }
+
+    $('#heap-stats').text(`${data.heap_stats.used_count}/${data.heap_stats.used_count + data.heap_stats.unused_count} ${memReadable(data.heap_stats.used_size)}M/${memReadable(data.heap_stats.heap_size)}M`);
 
     function showIfNonZero(itemID, imageID) {
       var img = $(`#${imageID}`);
