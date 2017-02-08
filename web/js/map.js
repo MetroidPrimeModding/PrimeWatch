@@ -41,9 +41,9 @@ function loadRoom(world, area, callback) {
       } else if (line[0] == 'f') {
         let split = line.split(' ');
         geom.faces.push(new THREE.Face3(
-            Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
-            null,
-            new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
+          Number(split[1]) - 1, Number(split[2]) - 1, Number(split[3]) - 1,
+          null,
+          new THREE.Color(Number(split[4]), Number(split[5]), Number(split[6]))
         ));
       }
     }
@@ -52,6 +52,16 @@ function loadRoom(world, area, callback) {
     // geom.computeVertexNormals();
     callback(world, area, geom);
   }, 'text');
+}
+
+function clamp(v, min, max) {
+  if (v < min) {
+    return min;
+  } else if (v > max) {
+    return max;
+  } else {
+    return v;
+  }
 }
 
 $(() => {
@@ -65,11 +75,32 @@ $(() => {
   let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
   camera.up = new THREE.Vector3(0, 0, 1);
 
-  let controls = new THREE.OrbitControls(camera, canvas);
-  //controls.addEventListener( 'change', render ); // add this only if there is no animation loop (requestAnimationFrame)
-  controls.enableDamping = true;
-  controls.dampingFactor = 1;
-  controls.enableZoom = false;
+  let camYaw = 0;
+  let camPitch = 0;
+  let camDist = 5;
+  let mouseDown = null;
+  canvas.addEventListener('mousedown', e => {
+    mouseDown = e;
+  });
+  canvas.addEventListener('mouseup', () => {
+    mouseDown = null
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (mouseDown) {
+      let x = e.movementX;
+      let y = e.movementY;
+      camPitch = clamp(camPitch + y * 0.01, -Math.PI / 2 + 0.01, Math.PI / 2 - 0.01);
+      camYaw = (camYaw - x * 0.01) % (2 * Math.PI);
+    }
+  });
+  canvas.addEventListener('wheel', e => {
+    console.log('Wheel', e);
+    camDist = clamp(camDist + ((camDist / 2) * (e.deltaY / 500)), 1, 500);
+  });
+
+  if (mouseDown) {
+
+  }
 
   let latestSamusUpdate = {};
   let samusBox;
@@ -109,15 +140,15 @@ $(() => {
 
   electron.ipcRenderer.on('showConnectPrompt', () => {
     smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
-        .then(function (ipPort) {
-          localStorage['lastIpPort'] = ipPort;
-          let split = ipPort.split(':');
-          let ip = split[0];
-          let port = split.length >= 2 ? Number(split[1]) : 43673;
-          electron.ipcRenderer.send('connectToWii', ip, port);
-        }, function () {
-          console.log('cancel');
-        });
+      .then(function (ipPort) {
+        localStorage['lastIpPort'] = ipPort;
+        let split = ipPort.split(':');
+        let ip = split[0];
+        let port = split.length >= 2 ? Number(split[1]) : 43673;
+        electron.ipcRenderer.send('connectToWii', ip, port);
+      }, function () {
+        console.log('cancel');
+      });
   });
 
   electron.ipcRenderer.on('depRead', (event, data) => {
@@ -160,21 +191,21 @@ $(() => {
     const bbYDim = aabb[4] - aabb[1];
     const bbZDim = aabb[5] - aabb[2];
     samusBox.position.set(
-        pos[0] + aabb[0] + bbXDim / 2,
-        pos[1] + aabb[1] + bbYDim / 2,
-        pos[2] + aabb[2] + bbZDim / 2
+      pos[0] + aabb[0] + bbXDim / 2,
+      pos[1] + aabb[1] + bbYDim / 2,
+      pos[2] + aabb[2] + bbZDim / 2
     );
     samusBox.scale.set(bbXDim, bbYDim, bbZDim);
     let morphPrimitive = player.morphball.collision_primitive;
     samusSphere.position.set(
-        pos[0] + itf(morphPrimitive.origin[0]),
-        pos[1] + itf(morphPrimitive.origin[1]),
-        pos[2] + itf(morphPrimitive.origin[2]) + 0.7
+      pos[0] + itf(morphPrimitive.origin[0]),
+      pos[1] + itf(morphPrimitive.origin[1]),
+      pos[2] + itf(morphPrimitive.origin[2]) + 0.7
     );
     samusSphere.scale.set(
-        morphPrimitive.radius,
-        morphPrimitive.radius,
-        morphPrimitive.radius
+      morphPrimitive.radius,
+      morphPrimitive.radius,
+      morphPrimitive.radius
     );
 
     function renderVec(vec) {
@@ -184,30 +215,37 @@ $(() => {
     samusBox.visible = !isMorphed;
     samusSphere.visible = isMorphed;
 
-    camera.position.set(pos[0] + 2, pos[1] + 1, pos[2] + 1);
+    let camVec = new THREE.Vector3(
+      Math.cos(camYaw) * Math.cos(camPitch),
+      Math.sin(camYaw) * Math.cos(camPitch),
+      Math.sin(camPitch)
+    );
+    camVec = camVec.normalize().multiplyScalar(camDist);
+
+    camera.position.set(pos[0] + camVec.x, pos[1] + camVec.y, pos[2] + camVec.z);
     camera.lookAt(new THREE.Vector3(pos[0], pos[1], pos[2]));
 
-    let camStats = `Camera Stats (state: ${player.camera_state}):`;
-    if (camData) {
-      camStats += `
-Ball:
-Watching: ${camData.ball.watched.toString(16)}
-Perspective: ${renderVec(camData.ball.perspective_raw)}
-Transform: ${renderVec(camData.ball.transform_raw)} @ ${camData.ball.transform_addr.toString(16)}
-Cam Transform: ${renderVec(camData.ball.transform_cam_raw)}
-
-First Person:
-Watching: ${camData.first_person.watched.toString(16)}
-Perspective: ${renderVec(camData.first_person.perspective_raw)}
-Transform: ${renderVec(camData.first_person.transform_raw)} @ ${camData.first_person.transform_addr.toString(16)}
-Cam Transform: ${renderVec(camData.first_person.transform_cam_raw)}
-Gun Follow: ${renderVec(camData.first_person.gun_follow_raw)}`;
-    }
+    let camStats = `Camera state: ${player.camera_state}`;
+//     if (camData) {
+//       camStats += `
+// Ball:
+// Watching: ${camData.ball.watched.toString(16)}
+// Perspective: ${renderVec(camData.ball.perspective_raw)}
+// Transform: ${renderVec(camData.ball.transform_raw)} @ ${camData.ball.transform_addr.toString(16)}
+// Cam Transform: ${renderVec(camData.ball.transform_cam_raw)}
+//
+// First Person:
+// Watching: ${camData.first_person.watched.toString(16)}
+// Perspective: ${renderVec(camData.first_person.perspective_raw)}
+// Transform: ${renderVec(camData.first_person.transform_raw)} @ ${camData.first_person.transform_addr.toString(16)}
+// Cam Transform: ${renderVec(camData.first_person.transform_cam_raw)}
+// Gun Follow: ${renderVec(camData.first_person.gun_follow_raw)}`;
+//     }
 
     let forceMag = Math.sqrt(
-        itf(player.force[0]) * itf(player.force[0]) +
-        itf(player.force[1]) * itf(player.force[1]) +
-        itf(player.force[2]) * itf(player.force[2])
+      itf(player.force[0]) * itf(player.force[0]) +
+      itf(player.force[1]) * itf(player.force[1]) +
+      itf(player.force[2]) * itf(player.force[2])
     ).toFixed(3);
     $("#physics").text(camStats + `\n
 Physics stats:
@@ -221,7 +259,9 @@ Ang Imp: ${renderVec(player.angular_impulse)}
 Ang Mom: ${renderVec(player.angular_momentum)}
 Ang Vel: ${renderVec(player.angular_velocity)}
 Orient: ${renderVec(player.orientation)}
-Bob Mag: ${itf(player.camera_bob.magnitude)} Timescale: ${itf(player.camera_bob.time_scale)} Transform: ${renderVec(player.camera_bob.transform)}
+Bob Mag: ${itf(player.camera_bob.magnitude)} 
+Bob Timescale: ${itf(player.camera_bob.time_scale)} 
+Bob Transform: ${renderVec(player.camera_bob.transform)}
 Transform: ${renderVec(player.transform)}
 Translation: ${renderVec(player.translation)}
 `);
@@ -400,10 +440,10 @@ Translation: ${renderVec(player.translation)}
       let transform = area.transform;
       const transformMatrix = new THREE.Matrix4();
       transformMatrix.set(
-          transform[0], transform[1], transform[2], transform[3],
-          transform[4], transform[5], transform[6], transform[7],
-          transform[8], transform[9], transform[10], transform[11],
-          0, 0, 0, 1
+        transform[0], transform[1], transform[2], transform[3],
+        transform[4], transform[5], transform[6], transform[7],
+        transform[8], transform[9], transform[10], transform[11],
+        0, 0, 0, 1
       );
       const bbGeom = new THREE.Geometry();
       {
@@ -438,7 +478,7 @@ Translation: ${renderVec(player.translation)}
           new THREE.Vector3(x1, y2, z1)
 
         ].map(v => v.applyMatrix4(transformMatrix))
-            .forEach(v => bbGeom.vertices.push(v));
+          .forEach(v => bbGeom.vertices.push(v));
       }
       const bbMesh = new THREE.Line(bbGeom, bbMat);
 
