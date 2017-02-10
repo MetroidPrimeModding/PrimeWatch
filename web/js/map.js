@@ -94,13 +94,8 @@ $(() => {
     }
   });
   canvas.addEventListener('wheel', e => {
-    console.log('Wheel', e);
     camDist = clamp(camDist + ((camDist / 2) * (e.deltaY / 500)), 1, 500);
   });
-
-  if (mouseDown) {
-
-  }
 
   let latestSamusUpdate = {};
   let samusBox;
@@ -138,6 +133,27 @@ $(() => {
   let worlds = {};
   let currentWorld = null;
 
+  function itf(val) {
+    intArray[0] = val;
+    return floatArray[0];
+  }
+
+  function updateCamera() {
+    let camVec = new THREE.Vector3(
+      Math.cos(camYaw) * Math.cos(camPitch),
+      Math.sin(camYaw) * Math.cos(camPitch),
+      Math.sin(camPitch)
+    );
+    camVec = camVec.normalize().multiplyScalar(camDist);
+
+    camera.position.set(
+      samusSphere.position.x + camVec.x,
+      samusSphere.position.y + camVec.y,
+      samusSphere.position.z + camVec.z
+    );
+    camera.lookAt(samusSphere.position);
+  }
+
   electron.ipcRenderer.on('showConnectPrompt', () => {
     smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
       .then(function (ipPort) {
@@ -163,8 +179,6 @@ $(() => {
     }
   });
 
-  let lastPos = [0, 0, 0];
-
   electron.ipcRenderer.on('primeDump', (event, data) => {
     latestSamusUpdate = data;
     const player = data.player_raw;
@@ -173,17 +187,6 @@ $(() => {
 
     const intArray = new Int32Array(1);
     const floatArray = new Float32Array(intArray.buffer);
-
-    function itf(val) {
-      intArray[0] = val;
-      return floatArray[0];
-    }
-
-    // const pos = [
-    //   itf(player.transform[3]),
-    //   itf(player.transform[7]),
-    //   itf(player.transform[11])
-    // ];
 
     const pos = player.translation.map(itf);
     const aabb = player.collision_primitive.map(itf);
@@ -215,15 +218,7 @@ $(() => {
     samusBox.visible = !isMorphed;
     samusSphere.visible = isMorphed;
 
-    let camVec = new THREE.Vector3(
-      Math.cos(camYaw) * Math.cos(camPitch),
-      Math.sin(camYaw) * Math.cos(camPitch),
-      Math.sin(camPitch)
-    );
-    camVec = camVec.normalize().multiplyScalar(camDist);
-
-    camera.position.set(pos[0] + camVec.x, pos[1] + camVec.y, pos[2] + camVec.z);
-    camera.lookAt(new THREE.Vector3(pos[0], pos[1], pos[2]));
+    updateCamera();
 
     let camStats = `Camera state: ${player.camera_state}`;
 //     if (camData) {
@@ -548,9 +543,7 @@ Translation: ${renderVec(player.translation)}
     stats.update();
     frame++;
     updateAreaHotness();
-    // camera.lookAt(new THREE.Vector3(0, 0, 0));
-    // camera.position.x = Math.sin(frame / 500) * 500;
-    // camera.position.y = Math.cos(frame / 500) * 500;
+    updateCamera();
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   })();
