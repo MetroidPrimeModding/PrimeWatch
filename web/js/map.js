@@ -133,6 +133,9 @@ $(() => {
   let worlds = {};
   let currentWorld = null;
 
+
+  const intArray = new Int32Array(1);
+  const floatArray = new Float32Array(intArray.buffer);
   function itf(val) {
     intArray[0] = val;
     return floatArray[0];
@@ -184,9 +187,6 @@ $(() => {
     const player = data.player_raw;
     const camData = data.camera;
     const isMorphed = player["morph_state"] == 1/* || player["morph_state"] == 2*/;
-
-    const intArray = new Int32Array(1);
-    const floatArray = new Float32Array(intArray.buffer);
 
     const pos = player.translation.map(itf);
     const aabb = player.collision_primitive.map(itf);
