@@ -74,6 +74,11 @@ $(() => {
   const scene = new THREE.Scene();
   let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
   camera.up = new THREE.Vector3(0, 0, 1);
+  let samusCam = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 1, 3000);
+
+  let samusCamHelper = new THREE.CameraHelper(samusCam);
+  scene.add(samusCam);
+  scene.add(samusCamHelper);
 
   let camYaw = 0;
   let camPitch = 0;
@@ -100,12 +105,14 @@ $(() => {
   let latestSamusUpdate = {};
   let samusBox;
   let samusSphere;
+  let velLine;
   {
     let samusGeom = new THREE.BoxGeometry(1, 1, 1);
     let samusMat = new THREE.MeshPhongMaterial({
       color: 0xFFFFFF
     });
     samusBox = new THREE.Mesh(samusGeom, samusMat);
+    samusBox.castShadow = true;
   }
   {
     let samusGeom = new THREE.SphereGeometry(1, 32, 32);
@@ -113,22 +120,51 @@ $(() => {
       color: 0xFFFFFF
     });
     samusSphere = new THREE.Mesh(samusGeom, samusMat);
+    samusSphere.castShadow = true;
+  }
+  {
+    let velGeom = new THREE.Geometry();
+    velGeom.vertices.push(
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(1, 1, 1)
+    );
+    let velMat = new THREE.LineBasicMaterial({
+      color: 0xFFFFFF,
+      depthTest: false,
+      lights: false,
+    });
+    velLine = new THREE.Line(velGeom, velMat);
+    velLine.renderOrder = 999;
+    velLine.frustumCulled = false;
   }
   scene.add(samusBox);
   scene.add(samusSphere);
+  scene.add(velLine);
   samusBox.position.set(0, 0, 0);
   samusSphere.position.set(0, 0, 0);
+  velLine.geometry.vertices[0].set(0, 0, 0);
+  velLine.geometry.vertices[1].set(0, 0, 0);
+  velLine.geometry.verticesNeedUpdate = true;
+
 
   const renderer = new THREE.WebGLRenderer({
     canvas: canvas
   });
+  renderer.autoClear = false;
+  renderer.sortObjects = true;
+  renderer.shadowMap.enabled = true;
 
   const ambientLight = new THREE.AmbientLight(0x222222);
   scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-  directionalLight.position.set(0, 0.1, 1).normalize();
-  scene.add(directionalLight);
+
+
+  const pointLight = new THREE.PointLight(0xFFFFFF, 0.5);
+  pointLight.position.set(0, 0.1, 1);
+  pointLight.castShadow = true;
+  pointLight.shadowDarkness = 1;
+  scene.add(pointLight);
 
   let worlds = {};
   let currentWorld = null;
@@ -136,7 +172,11 @@ $(() => {
 
   const intArray = new Int32Array(1);
   const floatArray = new Float32Array(intArray.buffer);
+
   function itf(val) {
+    if (val % 1 !== 0) {
+      return val;
+    }
     intArray[0] = val;
     return floatArray[0];
   }
@@ -159,13 +199,13 @@ $(() => {
 
   electron.ipcRenderer.on('showConnectPrompt', () => {
     smalltalk.prompt('Connect to Wii', 'Enter ip[:port] or host[:port] (default port: 43673)', localStorage['lastIpPort'])
-      .then(function (ipPort) {
+      .then(function(ipPort) {
         localStorage['lastIpPort'] = ipPort;
         let split = ipPort.split(':');
         let ip = split[0];
         let port = split.length >= 2 ? Number(split[1]) : 43673;
         electron.ipcRenderer.send('connectToWii', ip, port);
-      }, function () {
+      }, function() {
         console.log('cancel');
       });
   });
@@ -189,6 +229,8 @@ $(() => {
     const isMorphed = player["morph_state"] == 1/* || player["morph_state"] == 2*/;
 
     const pos = player.translation.map(itf);
+    const vel = player.velocity.map(itf);
+    const orient = player.orientation;
     const aabb = player.collision_primitive.map(itf);
     const bbXDim = aabb[3] - aabb[0];
     const bbYDim = aabb[4] - aabb[1];
@@ -203,13 +245,17 @@ $(() => {
     samusSphere.position.set(
       pos[0] + itf(morphPrimitive.origin[0]),
       pos[1] + itf(morphPrimitive.origin[1]),
-      pos[2] + itf(morphPrimitive.origin[2]) + 0.7
+      pos[2] + itf(morphPrimitive.origin[2])
     );
     samusSphere.scale.set(
       morphPrimitive.radius,
       morphPrimitive.radius,
       morphPrimitive.radius
     );
+
+    let verticalOffset = isMorphed ? morphPrimitive.radius * 2 : bbZDim / 2;
+
+    pointLight.position.set(pos[0] + 1, pos[1], pos[2] + 10);
 
     function renderVec(vec) {
       return vec.map(v => itf(v).toFixed(3));
@@ -218,9 +264,42 @@ $(() => {
     samusBox.visible = !isMorphed;
     samusSphere.visible = isMorphed;
 
+
+    velLine.geometry.vertices[0].set(0, 0, 0);
+    velLine.geometry.vertices[1].set(vel[0] / 10, vel[1] / 10, vel[2] / 10);
+    velLine.geometry.verticesNeedUpdate = true;
+    velLine.position.set(pos[0], pos[1], pos[2] + verticalOffset);
+
+    {
+      let cam = isMorphed ? camData.ball : camData.first_person;
+
+      let camTransform = new THREE.Matrix4().set(
+        cam.transform[0], cam.transform[1], cam.transform[2], cam.transform[3],
+        cam.transform[4], cam.transform[5], cam.transform[6], cam.transform[7],
+        cam.transform[8], cam.transform[9], cam.transform[10], cam.transform[11],
+        0, 0, 0, 1
+      );
+
+      let camPos = new THREE.Vector3();
+      let camQuat = new THREE.Quaternion();
+      let camScale = new THREE.Vector3();
+      camTransform.decompose(camPos, camQuat, camScale);
+      let fixQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0));
+      camQuat = camQuat.multiply(fixQuat);
+
+      samusCam.fov = cam.current_fov;
+      samusCam.aspect = cam.aspect;
+      samusCam.near = cam.znear;
+      samusCam.far = cam.zfar;
+      samusCam.position.copy(camPos);
+      samusCam.quaternion.copy(camQuat);
+      samusCam.updateProjectionMatrix();
+    }
+
     updateCamera();
 
-    let camStats = `Camera state: ${player.camera_state}`;
+    let camStats = '';
+//     let camStats = `Camera state: ${player.camera_state}`;
 //     if (camData) {
 //       camStats += `
 // Ball:
@@ -234,32 +313,27 @@ $(() => {
 // Perspective: ${renderVec(camData.first_person.perspective_raw)}
 // Transform: ${renderVec(camData.first_person.transform_raw)} @ ${camData.first_person.transform_addr.toString(16)}
 // Cam Transform: ${renderVec(camData.first_person.transform_cam_raw)}
-// Gun Follow: ${renderVec(camData.first_person.gun_follow_raw)}`;
+// Gun Follow: ${renderVec(camData.first_person.gun_follow_raw)}
+// `;
 //     }
 
-    let forceMag = Math.sqrt(
-      itf(player.force[0]) * itf(player.force[0]) +
-      itf(player.force[1]) * itf(player.force[1]) +
-      itf(player.force[2]) * itf(player.force[2])
-    ).toFixed(3);
-    $("#physics").text(camStats + `\n
-Physics stats:
+    let horiz = Math.sqrt(
+      itf(player.velocity[0]) * itf(player.velocity[0]) +
+      itf(player.velocity[1]) * itf(player.velocity[1])
+    );
+    $("#physics").text(`${camStats}
 Velocity: ${renderVec(player.velocity)}
-Const Force: ${renderVec(player.constant_force)}
-Force: ${renderVec(player.force)} | ${forceMag}
-Imp: ${renderVec(player.impulse)}
-Mom: ${renderVec(player.momentum)}
-Torque: ${renderVec(player.torque)}
-Ang Imp: ${renderVec(player.angular_impulse)}
-Ang Mom: ${renderVec(player.angular_momentum)}
+Horiz/vert: ${horiz.toFixed(3)} ${player.velocity[2].toFixed(3)}
 Ang Vel: ${renderVec(player.angular_velocity)}
 Orient: ${renderVec(player.orientation)}
-Bob Mag: ${itf(player.camera_bob.magnitude)} 
-Bob Timescale: ${itf(player.camera_bob.time_scale)} 
-Bob Transform: ${renderVec(player.camera_bob.transform)}
-Transform: ${renderVec(player.transform)}
 Translation: ${renderVec(player.translation)}
 `);
+    /*
+    Transform:
+${renderVec(player.transform.slice(0, 4))}
+${renderVec(player.transform.slice(4, 8))}
+${renderVec(player.transform.slice(8, 12))}
+     */
 
     const world = data.world;
     let currentWorldString = world.mlvl.toString(16);
@@ -291,8 +365,7 @@ Translation: ${renderVec(player.translation)}
     $('#current-world-status').text(currentWorldStateString);
     $('#pos').text(pos.map(v => Number(v).toFixed(3)));
     $('#room').text(world.area.toString(16));
-    $('#resource-status').text(`${data.pool_summary.count}`);
-    $('#packet-size').text(`${data.packet_size}`);
+    // $('#resource-status').text(`${data.pool_summary.count}`);
     // {
     //   "heap_size": 17983936,
     //     "unused_count": 711,
@@ -420,13 +493,17 @@ Translation: ${renderVec(player.translation)}
         ambientColor: {value: color.multiplyScalar(0.5)},
         directionalColor: {value: color}
       };
-      const mat = new THREE.ShaderMaterial({
-        uniforms: uniforms,
-        vertexColors: THREE.FaceColors,
-        vertexShader: vertShader,
-        fragmentShader: fragShader,
+      // const mat = new THREE.ShaderMaterial({
+      //   uniforms: uniforms,
+      //   vertexColors: THREE.FaceColors,
+      //   vertexShader: vertShader,
+      //   fragmentShader: fragShader,
+      // });
+      const mat = new THREE.MeshPhongMaterial({
+        vertexColors: THREE.FaceColors
       });
       const mesh = new THREE.Mesh(geom, mat);
+      mesh.receiveShadow = true;
 
       const bbMat = new THREE.LineBasicMaterial({
         color: color,
@@ -499,6 +576,7 @@ Translation: ${renderVec(player.translation)}
   function resize() {
     renderer.setSize(canvasWrapper.offsetWidth, canvasWrapper.offsetHeight, true);
     camera.aspect = canvasWrapper.offsetWidth / canvasWrapper.offsetHeight;
+    camera.updateProjectionMatrix();
   }
 
   function updateAreaHotness() {
@@ -544,7 +622,10 @@ Translation: ${renderVec(player.translation)}
     frame++;
     updateAreaHotness();
     updateCamera();
+    renderer.clear();
     renderer.render(scene, camera);
+    // renderer.clearDepth();
+    // renderer.render(lineScene, camera);
     requestAnimationFrame(render);
   })();
 });
