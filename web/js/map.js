@@ -253,7 +253,7 @@ $(() => {
       morphPrimitive.radius
     );
 
-    let verticalOffset = isMorphed ? morphPrimitive.radius * 2 : bbZDim / 2;
+    let verticalOffset = isMorphed ? morphPrimitive.radius : bbZDim / 2;
 
     pointLight.position.set(pos[0] + 1, pos[1], pos[2] + 10);
 
@@ -323,7 +323,7 @@ $(() => {
     );
     $("#physics").text(`${camStats}
 Velocity: ${renderVec(player.velocity)}
-Horiz/vert: ${horiz.toFixed(3)} ${player.velocity[2].toFixed(3)}
+Horiz/vert: ${horiz.toFixed(3)} ${itf(player.velocity[2]).toFixed(3)}
 Ang Vel: ${renderVec(player.angular_velocity)}
 Orient: ${renderVec(player.orientation)}
 Translation: ${renderVec(player.translation)}
