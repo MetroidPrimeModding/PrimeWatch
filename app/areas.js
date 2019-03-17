@@ -3,7 +3,18 @@
 const fs = require('fs');
 const utils = require('./utils');
 
-let files = fs.readdirSync(__dirname + '/areas/');
+// let files = fs.readdirSync(__dirname + '/areas/')
+//     .filter(n => n.endsWith(".json"));
+let files = [
+  "13d79165.MLVL.json",
+  "39f2de28.MLVL.json",
+  "83f6ff6f.MLVL.json",
+  "b1ac4d65.MLVL.json",
+  "158efe17.MLVL.json",
+  "3ef8237c.MLVL.json",
+  "a8be6291.MLVL.json",
+  "c13b09d1.MLVL.json"
+];
 let dgrpLookup = new Map();
 let areaHeaders = [];
 

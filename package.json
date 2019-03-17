@@ -1,6 +1,6 @@
 {
-  "name": "PrimeWatch",
-  "description": "A prime memory watcher (remote for Dolphin or Nintendont)",
+  "name": "prime-watch",
+  "description": "A prime memory watcher (remote for Dolphin)",
   "author": "Pwootage",
   "version": "1.0.0",
   "main": "app/mainForm.js",
@@ -8,5 +8,37 @@
     "binary": "^0.3.0",
     "binary-parser": "^1.1.5",
     "smalltalk": "^2.1.3"
+  },
+  "devDependencies": {
+    "electron": "^4.1.0",
+    "electron-builder": "^20.39.0"
+  },
+  "scripts": {
+    "dist": "yarn dist:win && yarn dist:linux && yarn dist:macOS",
+    "dist:linux": "electron-builder build --linux",
+    "dist:win": "electron-builder build --windows",
+    "dist:macOS": "electron-builder build --mac"
+  },
+  "build": {
+    "appId": "com.pwootage.prime.watch",
+    "productName": "Prime Watch",
+    "directories": {
+      "output": "release/"
+    },
+    "win": {
+      "target": [
+        "zip"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg", "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "tar.gz"
+      ]
+    }
   }
 }
