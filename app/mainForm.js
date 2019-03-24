@@ -69,6 +69,13 @@ function setupMenu() {
           }
         },
         {
+          label: "Wireframe",
+          type: 'checkbox',
+          click(item, focusedwindow) {
+            mapWindow.webContents.send('setWireframe', item.checked);
+          }
+        },
+        {
           type: 'separator'
         } ,
         {

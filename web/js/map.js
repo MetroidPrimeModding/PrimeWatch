@@ -224,6 +224,11 @@ $(() => {
     }
   });
 
+  electron.ipcRenderer.on('setWireframe', (event, data) => {
+    geometryMaterial.wireframe = !!data;
+
+  });
+
   electron.ipcRenderer.on('depRead', (event, data) => {
     let world = worlds[currentWorld];
     if (world) {
