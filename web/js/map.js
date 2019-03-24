@@ -166,6 +166,10 @@ $(() => {
   pointLight.shadowDarkness = 1;
   scene.add(pointLight);
 
+  const geometryMaterial = new THREE.MeshPhongMaterial({
+    vertexColors: THREE.FaceColors
+  });
+
   let worlds = {};
   let currentWorld = null;
 
@@ -208,6 +212,16 @@ $(() => {
       }, function() {
         console.log('cancel');
       });
+  });
+
+  electron.ipcRenderer.on('setCulling', (event, data) => {
+    if (data == 'front') {
+      geometryMaterial.side = THREE.BackSide;
+    } else if (data == 'back') {
+      geometryMaterial.side = THREE.FrontSide;
+    } else {
+      geometryMaterial.side = THREE.DoubleSide;
+    }
   });
 
   electron.ipcRenderer.on('depRead', (event, data) => {
@@ -499,10 +513,7 @@ ${renderVec(player.transform.slice(8, 12))}
       //   vertexShader: vertShader,
       //   fragmentShader: fragShader,
       // });
-      const mat = new THREE.MeshPhongMaterial({
-        vertexColors: THREE.FaceColors
-      });
-      const mesh = new THREE.Mesh(geom, mat);
+      const mesh = new THREE.Mesh(geom, geometryMaterial);
       mesh.receiveShadow = true;
 
       const bbMat = new THREE.LineBasicMaterial({

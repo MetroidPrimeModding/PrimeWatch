@@ -48,6 +48,30 @@ function setupMenu() {
       label: 'View',
       submenu: [
         {
+          label: "Front faces",
+          type: 'radio',
+          click(item, focusedwindow) {
+            mapWindow.webContents.send('setCulling', 'back');
+          }
+        },
+        {
+          label: "Back faces",
+          type: 'radio',
+          click(item, focusedwindow) {
+            mapWindow.webContents.send('setCulling', 'front');
+          }
+        },
+        {
+          label: "All faces",
+          type: 'radio',
+          click(item, focusedwindow) {
+            mapWindow.webContents.send('setCulling', 'none');
+          }
+        },
+        {
+          type: 'separator'
+        } ,
+        {
           label: 'Reload',
           accelerator: 'CmdOrCtrl+R',
           click (item, focusedWindow) {
