@@ -7,17 +7,18 @@
   "dependencies": {
     "binary": "^0.3.0",
     "binary-parser": "^1.1.5",
-    "smalltalk": "^2.1.3"
+    "smalltalk": "^4.0.2"
   },
   "devDependencies": {
-    "electron": "^4.1.0",
-    "electron-builder": "^20.39.0"
+    "electron": "^7.1.3",
+    "electron-builder": "^21.2.0"
   },
   "scripts": {
-    "dist": "yarn dist:win && yarn dist:linux && yarn dist:macOS",
+    "dist": "yarn dist:ng && yarn dist:win && yarn dist:linux && yarn dist:macOS",
     "dist:linux": "electron-builder build --linux",
     "dist:win": "electron-builder build --windows",
-    "dist:macOS": "electron-builder build --mac"
+    "dist:macOS": "electron-builder build --mac",
+    "dist:ng": "cd web && ng build --prod --base-href ./"
   },
   "build": {
     "appId": "com.pwootage.prime.watch",
@@ -32,7 +33,8 @@
     },
     "mac": {
       "target": [
-        "dmg", "zip"
+        "dmg",
+        "zip"
       ]
     },
     "linux": {

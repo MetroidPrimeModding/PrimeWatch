@@ -252,14 +252,15 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  // mainWindow = new BrowserWindow({width: 600, height: 700, frame: false, title: "Metroid Prime Randomizer"});
-  // mainWindow.loadURL('file://' + __dirname + '/../web/html/index.html');
-  // mainWindow.webContents.openDevTools({mode: "undocked"});
-  // mainWindow.on('closed', () => {mainWindow = null;});
-
   mapWindow = new BrowserWindow({width: 600, height: 700, title: "Prime Watch"});
-  mapWindow.loadURL('file://' + __dirname + '/../web/html/map.html');
-  // mapWindow.webContents.openDevTools({mode: "undocked"});
+
+  // TODO: maybe lock this better?
+  if (process.env.PW_DEV_MODE === 'true') {
+    mapWindow.loadURL('http://localhost:4200/index.html');
+  } else {
+    mapWindow.loadURL('file://' + __dirname + '/../web-dist/index.html');
+  }
+  mapWindow.webContents.openDevTools({mode: "undocked"});
   mapWindow.on('closed', () => {
     mapWindow = null;
   });
