@@ -10,5 +10,11 @@ export class GameStateService {
   readonly globalObjects = new CGameGlobalObjects(this.memory, () => 0x80457798);
 
   constructor() {
+    (<any> window).require('electron').ipcRenderer.send('loadTestData');
+    (<any> window).require('electron').ipcRenderer.on('loadTestData', (event, v) => {
+      const input = <Uint8Array> v;
+      const out = new Uint8Array(this.memoryBuffer);
+      out.set(input, 0);
+    });
   }
 }

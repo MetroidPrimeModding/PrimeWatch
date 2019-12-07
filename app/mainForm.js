@@ -3,12 +3,14 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const tcp = require('./tcpHandler');
 const {ipcMain, Menu, MenuItem, dialog} = require('electron');
+const fs = require('fs');
 
 var mainWindow = null;
 var mapWindow = null;
 var currentClient = null;
+var testRamDump = null;
+testRamDump = fs.readFileSync( __dirname + '/../testram.raw');
 
 function setupMenu() {
   const template = [
@@ -279,8 +281,6 @@ ipcMain.on('connectToWii', (event, ip, port) => {
   currentClient = tcp.connect(ip, port);
 });
 
-let count = 0;
-tcp.messages.on('data', data => {
-  count++;
-  mapWindow.webContents.send('primeDump', data);
+ipcMain.on('loadTestData', (event) => {
+  mapWindow.webContents.send('loadTestData', testRamDump);
 });

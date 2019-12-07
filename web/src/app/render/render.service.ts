@@ -3,6 +3,7 @@ import {StatsService} from '../canvas/stats.service';
 
 import {BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer} from 'three';
 import {CGameGlobalObjects} from '../../memory/prime1/CGameGlobalObjects';
+import {GameStateService} from '../gameState/game-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class RenderService {
   camera: PerspectiveCamera;
   renderer: WebGLRenderer;
 
-  constructor(private stats: StatsService) {
+  constructor(private stats: StatsService, private state: GameStateService) {
     this.scene = new Scene();
     this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
 
@@ -60,10 +61,6 @@ export class RenderService {
   }
 
   private updateScene() {
-
-    const memory = new DataView(new ArrayBuffer(1));
-    let test = new CGameGlobalObjects(memory, () => 0);
-    console.log(test);
 
   }
 }

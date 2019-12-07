@@ -1,4 +1,12 @@
-import 'reflect-metadata';
+export interface MemoryObjectConstructor<T extends MemoryObject> {
+  new(memory: DataView, offset: MemoryOffset, ...args: any[]): T;
+}
+
+export interface MemoryObject {
+  readonly memory: DataView;
+  readonly offset: MemoryOffset;
+  readonly size: number;
+}
 
 export type MemoryOffset = number | (() => number);
 
@@ -18,25 +26,13 @@ export function addOffset(base: MemoryOffset, offset: MemoryOffset): MemoryOffse
 
 export function getOffset(offset: MemoryOffset): number {
   if (typeof offset == 'number') {
-    return offset;
+    return offset & 0x7FFFFFFF;
   } else {
-    return offset();
+    return offset() & 0x7FFFFFFF;
   }
 }
 
-export interface MemoryItemConstructor<T extends MemoryItem> {
-  new(memory: DataView, offset: MemoryOffset, ...args: any[]): T;
-
-  readonly size: number;
-}
-
-export interface MemoryItem {
-  readonly memory: DataView;
-  readonly offset: MemoryOffset;
-  readonly size: number;
-}
-
-export class CString implements MemoryItem {
+export class CString implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly length: number = -1) {
   }
 
@@ -63,7 +59,7 @@ export class CString implements MemoryItem {
   }
 }
 
-export class Uint8 implements MemoryItem {
+export class Uint8 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -74,7 +70,7 @@ export class Uint8 implements MemoryItem {
   }
 }
 
-export class Int8 implements MemoryItem {
+export class Int8 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -85,7 +81,7 @@ export class Int8 implements MemoryItem {
   }
 }
 
-export class Uint16 implements MemoryItem {
+export class Uint16 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -96,7 +92,7 @@ export class Uint16 implements MemoryItem {
   }
 }
 
-export class Int16 implements MemoryItem {
+export class Int16 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -107,7 +103,7 @@ export class Int16 implements MemoryItem {
   }
 }
 
-export class Uint32 implements MemoryItem {
+export class Uint32 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -118,7 +114,7 @@ export class Uint32 implements MemoryItem {
   }
 }
 
-export class Int32 implements MemoryItem {
+export class Int32 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -129,7 +125,7 @@ export class Int32 implements MemoryItem {
   }
 }
 
-export class Float32 implements MemoryItem {
+export class Float32 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -140,7 +136,7 @@ export class Float32 implements MemoryItem {
   }
 }
 
-export class Float64 implements MemoryItem {
+export class Float64 implements MemoryObject {
   constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
@@ -148,5 +144,54 @@ export class Float64 implements MemoryItem {
 
   get value(): number {
     return this.memory.getFloat64(getOffset(this.offset), false);
+  }
+}
+
+export class Pointer<T extends MemoryObject> implements MemoryObject {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly clazz: MemoryObjectConstructor<T>, ...args:any[]) {
+    this.args = args || [];
+  }
+  private readonly args: any[];
+
+  readonly size = 4;
+
+  get value(): T  { return new this.clazz(this.memory, () => this.rawValue, ...this.args); }
+
+  get rawValue(): number {
+    return this.memory.getUint32(getOffset(this.offset), false);
+  }
+}
+
+export class RCPointerData<T extends MemoryObject> implements MemoryObject {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly clazz: MemoryObjectConstructor<T>, ...args:any[]) {
+    this.args = args || [];
+  }
+  private readonly args: any[];
+
+  readonly size = 4;
+
+  readonly refcount = new Uint32(this.memory, addOffset(this.offset, 0x4));
+
+  get value(): T  { return new this.clazz(this.memory, () => this.rawValue, ...this.args); }
+
+  get rawValue(): number {
+    return this.memory.getUint32(getOffset(this.offset), false);
+  }
+}
+
+export class MemoryArray<T extends MemoryObject> implements MemoryObject {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly length: number, readonly stride: number, readonly clazz: MemoryObjectConstructor<T>, ...args:any[]) {
+    this.args = args || [];
+  }
+  private readonly args: any[];
+
+  readonly size = this.length * this.stride;
+
+  get(index: number): T {
+    return new this.clazz(this.memory, addOffset(this.offset, index * this.stride));
+  }
+
+  get rawValue(): number {
+    return this.memory.getUint32(getOffset(this.offset), false);
   }
 }

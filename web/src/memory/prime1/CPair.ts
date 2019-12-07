@@ -1,6 +1,6 @@
-import {MemoryItem, MemoryOffset} from '../MemoryObject';
+import {MemoryObject, MemoryOffset} from '../MemoryObject';
 
-export class CPair<A extends MemoryItem, B extends MemoryItem> implements MemoryItem {
+export class CPair<A extends MemoryObject, B extends MemoryObject> implements MemoryObject {
   constructor(readonly a: A, readonly b: B, readonly memory: DataView, readonly offset: MemoryOffset) {
   }
 
