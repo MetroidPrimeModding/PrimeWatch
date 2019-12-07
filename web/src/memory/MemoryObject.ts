@@ -1,0 +1,152 @@
+import 'reflect-metadata';
+
+export type MemoryOffset = number | (() => number);
+
+export function addOffset(base: MemoryOffset, offset: MemoryOffset): MemoryOffset {
+  if (typeof base == 'number') {
+    if (typeof offset == 'number') {
+      return base + offset;
+    } else {
+      return () => base + offset();
+    }
+  } else if (typeof offset == 'number') {
+    return () => base() + offset;
+  } else {
+    return base() + offset();
+  }
+}
+
+export function getOffset(offset: MemoryOffset): number {
+  if (typeof offset == 'number') {
+    return offset;
+  } else {
+    return offset();
+  }
+}
+
+export interface MemoryItemConstructor<T extends MemoryItem> {
+  new(memory: DataView, offset: MemoryOffset, ...args: any[]): T;
+
+  readonly size: number;
+}
+
+export interface MemoryItem {
+  readonly memory: DataView;
+  readonly offset: MemoryOffset;
+  readonly size: number;
+}
+
+export class CString implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly length: number = -1) {
+  }
+
+  readonly size = 1;
+
+  get value(): string {
+    if (length >= 0) {
+      let res = '';
+      for (let i = 0; i < length; i++) {
+        res += String.fromCharCode(this.memory.getInt8(getOffset(this.offset) + i));
+      }
+      return res;
+    } else {
+      let res = '';
+      for (let i = 0; ; i++) {
+        const read = this.memory.getInt8(getOffset(this.offset) + i);
+        if (read == 0x00) {
+          return res;
+        } else {
+          res += String.fromCharCode(read);
+        }
+      }
+    }
+  }
+}
+
+export class Uint8 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 1;
+
+  get value(): number {
+    return this.memory.getUint8(getOffset(this.offset));
+  }
+}
+
+export class Int8 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 1;
+
+  get value(): number {
+    return this.memory.getInt8(getOffset(this.offset));
+  }
+}
+
+export class Uint16 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 2;
+
+  get value(): number {
+    return this.memory.getUint16(getOffset(this.offset), false);
+  }
+}
+
+export class Int16 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 2;
+
+  get value(): number {
+    return this.memory.getInt16(getOffset(this.offset), false);
+  }
+}
+
+export class Uint32 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 4;
+
+  get value(): number {
+    return this.memory.getUint32(getOffset(this.offset), false);
+  }
+}
+
+export class Int32 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 4;
+
+  get value(): number {
+    return this.memory.getInt32(getOffset(this.offset), false);
+  }
+}
+
+export class Float32 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 4;
+
+  get value(): number {
+    return this.memory.getFloat32(getOffset(this.offset), false);
+  }
+}
+
+export class Float64 implements MemoryItem {
+  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  }
+
+  readonly size = 8;
+
+  get value(): number {
+    return this.memory.getFloat64(getOffset(this.offset), false);
+  }
+}

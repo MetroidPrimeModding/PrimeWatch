@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {StatsService} from "../canvas/stats.service";
+import {StatsService} from '../canvas/stats.service';
 
 import {BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer} from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import {CGameGlobalObjects} from '../../memory/prime1/CGameGlobalObjects';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,9 @@ export class RenderService {
   }
 
   init(ele: HTMLCanvasElement) {
-    if (this.element) throw new Error('Already initialized!');
+    if (this.element) {
+      throw new Error('Already initialized!');
+    }
     this.element = ele;
     this.renderer = new WebGLRenderer({
       canvas: this.element
@@ -44,6 +46,8 @@ export class RenderService {
     }
     this.stats.begin();
 
+    this.updateScene();
+
     this.renderer.render(this.scene, this.camera);
 
     this.stats.end();
@@ -53,5 +57,13 @@ export class RenderService {
   resize(width: number, height: number) {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
+  }
+
+  private updateScene() {
+
+    const memory = new DataView(new ArrayBuffer(1));
+    let test = new CGameGlobalObjects(memory, () => 0);
+    console.log(test);
+
   }
 }
