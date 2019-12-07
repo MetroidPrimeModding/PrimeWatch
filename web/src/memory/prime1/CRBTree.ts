@@ -1,38 +1,62 @@
-import {addOffset, getOffset, MemoryObject, MemoryObjectConstructor, MemoryOffset, Pointer, Uint32} from '../MemoryObject';
+import {MemoryView} from '../MemoryObject';
 
-export class CRBTree<T extends MemoryObject> implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly clazz: MemoryObjectConstructor<T>, ...args: any[]) {
-    this.args = args || [];
-    this.treeSize = new Uint32(this.memory, addOffset(this.offset, 0x0));
-    this.first = new Pointer<CRBTreeNode<T>>(this.memory, addOffset(this.offset, 0x4), CRBTreeNode, this.clazz, ...this.args);
-    this.last = new Pointer<CRBTreeNode<T>>(this.memory, addOffset(this.offset, 0x4), CRBTreeNode, this.clazz, ...this.args);
-    this.root = new Pointer<CRBTreeNode<T>>(this.memory, addOffset(this.offset, 0x4), CRBTreeNode, this.clazz, ...this.args);
+export class CRBTree<T> {
+  constructor(readonly memory: MemoryView, readonly offset: number, private construct: (number) => T) {
   }
 
-  private readonly args: any[];
+  treeSize(): number {
+    return this.memory.u32(0x0);
+  }
 
-  readonly size = 16;
+  first(): CRBTreeNode<T> {
+    const ptr = this.memory.u32(this.offset + 0x4);
+    return new CRBTreeNode<T>(this.memory, ptr, this.construct);
+  }
 
-  readonly treeSize: Uint32;
-  readonly first: Pointer<CRBTreeNode<T>>;
-  readonly last: Pointer<CRBTreeNode<T>>;
-  readonly root: Pointer<CRBTreeNode<T>>;
+  last(): CRBTreeNode<T> {
+    const ptr = this.memory.u32(this.offset + 0x8);
+    return new CRBTreeNode<T>(this.memory, ptr, this.construct);
+  }
+
+  root(): CRBTreeNode<T> {
+    const ptr = this.memory.u32(this.offset + 0xC);
+    return new CRBTreeNode<T>(this.memory, ptr, this.construct);
+  }
+
+
 }
 
-export class CRBTreeNode<T extends MemoryObject> implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset, readonly clazz: MemoryObjectConstructor<T>, ...args: any[]) {
-    this.args = args || [];
+export class CRBTreeNode<T> {
+  constructor(readonly memory: MemoryView, readonly offset: number, private construct: (number) => T) {
   }
 
   private readonly args: any[];
 
-  get size() {
-    return 16 + this.data.size;
+  size(): number {
+    return this.memory.u32(this.offset);
   }
 
-  readonly left = new Pointer(this.memory, addOffset(this.offset, 0x0), CRBTreeNode, this.clazz, ...this.args);
-  readonly right = new Pointer(this.memory, addOffset(this.offset, 0x4), CRBTreeNode, this.clazz, ...this.args);
-  readonly parent = new Pointer(this.memory, addOffset(this.offset, 0x8), CRBTreeNode, this.clazz, ...this.args);
-  readonly redOrBlack = new Uint32(this.memory, addOffset(this.offset, 0xC));
-  readonly data = new this.clazz(this.memory, addOffset(this.offset, 0x10), ...this.args);
+  left(): CRBTreeNode<T> {
+    const ptr = this.memory.u32(this.offset);
+    return new CRBTreeNode<T>(this.memory, ptr, this.construct);
+  }
+
+  right(): CRBTreeNode<T> {
+    const ptr = this.memory.u32(this.offset + 0x4);
+    return new CRBTreeNode<T>(this.memory, ptr, this.construct);
+  }
+
+  parent(): CRBTreeNode<T> {
+    const ptr = this.memory.u32(this.offset + 0x8);
+    return new CRBTreeNode<T>(this.memory, ptr, this.construct);
+  }
+
+  redOrBlack(): number {
+    return this.memory.u32(this.offset + 0xC);
+  }
+
+  data(): T {
+    const ptr = this.memory.u32(this.offset + 0x10);
+    return this.construct(ptr);
+  }
 }

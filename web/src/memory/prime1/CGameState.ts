@@ -1,11 +1,14 @@
-import {addOffset, Float64, MemoryObject, MemoryOffset, Uint32} from '../MemoryObject';
+import {MemoryView} from '../MemoryObject';
 
-export class CGameState implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+export class CGameState {
+  constructor(readonly memory: MemoryView, readonly offset: number) {
   }
 
-  readonly size = 0;
+  mlvlId(): number {
+    return this.memory.u32(this.offset + 0x84);
+  }
 
-  readonly mlvlId = new Uint32(this.memory, addOffset(this.offset, 0x84));
-  readonly playtime = new Float64(this.memory, addOffset(this.offset, 0xA0))
+  playtime(): number {
+    return this.memory.f64(this.offset + 0xA0)
+  }
 }

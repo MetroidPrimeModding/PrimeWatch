@@ -1,14 +1,26 @@
-import {MemoryObject, MemoryOffset, Uint8} from '../MemoryObject';
+import {MemoryView} from '../MemoryObject';
 import {CRBTree} from './CRBTree';
 import {CPair} from './CPair';
+import {SObjectTag} from './SObjectTag';
 
-export type ResourceType = Uint8;//todo
-
-export class CSimplePool implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+export class CSimplePool {
+  constructor(readonly memory: MemoryView, readonly offset: number) {
   }
 
   readonly size = 0;
 
-  readonly resources = new CRBTree<ResourceType>(this.memory, this.offset, Uint8)
+  resources(): CRBTree<CPair<SObjectTag, number>> {
+    return new CRBTree(this.memory, this.offset, (off) => {
+      return new CPair(
+        this.memory, off,
+        SObjectTag.size,
+        (off) => {
+          return new SObjectTag(this.memory, off);
+        },
+        (off) => {
+          return this.memory.u32(off);
+        }
+      );
+    });
+  }
 }

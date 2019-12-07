@@ -1,13 +1,17 @@
-import {MemoryObject, addOffset, MemoryOffset, Uint8, Pointer} from '../MemoryObject';
+import {MemoryView} from '../MemoryObject';
 import {CSimplePool} from './CSimplePool';
 import {CGameState} from './CGameState';
 
-export class CGameGlobalObjects implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+export class CGameGlobalObjects {
+  constructor(readonly memory: MemoryView, readonly offset: number) {
   }
 
-  readonly size = 0;
-  readonly testOff = new Uint8(this.memory, 0x00);
-  readonly mainPool = new CSimplePool(this.memory, addOffset(this.offset, 0xCC));
-  readonly gameState = new Pointer(this.memory, addOffset(this.offset, 0x134), CGameState)
+  mainPool(): CSimplePool {
+    return new CSimplePool(this.memory, this.offset + 0xCC);
+  }
+
+  gameState(): CGameState {
+    const ptr = this.memory.u32(this.offset + 0x134);
+    return new CGameState(this.memory, ptr);
+  }
 }

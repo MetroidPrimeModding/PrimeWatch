@@ -1,8 +1,17 @@
-import {MemoryObject, MemoryOffset} from '../MemoryObject';
+import {MemoryView} from '../MemoryObject';
 
-export class CPair<A extends MemoryObject, B extends MemoryObject> implements MemoryObject {
-  constructor(readonly a: A, readonly b: B, readonly memory: DataView, readonly offset: MemoryOffset) {
+export class CPair<A , B > {
+  constructor(readonly memory: MemoryView, readonly offset: number,
+              readonly stride: number,
+              private constructA: (number) => A,
+              private constructB: (number) => B) {
   }
 
-  get size(): number { return this.a.size + this.b.size};
+  a(): A {
+    return this.constructA(this.offset);
+  }
+
+  b(): B {
+    return this.constructB(this.offset + this.stride);
+  }
 }
