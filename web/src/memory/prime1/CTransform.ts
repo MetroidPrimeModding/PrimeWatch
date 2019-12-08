@@ -1,10 +1,14 @@
-import {addOffset, Float32, MemoryArray, MemoryObject, MemoryOffset} from '../MemoryObject';
+import {MemoryArray, MemoryView} from '../MemoryObject';
 
-export class CTransform implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+export class CTransform {
+  constructor(readonly memory: MemoryView, readonly offset: number) {
   }
 
-  readonly size = 0;
-
-  readonly matrix = new MemoryArray(this.memory, addOffset(this.offset, 0x0), 12, 4, Float32)
+  matrix(): MemoryArray<number> {
+    return new MemoryArray(
+      this.memory, this.offset,
+      4, 12,
+      (off) => this.memory.f32(off)
+    )
+  }
 }

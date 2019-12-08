@@ -1,19 +1,45 @@
-import {addOffset, MemoryObject, MemoryOffset, Pointer, RCPointer} from '../MemoryObject';
+import {MemoryView} from '../MemoryObject';
 
-export class CStateManager implements MemoryObject {
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+export class CStateManager {
+  constructor(readonly memory: MemoryView, readonly offset: number) {
   }
 
-  readonly size = 0;
+  allObjects(): CObjectList {
+    // const ptr = this.memory.u32(this.offset + 0x80C)
+    const ptr = this.memory.u32(this.offset + 0x810);
+    return new CObjectList(this.memory, ptr);
+  }
 
-  //    game_ptr<CObjectList> allObjs = game_ptr<CObjectList>(ptr(), 0x80C);
-  readonly allObjs = new Pointer(this.memory, addOffset(this.offset, 0x80C), CObjectList);
-  readonly player = new Pointer(this.memory, addOffset(this.offset, 0x80C), CPlayer);
-  readonly world = new Pointer(this.memory, addOffset(this.offset, 0x80C), CWorld);
-  readonly cameraManager = new Pointer(this.memory, addOffset(this.offset, 0x80C), CCameraManager);
-  readonly playerState = new RCPointer(this.memory, addOffset(this.offset, 0x80C), CPlayerState);
+  player(): CPlayer {
+    const ptr = this.memory.u32(this.offset + 0x84C);
+    return new CPlayer(this.memory, ptr);
+  }
 
-  readonly nextAreaID = game_u32(ptr(), 0x8CC);
-  readonly prevAreaID = game_u32(ptr(), 0x8D0);
-  readonly random = CRandom16(ptr(), 0x8FC);
+  world(): CWorld {
+    const ptr = this.memory.u32(this.offset + 0x850);
+    return new CWorld(this.memory, ptr);
+  }
+
+  cameraManager(): CCameraManager {
+    const ptr = this.memory.u32(this.offset + 0x870);
+    return new CCameraManager(this.memory, ptr);
+  }
+
+  playerState(): CPlayerState {
+    let ptr = this.memory.u32(this.offset + 0x8B8);
+    ptr = this.memory.u32(ptr);
+    return new CPlayerState(this.memory, ptr);
+  }
+
+  nextAreaID(): number {
+    return this.memory.u32(this.offset + 0x8CC);
+  }
+
+  prevAreaID(): number {
+    return this.memory.u32(this.offset + 0x8D0);
+  }
+
+  random(): CRandom16 {
+    return new CRandom16(this.memory, this.offset + 0x8FC);
+  }
 }

@@ -1,3 +1,5 @@
+import construct = Reflect.construct;
+
 export class MemoryView {
   constructor(readonly memory: DataView) {
   }
@@ -65,5 +67,17 @@ export class MemoryView {
         }
       }
     }
+  }
+}
+
+export class MemoryArray<T> {
+  constructor(readonly view: MemoryView, readonly offset: number,
+              readonly stride: number,
+              readonly length: number,
+              readonly construct: (number) => T) {
+  }
+
+  get(index: number) {
+    return this.construct(this.offset + this.stride * index);
   }
 }

@@ -1,21 +1,36 @@
-import {addOffset, CString, MemoryObject, MemoryOffset, Uint32, Uint8} from '../../MemoryObject';
+import {MemoryView} from '../../MemoryObject';
 
-export class CEntity implements MemoryObject {
+export class CEntity {
   static ACTIVE_MASK = 0x80;
   static GRAVEYARD_MASK = 0x40;
   static BLOCKED_MASK = 0x20;
   static USE_MASK = 0x10;
 
-  constructor(readonly memory: DataView, readonly offset: MemoryOffset) {
+  constructor(readonly memory: MemoryView, readonly offset: number) {
   }
 
-  readonly size = 0;
+  vtable(): number {
+    return this.memory.u32(this.offset);
+  }
 
-  readonly vtable = new Uint32(this.memory, addOffset(this.offset, 0x0));
-  readonly areaID = new Uint32(this.memory, addOffset(this.offset, 0x4));
-  readonly uniqueID = new Uint32(this.memory, addOffset(this.offset, 0x8));
-  readonly editorID = new Uint32(this.memory, addOffset(this.offset, 0xC));
-  readonly name = new CString(this.memory, addOffset(this.offset, 0x10));
-  readonly status = new Uint8(this.memory, addOffset(this.offset, 0x30));
+  areaID(): number {
+    return this.memory.u32(this.offset + 0x4);
+  }
+
+  uniqueID(): number {
+    return this.memory.u32(this.offset + 0x8);
+  }
+
+  editorID(): number {
+    return this.memory.u32(this.offset + 0xC);
+  }
+
+  name(): string {
+    return this.memory.string(this.offset + 0x10);
+  }
+
+  status(): number {
+    return this.memory.u32(this.offset + 0x30);
+  }
 }
 
