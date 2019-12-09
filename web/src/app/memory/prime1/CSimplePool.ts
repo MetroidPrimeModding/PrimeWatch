@@ -1,15 +1,15 @@
-import {MemoryView} from '../MemoryObject';
-import {CRBTree} from './CRBTree';
-import {CPair} from './CPair';
+import {MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
+import {CRBTree} from './rstl/CRBTree';
+import {CPair} from './rstl/CPair';
 import {SObjectTag} from './SObjectTag';
 
 export class CSimplePool {
-  constructor(readonly memory: MemoryView, readonly offset: number) {
+  constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
   readonly size = 0;
 
-  resources(): CRBTree<CPair<SObjectTag, number>> {
+  get resources(): CRBTree<CPair<SObjectTag, Uint32>> {
     return new CRBTree(this.memory, this.offset, (off) => {
       return new CPair(
         this.memory, off,
@@ -18,7 +18,7 @@ export class CSimplePool {
           return new SObjectTag(this.memory, off);
         },
         (off) => {
-          return this.memory.u32(off);
+          return new Uint32(this.memory, off);
         }
       );
     });

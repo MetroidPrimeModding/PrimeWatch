@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {StatsService} from '../canvas/stats.service';
 
 import {BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer} from 'three';
-import {CGameGlobalObjects} from '../../memory/prime1/CGameGlobalObjects';
+import {CGameGlobalObjects} from '../memory/prime1/CGameGlobalObjects';
 import {GameStateService} from '../gameState/game-state.service';
 
 @Injectable({

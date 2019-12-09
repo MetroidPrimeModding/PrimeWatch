@@ -1,61 +1,59 @@
-import {MemoryView} from '../MemoryObject';
+import {MemoryOffset, MemoryView, Uint32} from '../../MemoryObject';
 
 export class CRBTree<T> {
-  constructor(readonly memory: MemoryView, readonly offset: number, private construct: (number) => T) {
+  constructor(readonly memory: MemoryView, readonly offset: MemoryOffset, private construct: (MemoryOffset) => T) {
   }
 
-  treeSize(): number {
-    return this.memory.u32(0x0);
+  get treeSize(): Uint32 {
+    return new Uint32(this.memory, this.offset);
   }
 
-  first(): CRBTreeNode<T> {
+  get first(): CRBTreeNode<T> {
     const ptr = this.memory.u32(this.offset + 0x4);
     return new CRBTreeNode<T>(this.memory, ptr, this.construct);
   }
 
-  last(): CRBTreeNode<T> {
+  get last(): CRBTreeNode<T> {
     const ptr = this.memory.u32(this.offset + 0x8);
     return new CRBTreeNode<T>(this.memory, ptr, this.construct);
   }
 
-  root(): CRBTreeNode<T> {
+  get root(): CRBTreeNode<T> {
     const ptr = this.memory.u32(this.offset + 0xC);
     return new CRBTreeNode<T>(this.memory, ptr, this.construct);
   }
-
-
 }
 
 export class CRBTreeNode<T> {
-  constructor(readonly memory: MemoryView, readonly offset: number, private construct: (number) => T) {
+  constructor(readonly memory: MemoryView, readonly offset: MemoryOffset, private construct: (MemoryOffset) => T) {
   }
 
   private readonly args: any[];
 
-  size(): number {
+  get size(): number {
     return this.memory.u32(this.offset);
   }
 
-  left(): CRBTreeNode<T> {
+  get left(): CRBTreeNode<T> {
     const ptr = this.memory.u32(this.offset);
     return new CRBTreeNode<T>(this.memory, ptr, this.construct);
   }
 
-  right(): CRBTreeNode<T> {
+  get right(): CRBTreeNode<T> {
     const ptr = this.memory.u32(this.offset + 0x4);
     return new CRBTreeNode<T>(this.memory, ptr, this.construct);
   }
 
-  parent(): CRBTreeNode<T> {
+  get parent(): CRBTreeNode<T> {
     const ptr = this.memory.u32(this.offset + 0x8);
     return new CRBTreeNode<T>(this.memory, ptr, this.construct);
   }
 
-  redOrBlack(): number {
-    return this.memory.u32(this.offset + 0xC);
+  get redOrBlack(): Uint32 {
+    return new Uint32(this.memory, this.offset + 0xC);
   }
 
-  data(): T {
+  get data(): T {
     const ptr = this.memory.u32(this.offset + 0x10);
     return this.construct(ptr);
   }
