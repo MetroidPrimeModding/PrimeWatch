@@ -5,16 +5,26 @@ import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasComponent } from './canvas/canvas.component';
+import { MemoryObjectComponent } from './memoryView/memory-object/memory-object.component';
+import { MemoryRootComponent } from './memoryView/memory-root/memory-root.component';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatListModule} from '@angular/material/list';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopBarComponent,
-    CanvasComponent
+    CanvasComponent,
+    MemoryObjectComponent,
+    MemoryRootComponent
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDividerModule,
+    MatListModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,7 +5,7 @@
 // Include the common styles for Angular Material
 @include mat-core();
 
-$web-primary: mat-palette($mat-purple);
+$web-primary: mat-palette($mat-blue);
 $web-accent: mat-palette($mat-teal, A200, A100, A400);
 
 $web-warn: mat-palette($mat-red);
@@ -31,4 +31,9 @@ html, body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.primary-background-color {
+  background: mat-color($web-primary);
+  color: #FFF;
 }

@@ -1,7 +1,7 @@
-import {MemoryArray, MemoryOffset, MemoryView, Uint16, Uint32} from '../MemoryObject';
+import {MemoryArray, MemoryObject, MemoryOffset, MemoryView, Uint16, Uint32} from '../MemoryObject';
 import {CEntity} from './entities/CEntity';
 
-export class CObjectList {
+export class CObjectList implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -26,7 +26,7 @@ export class CObjectList {
   }
 }
 
-export class SObjectListEntry {
+export class SObjectListEntry implements MemoryObject {
   static readonly size = 8;
 
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {

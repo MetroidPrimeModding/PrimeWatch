@@ -1,9 +1,9 @@
-import {MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
 import {CRBTree} from './rstl/CRBTree';
 import {CPair} from './rstl/CPair';
 import {SObjectTag} from './SObjectTag';
 
-export class CSimplePool {
+export class CSimplePool implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

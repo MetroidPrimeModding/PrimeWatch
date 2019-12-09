@@ -1,7 +1,7 @@
 import {CVector3f} from './CVector3f';
-import {MemoryOffset, MemoryView} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 
-export class CAABB {
+export class CAABB implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

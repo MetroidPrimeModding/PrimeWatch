@@ -1,7 +1,7 @@
-import {MemoryOffset, MemoryView, Uint32} from '../../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32} from '../../../MemoryObject';
 import {CHealthInfo} from './CHealthInfo';
 
-export class CPlayerState {
+export class CPlayerState implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

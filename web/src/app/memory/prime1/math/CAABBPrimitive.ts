@@ -1,7 +1,7 @@
 import {CAABB} from './CAABB';
-import {MemoryOffset, MemoryView} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 
-export class CAABBPrimitive {
+export class CAABBPrimitive implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

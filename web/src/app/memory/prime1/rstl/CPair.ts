@@ -1,6 +1,6 @@
-import {MemoryOffset, MemoryView} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 
-export class CPair<A , B > {
+export class CPair<A, B> implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset,
               readonly stride: number,
               private constructA: (number) => A,

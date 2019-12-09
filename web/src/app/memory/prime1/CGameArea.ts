@@ -1,4 +1,4 @@
-import {MemoryOffset, MemoryView, Uint32, Uint32Bit, Uint32Enum} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32, Uint32Bit, Uint32Enum} from '../MemoryObject';
 import {CPostConstructed} from './CPostConstructed';
 
 export enum EPhase {
@@ -23,7 +23,7 @@ export enum EOcclusionState {
   Visible
 }
 
-export class CGameArea {
+export class CGameArea implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

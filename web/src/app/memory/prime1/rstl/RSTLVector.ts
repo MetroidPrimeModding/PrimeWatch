@@ -1,6 +1,6 @@
-import {MemoryOffset, MemoryView, Uint32} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32} from '../../MemoryObject';
 
-export class RSTLVector<T> {
+export class RSTLVector<T> implements MemoryObject {
   static readonly size = 12;
 
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset,

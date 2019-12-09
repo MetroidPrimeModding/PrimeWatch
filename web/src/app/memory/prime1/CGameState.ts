@@ -1,6 +1,6 @@
-import {Float64, MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
+import {Float64, MemoryObject, MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
 
-export class CGameState {
+export class CGameState implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

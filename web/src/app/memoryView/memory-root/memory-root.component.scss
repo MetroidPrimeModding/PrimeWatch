@@ -1,0 +1,15 @@
+.memory-root {
+  position: absolute;
+  top: 32px;
+  bottom: 0;
+  right: 0;
+  width: 240px;
+}
+
+.breadcrumb {
+  padding-top: 0;
+
+  .breadcrumb-item {
+    margin-right: 4px;
+  }
+}

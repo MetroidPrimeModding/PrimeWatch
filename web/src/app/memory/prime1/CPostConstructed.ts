@@ -1,7 +1,7 @@
-import {MemoryOffset, MemoryView, Uint32Enum} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32Enum} from '../MemoryObject';
 import {EOcclusionState} from './CGameArea';
 
-export class CPostConstructed {
+export class CPostConstructed implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

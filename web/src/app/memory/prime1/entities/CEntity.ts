@@ -1,6 +1,6 @@
-import {MemoryOffset, MemoryString, MemoryView, Uint32} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryString, MemoryView, Uint32} from '../../MemoryObject';
 
-export class CEntity {
+export class CEntity implements MemoryObject {
   static ACTIVE_MASK = 0x80;
   static GRAVEYARD_MASK = 0x40;
   static BLOCKED_MASK = 0x20;

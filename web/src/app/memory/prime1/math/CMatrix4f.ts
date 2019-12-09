@@ -1,6 +1,6 @@
-import {Float32, MemoryArray, MemoryOffset, MemoryView} from '../../MemoryObject';
+import {Float32, MemoryArray, MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 
-export class CMatrix4f {
+export class CMatrix4f implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

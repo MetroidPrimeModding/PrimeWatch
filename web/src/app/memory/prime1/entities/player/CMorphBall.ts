@@ -1,7 +1,7 @@
-import {MemoryOffset, MemoryView} from '../../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView} from '../../../MemoryObject';
 import {CSpherePrimitive} from '../../math/CSpherePrimitive';
 
-export class CMorphBall {
+export class CMorphBall implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

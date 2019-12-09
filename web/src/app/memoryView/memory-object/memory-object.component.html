@@ -1,0 +1,22 @@
+<h2>
+  {{this.memoryObject.name}}
+</h2>
+<h3>
+  <span class="class-name">{{this.memoryObject.obj.constructor.name}}</span>
+</h3>
+<mat-action-list>
+  <ng-container *ngFor="let child of children">
+    <button mat-list-item (click)="goToChild(child)" *ngIf="!child.isPrimitive">
+      <h2 matLine>{{child.name}} <span class="class-name">{{child.obj.constructor.name}}</span></h2>
+      <p matLine class="mat-caption">
+        <span class="offset">0x{{child.obj.offset.toString(16).toUpperCase()}}</span>
+      </p>
+    </button>
+    <ng-container [ngSwitch]="child.obj.constructor.name">
+      <mat-list-item *ngSwitchCase="'Int32'">
+        {{child.obj.value}}
+      </mat-list-item>
+
+    </ng-container>
+  </ng-container>
+</mat-action-list>

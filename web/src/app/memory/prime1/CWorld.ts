@@ -1,9 +1,9 @@
-import {MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
 import {RSTLVector} from './rstl/RSTLVector';
 import {RSTLAutoPtr} from './rstl/RSTLAutoPtr';
 import {CGameArea} from './CGameArea';
 
-export class CWorld {
+export class CWorld implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

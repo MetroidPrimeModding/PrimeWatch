@@ -1,4 +1,4 @@
-import {MemoryOffset, MemoryView} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView} from '../MemoryObject';
 import {CObjectList} from './CObjectList';
 import {CPlayer} from './entities/player/CPlayer';
 import {CWorld} from './CWorld';
@@ -6,7 +6,7 @@ import {CCameraManager} from './CCameraManager';
 import {CPlayerState} from './entities/player/CPlayerState';
 import {CRandom16} from './CRandom16';
 
-export class CStateManager {
+export class CStateManager implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

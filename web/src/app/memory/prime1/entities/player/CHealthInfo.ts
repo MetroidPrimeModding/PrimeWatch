@@ -1,6 +1,6 @@
-import {Float32, MemoryOffset, MemoryView} from '../../../MemoryObject';
+import {Float32, MemoryObject, MemoryOffset, MemoryView} from '../../../MemoryObject';
 
-export class CHealthInfo {
+export class CHealthInfo implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

@@ -2,54 +2,91 @@ export interface MemoryObject {
   readonly offset: MemoryOffset;
 }
 
+export interface MemoryObjectPrimitive {
+  readonly value: number | string;
+}
+
 export type MemoryOffset = number;
 
 export class MemoryView {
   constructor(readonly memory: DataView) {
   }
 
-  fixOffset(offset: MemoryOffset): number {
+  fixOffset(offset: MemoryOffset): number | null {
     if (offset < 0x8000_0000) {
-      throw new Error(`Invalid address ${offset.toString(16)}`);
+      return null;
+      // throw new Error(`Invalid address ${offset.toString(16)}`);
     }
     const fixedOffset = offset & 0x7FFF_FFFF;
     if (fixedOffset > 0x1800000) {
-      throw new Error(`Invalid address ${offset.toString(16)}`);
+      return null;
+      // throw new Error(`Invalid address ${offset.toString(16)}`);
     }
     return fixedOffset;
   }
 
   u8(offset: MemoryOffset): number {
-    this.fixOffset(offset);
-    return this.memory.getUint8(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getUint8(fixedOffset);
   }
 
   s8(offset: MemoryOffset): number {
-    return this.memory.getInt8(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getInt8(fixedOffset);
   }
 
   u16(offset: MemoryOffset): number {
-    return this.memory.getUint16(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getUint16(fixedOffset);
   }
 
   s16(offset: MemoryOffset): number {
-    return this.memory.getInt16(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getInt16(fixedOffset);
   }
 
   u32(offset: MemoryOffset): number {
-    return this.memory.getUint32(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getUint32(fixedOffset);
   }
 
   s32(offset: MemoryOffset): number {
-    return this.memory.getInt32(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getInt32(fixedOffset);
   }
 
   f32(offset: MemoryOffset): number {
-    return this.memory.getFloat32(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getFloat32(fixedOffset);
   }
 
   f64(offset: MemoryOffset): number {
-    return this.memory.getFloat64(this.fixOffset(offset));
+    const fixedOffset = this.fixOffset(offset);
+    if (fixedOffset == null) {
+      return 0;
+    }
+    return this.memory.getFloat64(fixedOffset);
   }
 
   string(offset: MemoryOffset, length: number = -1): string {
@@ -74,7 +111,7 @@ export class MemoryView {
   }
 }
 
-export class MemoryArray<T> {
+export class MemoryArray<T> implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset,
               readonly stride: number,
               readonly length: number,
@@ -86,7 +123,7 @@ export class MemoryArray<T> {
   }
 }
 
-export class Uint8 implements MemoryObject {
+export class Uint8 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -96,7 +133,7 @@ export class Uint8 implements MemoryObject {
   }
 }
 
-export class Int8 implements MemoryObject {
+export class Int8 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -106,7 +143,7 @@ export class Int8 implements MemoryObject {
   }
 }
 
-export class Uint16 implements MemoryObject {
+export class Uint16 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -116,7 +153,7 @@ export class Uint16 implements MemoryObject {
   }
 }
 
-export class Int16 implements MemoryObject {
+export class Int16 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -126,7 +163,7 @@ export class Int16 implements MemoryObject {
   }
 }
 
-export class Uint32 implements MemoryObject {
+export class Uint32 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -136,7 +173,7 @@ export class Uint32 implements MemoryObject {
   }
 }
 
-export class Int32 implements MemoryObject {
+export class Int32 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -145,10 +182,14 @@ export class Int32 implements MemoryObject {
   }
 }
 
-export class Uint32Bit implements MemoryObject {
+export class Uint32Bit implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset, readonly bit: number) {
-    if (bit < 0) throw new Error('Bit must be at least 0');
-    if (bit > 31) throw new Error('Bit must be at at most 31');
+    if (bit < 0) {
+      throw new Error('Bit must be at least 0');
+    }
+    if (bit > 31) {
+      throw new Error('Bit must be at at most 31');
+    }
   }
 
 
@@ -162,16 +203,16 @@ type StandardEnum<T> = {
   [nu: number]: string;
 }
 
-export class Uint32Enum<T extends number> implements MemoryObject {
+export class Uint32Enum<T extends number> implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
   get value(): T {
-    return <T>this.memory.s32(this.offset);
+    return <T> this.memory.s32(this.offset);
   }
 }
 
-export class Float32 implements MemoryObject {
+export class Float32 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -180,7 +221,7 @@ export class Float32 implements MemoryObject {
   }
 }
 
-export class Float64 implements MemoryObject {
+export class Float64 implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 
@@ -189,7 +230,7 @@ export class Float64 implements MemoryObject {
   }
 }
 
-export class MemoryString implements MemoryObject {
+export class MemoryString implements MemoryObject, MemoryObjectPrimitive {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset, readonly length: number = -1) {
   }
 

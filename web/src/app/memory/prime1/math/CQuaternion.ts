@@ -1,6 +1,6 @@
-import {Float32, MemoryOffset, MemoryView} from '../../MemoryObject';
+import {Float32, MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 
-export class CQuaternion {
+export class CQuaternion implements MemoryObject {
   static readonly size = 4 * 4;
 
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {

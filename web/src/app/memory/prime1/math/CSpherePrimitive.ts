@@ -1,7 +1,7 @@
-import {Float32, MemoryOffset, MemoryView} from '../../MemoryObject';
+import {Float32, MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 import {CVector3f} from './CVector3f';
 
-export class CSpherePrimitive {
+export class CSpherePrimitive implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

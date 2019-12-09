@@ -1,6 +1,6 @@
-import {MemoryOffset, MemoryView, Uint32, Uint8} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32, Uint8} from '../../MemoryObject';
 
-export class RSTLAutoPtr<T> {
+export class RSTLAutoPtr<T> implements MemoryObject {
   static readonly size = 8;
 
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset,

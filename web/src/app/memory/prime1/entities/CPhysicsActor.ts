@@ -2,9 +2,11 @@ import {MemoryOffset, MemoryView} from '../../MemoryObject';
 import {CVector3f} from '../math/CVector3f';
 import {CAABBPrimitive} from '../math/CAABBPrimitive';
 import {CQuaternion} from '../math/CQuaternion';
+import {CActor} from './CActor';
 
-export class CPhysicsActor {
-  constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
+export class CPhysicsActor extends CActor {
+  constructor(memory: MemoryView, offset: MemoryOffset) {
+    super(memory, offset)
   }
 
   get constantForce(): CVector3f {

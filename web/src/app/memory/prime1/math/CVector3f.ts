@@ -1,7 +1,7 @@
-import {Float32, MemoryOffset, MemoryView} from '../../MemoryObject';
+import {Float32, MemoryObject, MemoryOffset, MemoryView} from '../../MemoryObject';
 
 
-export class CVector3f {
+export class CVector3f implements MemoryObject {
   static readonly size = 4 * 3;
 
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {

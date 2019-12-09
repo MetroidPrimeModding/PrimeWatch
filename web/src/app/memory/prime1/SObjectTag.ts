@@ -1,6 +1,6 @@
-import {MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32} from '../MemoryObject';
 
-export class SObjectTag {
+export class SObjectTag implements MemoryObject {
   static readonly size = 0x8;
 
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {

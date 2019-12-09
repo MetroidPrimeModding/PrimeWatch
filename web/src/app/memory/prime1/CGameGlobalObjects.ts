@@ -1,8 +1,8 @@
-import {MemoryOffset, MemoryView} from '../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView} from '../MemoryObject';
 import {CSimplePool} from './CSimplePool';
 import {CGameState} from './CGameState';
 
-export class CGameGlobalObjects {
+export class CGameGlobalObjects implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
   }
 

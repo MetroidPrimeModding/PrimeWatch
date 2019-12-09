@@ -1,10 +1,12 @@
-import {Float32, MemoryOffset, MemoryView, Uint32, Uint8} from '../../../MemoryObject';
+import {Float32, MemoryObject, MemoryOffset, MemoryView, Uint32, Uint8} from '../../../MemoryObject';
 import {CPlayerGun} from './CPlayerGun';
 import {CMorphBall} from './CMorphBall';
 import {CPlayerCameraBob} from './CPlayerCameraBob';
+import {CPhysicsActor} from '../CPhysicsActor';
 
-export class CPlayer {
-  constructor(readonly memory: MemoryView, readonly offset: MemoryOffset) {
+export class CPlayer extends CPhysicsActor{
+  constructor(memory: MemoryView, offset: MemoryOffset) {
+    super(memory, offset)
   }
 
   get jumpState(): Uint8 {

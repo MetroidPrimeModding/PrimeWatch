@@ -1,6 +1,6 @@
-import {MemoryOffset, MemoryView, Uint32} from '../../MemoryObject';
+import {MemoryObject, MemoryOffset, MemoryView, Uint32} from '../../MemoryObject';
 
-export class CRBTree<T> {
+export class CRBTree<T> implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset, private construct: (MemoryOffset) => T) {
   }
 
@@ -24,7 +24,7 @@ export class CRBTree<T> {
   }
 }
 
-export class CRBTreeNode<T> {
+export class CRBTreeNode<T> implements MemoryObject {
   constructor(readonly memory: MemoryView, readonly offset: MemoryOffset, private construct: (MemoryOffset) => T) {
   }
 
