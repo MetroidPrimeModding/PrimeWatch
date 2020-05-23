@@ -7,3 +7,5 @@
 /web-dist/
 /web_old/
 /*.raw
+/grammar/*.html
+/grammar/*.js
