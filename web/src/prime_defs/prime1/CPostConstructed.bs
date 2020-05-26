@@ -1,0 +1,3 @@
+struct CPostConstructed {
+    EOcclusionState occlusionState 0x10DC
+}

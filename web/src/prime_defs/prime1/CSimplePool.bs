@@ -1,0 +1,3 @@
+struct CSimplePool {
+    rstl::rbtree<rstl::pair<SOBjectTag, u32>>
+}

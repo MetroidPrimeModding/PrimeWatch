@@ -5,6 +5,7 @@
   "version": "1.1.2",
   "main": "app/mainForm.js",
   "dependencies": {
+    "@pwootage/bstruct": "^1.0.0",
     "binary": "^0.3.0",
     "binary-parser": "^1.6.2",
     "nearley": "^2.19.3",
@@ -15,7 +16,7 @@
     "electron-builder": "^22.6.1"
   },
   "scripts": {
-    "dist": "yarn dist:ng && yarn dist:win && yarn dist:linux && yarn dist:macOS",
+    "dist": "npm run dist:ng && npm run dist:win && npm run dist:linux && npm run dist:macOS",
     "dist:linux": "electron-builder build --linux",
     "dist:win": "electron-builder build --windows",
     "dist:macOS": "electron-builder build --mac",
