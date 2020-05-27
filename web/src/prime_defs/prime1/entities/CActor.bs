@@ -1,0 +1,3 @@
+struct CActor: CEntity {
+    CTransform transform 0x34
+}

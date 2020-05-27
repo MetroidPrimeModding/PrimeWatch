@@ -26,9 +26,9 @@ struct rstl::rc_ptr<T> {
 
 struct rstl::rbtree<T> {
     u32 size 0x0
-    *rbtree_node<T> first 0x4
-    *rbtree_node<T> last 0x8
-    *rbtree_node<T> root 0xC
+    *rstl::rbtree_node<T> first 0x4
+    *rstl::rbtree_node<T> last 0x8
+    *rstl::rbtree_node<T> root 0xC
 }
 
 struct rstl::rbtree_node<T> {

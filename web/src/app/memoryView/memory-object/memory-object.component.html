@@ -1,22 +1,26 @@
 <h2>
-  {{this.memoryObject.name}}
+  {{this.memoryObject.type.name}}
 </h2>
 <h3>
-  <span class="class-name">{{this.memoryObject.obj.constructor.name}}</span>
+  <span class="class-name">{{this.memoryObject.type.name}}</span>
 </h3>
+<h4>0x{{this.memoryObject.offset.toString(16)}}</h4>
 <mat-action-list>
-  <ng-container *ngFor="let child of children">
-    <button mat-list-item (click)="goToChild(child)" *ngIf="!child.isPrimitive">
-      <h2 matLine>{{child.name}} <span class="class-name">{{child.obj.constructor.name}}</span></h2>
+  <ng-container *ngFor="let child of memoryObject.type.members">
+    <!-- TODO: handle pimitives -->
+    <!-- TODO: handle pointers -->
+    <!-- TODO: handle arrays -->
+    <button mat-list-item (click)="goToChild(child)">
+      <h2 matLine>{{child.name}} <span class="class-name">{{child.type}}</span></h2>
       <p matLine class="mat-caption">
-        <span class="offset">0x{{child.obj.offset.toString(16).toUpperCase()}}</span>
+        <span class="offset">0x{{(memoryObject.offset + child.offset).toString(16)}}</span>
       </p>
     </button>
-    <ng-container [ngSwitch]="child.obj.constructor.name">
+    <ng-container [ngSwitch]="child.name">
       <mat-list-item *ngSwitchCase="'Int32'">
-        {{child.obj.value}}
+        value goes here lol
+<!--        {{child.value}}-->
       </mat-list-item>
-
     </ng-container>
   </ng-container>
 </mat-action-list>

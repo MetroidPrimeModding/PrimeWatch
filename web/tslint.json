@@ -1,6 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "no-bitwise": false,
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
@@ -18,8 +19,12 @@
     "component-selector": [
       true,
       "element",
-      "app",
+      "pw",
       "kebab-case"
+    ],
+    "variable-name": [
+      true,
+      "allow-leading-underscore"
     ],
     "import-blacklist": [
       true,

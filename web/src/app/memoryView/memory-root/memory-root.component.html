@@ -7,13 +7,13 @@
     <mat-list-item *ngFor="let item of stack"
                    (click)="popTo(item)"
                    class="breadcrumb-item">
-      <h2>&gt; {{item.name}}</h2>
+      <h2>&gt; {{item.type.name}}</h2>
     </mat-list-item>
   </mat-action-list>
   <ng-container *ngIf="stack.length == 0">
-    <pw-memory-object [memoryObject]="{name: 'Global Objects', obj: gameState.globalObjects}"></pw-memory-object>
+    <pw-memory-object [memoryObject]="gameState.globalObjects"></pw-memory-object>
     <mat-divider></mat-divider>
-    <pw-memory-object [memoryObject]="{name: 'State Manager', obj: gameState.stateManager}"></pw-memory-object>
+    <pw-memory-object [memoryObject]="gameState.stateManager"></pw-memory-object>
   </ng-container>
   <ng-container *ngIf="stack.length > 0">
     <pw-memory-object [memoryObject]="stack[stack.length-1]"></pw-memory-object>

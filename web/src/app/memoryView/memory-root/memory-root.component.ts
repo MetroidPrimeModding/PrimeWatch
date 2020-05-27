@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GameStateService} from '../../gameState/game-state.service';
-import {MemoryObjectNavService, NamedMemoryObject} from '../memory-object-nav.service';
-import {MemoryObject} from '../../memory/MemoryObject';
+import {MemoryObjectNavService} from '../memory-object-nav.service';
 import {Subscription} from 'rxjs';
+import {CompiledStructInstance} from '../../gameState/game-types.service';
 
 @Component({
   selector: 'pw-memory-root',
@@ -11,7 +11,7 @@ import {Subscription} from 'rxjs';
   providers: [MemoryObjectNavService]
 })
 export class MemoryRootComponent implements OnInit, OnDestroy {
-  stack: NamedMemoryObject[] = [];
+  stack: CompiledStructInstance[] = [];
 
   private sub: Subscription;
 
@@ -30,7 +30,7 @@ export class MemoryRootComponent implements OnInit, OnDestroy {
     this.sub = null;
   }
 
-  popTo(obj: NamedMemoryObject | null) {
+  popTo(obj: CompiledStructInstance | null) {
     this.navService.popTo(obj);
   }
 }

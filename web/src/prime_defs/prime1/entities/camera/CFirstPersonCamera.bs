@@ -1,0 +1,3 @@
+struct CFirstPersonCamera: CGameCamera {
+    CTransform gunFollowXf 0x190
+}

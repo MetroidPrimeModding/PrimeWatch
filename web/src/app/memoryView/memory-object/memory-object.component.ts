@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MemoryObject} from '../../memory/MemoryObject';
 import {GameStateService} from '../../gameState/game-state.service';
 import {Subscription} from 'rxjs';
-import {MemoryObjectNavService, NamedMemoryObject} from '../memory-object-nav.service';
+import {MemoryObjectNavService} from '../memory-object-nav.service';
+import {CompiledMember, CompiledStruct} from '@pwootage/bstruct/lib/BCompiler_JSON';
+import {CompiledStructInstance, GameTypesService} from '../../gameState/game-types.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,27 +12,20 @@ import {MemoryObjectNavService, NamedMemoryObject} from '../memory-object-nav.se
   styleUrls: ['./memory-object.component.scss']
 })
 export class MemoryObjectComponent implements OnInit, OnDestroy {
-  private _memoryObject: NamedMemoryObject;
   @Input()
-  set memoryObject(ele: NamedMemoryObject) {
-    this._memoryObject = ele;
-    this.calcChildren();
-  }
-
-  children: NamedMemoryObject[];
-
-  get memoryObject(): NamedMemoryObject {
-    return this._memoryObject;
-  }
+  memoryObject: CompiledStructInstance;
 
   private sub: Subscription;
 
-  constructor(private gameState: GameStateService, private changeDetectorRef: ChangeDetectorRef, private navService: MemoryObjectNavService) {
+  constructor(
+    private gameState: GameStateService,
+    private types: GameTypesService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private navService: MemoryObjectNavService) {
   }
 
   ngOnInit() {
     this.sub = this.gameState.onRefresh.subscribe(() => {
-      this.calcChildren();
       this.changeDetectorRef.markForCheck();
     });
   }
@@ -41,21 +35,10 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
     this.sub = null;
   }
 
-  private calcChildren() {
-    this.children = [];
-    // @ts-ignore
-    for (let prop of Object.getOwnPropertyNames(this._memoryObject.obj.__proto__)) {
-      const child = this._memoryObject.obj[prop];
-      if (child.offset !== undefined) {
-        this.children.push({
-          name: prop,
-          obj: child
-        });
-      }
-    }
-  }
-
-  goToChild(child: NamedMemoryObject) {
-    this.navService.pushNavigation(child);
+  goToChild(child: CompiledMember) {
+    this.navService.pushNavigation({
+      offset: this.memoryObject.offset + child.offset,
+      type: this.types.lookup(child.type)
+    });
   }
 }

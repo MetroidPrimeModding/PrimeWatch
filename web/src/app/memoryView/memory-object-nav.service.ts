@@ -1,18 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {MemoryObject} from '../memory/MemoryObject';
-
-export interface NamedMemoryObject {
-  name: string;
-  obj: MemoryObject;
-}
+import {Observable, Subject} from 'rxjs';
+import {CompiledStructInstance} from '../gameState/game-types.service';
 
 @Injectable()
 export class MemoryObjectNavService {
-  private stack: NamedMemoryObject[] = [];
-  private subject = new Subject<NamedMemoryObject[]>();
+  private stack: CompiledStructInstance[] = [];
+  private subject = new Subject<CompiledStructInstance[]>();
 
-  pushNavigation(obj: NamedMemoryObject) {
+  pushNavigation(obj: CompiledStructInstance) {
     this.stack.push(obj);
     this.subject.next(this.stack);
   }
@@ -24,11 +19,11 @@ export class MemoryObjectNavService {
     }
   }
 
-  get onNavigate(): Observable<NamedMemoryObject[]> {
+  get onNavigate(): Observable<CompiledStructInstance[]> {
     return this.subject;
   }
 
-  popTo(obj: NamedMemoryObject) {
+  popTo(obj: CompiledStructInstance) {
     while (this.stack.length > 0 && this.stack[this.stack.length - 1] != obj) {
       this.stack.pop();
     }

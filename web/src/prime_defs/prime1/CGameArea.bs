@@ -35,5 +35,5 @@ struct CGameArea {
     EPhase phase 0xF4
     u32 loadTransactions 0xF8
     EChain curChain 0x138
-    CPostConstructed 0x12C
+    CPostConstructed postConstructed 0x12C
 }
