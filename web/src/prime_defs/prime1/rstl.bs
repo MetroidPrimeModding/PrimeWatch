@@ -18,10 +18,12 @@ struct rstl::autoptr<T> {
 }
 
 struct rstl::rc_ptr<T> {
-    u32 data 0x0
-    *T value 0x0
-    u32 unknown 0x4
-    u32 referenced 0x4
+    *rstl::CRefData<T> ref
+}
+
+struct rstl::CRefData<T> {
+  *T value
+  u32 refCount
 }
 
 struct rstl::rbtree<T> {
