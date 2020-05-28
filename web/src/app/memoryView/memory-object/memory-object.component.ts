@@ -215,11 +215,8 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
         value = this.gameState.memoryView.s32(toRead);
         break;
     }
-    const enumValue = memberType.values.find(v => v.value === value);
-    if (enumValue == null) {
-      return `???(${value})`;
-    } else {
-      return enumValue.name;
-    }
+    const enumValue = memberType.values
+      .find(v => v.value === value) || '???';
+    return `${enumValue}(${value})`;
   }
 }
