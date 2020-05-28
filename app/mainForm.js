@@ -10,7 +10,7 @@ var mainWindow = null;
 var mapWindow = null;
 var currentClient = null;
 var testRamDump = null;
-// testRamDump = fs.readFileSync( __dirname + '/../testram.raw');
+testRamDump = fs.readFileSync( __dirname + '/../testram.raw');
 
 function setupMenu() {
   const template = [
@@ -255,8 +255,8 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
   mapWindow = new BrowserWindow({
-    width: 600, 
-    height: 700, 
+    width: 600,
+    height: 700,
     title: "Prime Watch",
     webPreferences: {
       nodeIntegration: true

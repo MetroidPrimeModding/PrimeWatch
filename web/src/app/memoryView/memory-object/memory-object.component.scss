@@ -1,7 +1,19 @@
-.offset {
-
-}
-
 .class-name {
   color: rgba(0, 0, 0, 0.31);
+}
+
+cdk-tree-node {
+  border-left: 1px solid rgba(0,0,0,0.13);
+  border-bottom: 1px solid  rgba(0,0,0,0.13);
+  display: block;
+  //font-size: 12px;
+}
+
+.expand-button {
+  background: none;
+  border: none;
+}
+
+.clickable {
+  cursor: pointer;
 }

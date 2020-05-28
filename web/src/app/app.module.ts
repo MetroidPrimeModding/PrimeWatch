@@ -10,6 +10,10 @@ import { MemoryRootComponent } from './memoryView/memory-root/memory-root.compon
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatTreeModule} from "@angular/material/tree";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {CdkTreeModule} from "@angular/cdk/tree";
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     BrowserAnimationsModule,
     MatDividerModule,
     MatListModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatTreeModule,
+    MatButtonModule,
+    MatIconModule,
+    CdkTreeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
