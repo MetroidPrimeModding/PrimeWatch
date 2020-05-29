@@ -9,18 +9,17 @@
     UNKNOWN!!!
   </cdk-tree-node>
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isPrimitive" [style.margin-left]="node.level * 10 + 'px'">
+    <button class="expand-button" disabled>&nbsp;</button>
     {{node.member.name}} - {{readPrimitive(node.parent, node.member, node.memberType)}}
+    <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}</span>
   </cdk-tree-node>
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isEnum" [style.margin-left]="node.level * 10 + 'px'">
+    <button class="expand-button" disabled>&nbsp;</button>
     {{node.member.name}} - {{readEnum(node.parent, node.member, node.memberType)}}
+    <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}</span>
   </cdk-tree-node>
   <cdk-tree-node class="clickable" *cdkTreeNodeDef="let node; when: isStruct" [style.margin-left]="node.level * 10 + 'px'" matTreeNodeToggle>
-    <button class="expand-button" [attr.aria-label]="'toggle ' + node.filename">
-      {{treeControl.isExpanded(node) ? '-' : '+'}}
-      <!--      <mat-icon class="mat-icon-rtl-mirror">-->
-      <!--        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}-->
-      <!--      </mat-icon>-->
-    </button>
+    <button class="expand-button" [attr.aria-label]="'toggle ' + node.filename">{{treeControl.isExpanded(node) ? '-' : '+'}}</button>
     <ng-container *ngIf="node.member.pointer">
       *{{node.member.name}}
       <span class="offset">

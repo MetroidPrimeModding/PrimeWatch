@@ -216,7 +216,7 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
         break;
     }
     const enumValue = memberType.values
-      .find(v => v.value === value) || '???';
-    return `${enumValue}(${value})`;
+      .find(v => v.value === value) || {value: '???'};
+    return `${enumValue.value}(${value})`;
   }
 }

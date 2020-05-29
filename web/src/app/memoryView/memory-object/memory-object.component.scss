@@ -11,12 +11,17 @@ cdk-tree-node {
   border-left: 1px solid rgba(0,0,0,0.13);
   border-bottom: 1px solid  rgba(0,0,0,0.13);
   display: block;
+  padding: 4px 2px;
   //font-size: 12px;
+  &:hover {
+    background: rgba(0,0,0,.13);
+  }
 }
 
 .expand-button {
   background: none;
   border: none;
+  width: 20px;
 }
 
 .clickable {
