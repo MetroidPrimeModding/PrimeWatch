@@ -159,7 +159,7 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
   // isVector = (_: number, _nodeData: DynamicFlatNode) => _nodeData.memberType.name == 'CVector3f';
 
   constructor(
-    private gameState: GameStateService,
+    public gameState: GameStateService,
     private types: GameTypesService,
     private changeDetectorRef: ChangeDetectorRef,
     private navService: MemoryObjectNavService) {

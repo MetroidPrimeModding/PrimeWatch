@@ -21,6 +21,15 @@
       <!--        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}-->
       <!--      </mat-icon>-->
     </button>
-    {{node.member.name}}
+    <ng-container *ngIf="node.member.pointer">
+      *{{node.member.name}}
+      <span class="offset">
+        {{(node.parent.offset + node.member.offset).toString(16)}}|{{gameState.memoryView.u32(node.parent.offset + node.member.offset).toString(16)}}
+      </span>
+    </ng-container>
+    <ng-container *ngIf="!node.member.pointer">
+      *{{node.member.name}}
+      <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}</span>
+    </ng-container>
   </cdk-tree-node>
 </cdk-tree>

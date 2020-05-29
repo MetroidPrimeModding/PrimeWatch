@@ -3,8 +3,7 @@ struct CWorld {
     u32 phase 0x4
     u32 mlvl 0x8
     u32 strgID 0xC
-    rstl::rbtree<rstl::pair<SObjectTag, u32>> areas 0x18
-    // rstl::vector<rstl::autoptr<CGameArea>> areas 0x18
+    rstl::vector<rstl::autoptr<CGameArea>> areas 0x18
     u32 relays 0x2C
     u32 currentArea 0x68
 }
