@@ -1,4 +1,5 @@
 struct CPlayer: CPhysicsActor {
+    vtable 0x803d96e8
     EPlayerMovementState jumpstate 0x258
     f32 sjTimer 0x28C
     u32 cameraState 0x2F4

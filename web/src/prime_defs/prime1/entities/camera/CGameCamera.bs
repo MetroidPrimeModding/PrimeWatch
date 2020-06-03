@@ -1,4 +1,4 @@
-struct CGameCamera {
+struct CGameCamera: CActor {
     u32 watchedObject 0xE8
     CMatrix4f perspectiveMatrix 0xEC
     CTransform camTransform 0x12C
