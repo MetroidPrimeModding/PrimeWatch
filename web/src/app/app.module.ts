@@ -14,6 +14,7 @@ import {MatTreeModule} from "@angular/material/tree";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {CdkTreeModule} from "@angular/cdk/tree";
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {CdkTreeModule} from "@angular/cdk/tree";
     MatTreeModule,
     MatButtonModule,
     MatIconModule,
-    CdkTreeModule
+    CdkTreeModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

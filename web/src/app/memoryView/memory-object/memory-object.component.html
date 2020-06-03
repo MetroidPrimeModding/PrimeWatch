@@ -11,7 +11,7 @@
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isPrimitive" [style.margin-left]="node.level * 10 + 'px'">
     <button class="expand-button" disabled>&nbsp;</button>
     {{node.member.name}} - {{readPrimitive(node.parent, node.member, node.memberType)}}
-    <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}</span>
+    <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}<ng-container *ngIf="node.member.bit">:{{node.member.bit}}</ng-container></span>
   </cdk-tree-node>
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isEnum" [style.margin-left]="node.level * 10 + 'px'">
     <button class="expand-button" disabled>&nbsp;</button>
