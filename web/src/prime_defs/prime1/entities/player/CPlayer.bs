@@ -6,6 +6,30 @@ struct CPlayer: CPhysicsActor {
     *CPlayerGun gun 0x490
     *CMorphBall morphBall 0x768
     *CPlayerCameraBob cameraBob 0x76C
+
+    bool visorChangeRequested 0x9C4:24:1
+    bool showCrosshairs 0x9C4:25:1
+    bool canEnterMorphBall 0x9C4:27:1
+    bool canLeaveMorphBall 0x9C4:28:1
+    bool spiderBallControlXY 0x9C4:29:1
+    bool controlDirOverride 0x9C4:30:1
+    bool inWaterMovement 0x9C4:31:1
+    bool splashUpdated 0x9C5:25:1
+    bool camSubmerged 0x9C5:27:1
+    bool slidingOnWall 0x9C5:28:1
+    bool hitWall 0x9C5:29:1
+    bool selectFluidBallSound 0x9C5:30:1
+    bool stepCameraZBiasDirty 0x9C5:31:1
+    bool extendTargetDistance 0x9C6:24:1
+    bool interpolatingControlDir 0x9C6:25:1
+    bool outOfBallLookAtHint 0x9C6:26:1
+    bool aimingAtProjectile 0x9C6:27:1
+    bool aligningGrappleSwingTurn 0x9C6:28:1
+    bool disableInput 0x9C6:29:1
+    bool newScanScanning 0x9C6:30:1
+    bool overrideRadarRadius 0x9C6:31:1
+    bool noDamageLoopSfx 0x9C7:24:1
+    bool outOfBallLookAtHintActor 0x9C7:25:1
 }
 
 enum EPlayerMovementState: u32 {

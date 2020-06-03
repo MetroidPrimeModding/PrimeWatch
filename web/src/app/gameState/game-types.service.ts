@@ -26,6 +26,7 @@ export class MemoryObjectInstance {
 }
 
 const PRIMITIVE_TYPES: MemoryPrimitive[] = [
+  {type: 'primitive', name: 'bool', size: 1, read: (view: MemoryView, offset: MemoryOffset) =>  view.s8(offset)},
   {type: 'primitive', name: 'i8', size: 1, read: (view: MemoryView, offset: MemoryOffset) =>  view.s8(offset)},
   {type: 'primitive', name: 'i16', size: 2, read: (view: MemoryView, offset: MemoryOffset) =>  view.s16(offset)},
   {type: 'primitive', name: 'i32', size: 4, read: (view: MemoryView, offset: MemoryOffset) =>  view.s32(offset)},

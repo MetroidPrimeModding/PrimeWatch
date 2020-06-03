@@ -1,10 +1,14 @@
+struct TLockedToken<T>: CToken {
+    *T _obj
+}
+
 struct TCachedToken<T>: CToken {
     *T _obj
 }
 
-// struct TToken<T>: CToken {
+struct TToken<T>: CToken {
     
-// }
+}
 
 struct CToken {
     *CObjectReference ref 0x0

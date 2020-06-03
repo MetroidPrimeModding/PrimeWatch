@@ -190,7 +190,17 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
     if (member.pointer) {
       toRead = this.gameState.memoryView.u32(toRead);
     }
-    return memberType.read(view, toRead).toString();
+    let value = memberType.read(view, toRead);
+
+    if (member.bit != null && typeof(value) === 'number') {
+      value = (value >> (member.bit - 24)) & ((1 << member.bitLength) - 1);
+    }
+
+    if (member.type === 'bool') {
+      value = (!!value).toString();
+    }
+
+    return value.toString();
   }
 
   readEnum(parent: MemoryObjectInstance, member: CompiledMember, memberType: MemoryObject): String {
