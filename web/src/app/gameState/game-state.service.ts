@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {CompiledEnum, CompiledStruct} from '@pwootage/bstruct/lib/BCompiler_JSON';
+import {CompiledEnum, CompiledMember, CompiledStruct} from '@pwootage/bstruct/lib/BCompiler_JSON';
 import {MemoryView} from './MemoryView';
-import {MemoryObjectInstance, GameTypesService} from "./game-types.service";
+import {MemoryObjectInstance, GameTypesService, MemoryObject} from "./game-types.service";
 
 @Injectable({
   providedIn: 'root'
@@ -47,5 +47,63 @@ export class GameStateService {
 
   refresh() {
     this.refreshSubject.next();
+  }
+
+  getMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): MemoryObjectInstance {
+    let member: CompiledMember;
+    if (typeof(memberName) === 'string') {
+      member = this.types.lookupMember(obj.obj, memberName);
+    } else {
+      member = memberName;
+    }
+    const memberType = this.types.lookup(member.type);
+    const offset = obj.offset + member.offset;
+    if (member.pointer) {
+      const ptr = this.memoryView.u32(offset);
+      return {obj: memberType, offset: ptr};
+    } else {
+      return {obj: memberType, offset};
+    }
+  }
+
+  readPrimitiveMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): number | null {
+    let member: CompiledMember;
+    if (typeof(memberName) === 'string') {
+      member = this.types.lookupMember(obj.obj, memberName);
+    } else {
+      member = memberName;
+    }
+    const memberType = this.types.lookup(member.type);
+    if (memberType.type !== 'primitive') {
+      return null;
+    }
+
+    let toRead = obj.offset + member.offset;
+    if (member.pointer) {
+      toRead = this.memoryView.u32(toRead);
+    }
+    let value = memberType.read(this.memoryView, toRead);
+
+    if (member.bit != null && typeof(value) === 'number') {
+      value = (value >> (member.bit - 24)) & ((1 << member.bitLength) - 1);
+    }
+    return value;
+  }
+
+  getMemberArray(obj: MemoryObjectInstance, memberName: CompiledMember | string, index: number): MemoryObjectInstance {
+    let member: CompiledMember;
+    if (typeof(memberName) === 'string') {
+      member = this.types.lookupMember(obj.obj, memberName);
+    } else {
+      member = memberName;
+    }
+    const memberType = this.types.lookup(member.type);
+    const offset = obj.offset + member.offset;
+    if (member.pointer) {
+      const ptr = this.memoryView.u32(offset);
+      return {obj: memberType, offset: ptr + memberType.size * index};
+    } else {
+      return {obj: memberType, offset: offset + memberType.size * index};
+    }
   }
 }

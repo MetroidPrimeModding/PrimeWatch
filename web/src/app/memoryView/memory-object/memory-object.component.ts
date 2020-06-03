@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {GameStateService} from '../../gameState/game-state.service';
 import {BehaviorSubject, merge, Observable, Subscription} from 'rxjs';
-import {MemoryObjectNavService} from '../memory-object-nav.service';
 import {CompiledMember} from '@pwootage/bstruct/lib/BCompiler_JSON';
 import {MemoryObjectInstance, GameTypesService, MemoryObject} from '../../gameState/game-types.service';
 import {CollectionViewer, DataSource, SelectionChange} from '@angular/cdk/collections';
@@ -67,7 +66,6 @@ export class CompiledStructDataSource implements DataSource<DynamicFlatNode> {
   toggleNode(node: DynamicFlatNode, expand: boolean) {
     const parent = node.parent;
     const member = node.member;
-    const memberType = this.types.lookup(member.type);
     const index = this.data.indexOf(node);
     if (index < 0) {
       return;
@@ -77,14 +75,7 @@ export class CompiledStructDataSource implements DataSource<DynamicFlatNode> {
     //   return;
     // }
     if (expand) {
-      let newInstance: MemoryObjectInstance;
-      const offset = parent.offset + member.offset;
-      if (member.pointer) {
-        const ptr = this.gameState.memoryView.u32(offset);
-        newInstance = {obj: memberType, offset: ptr};
-      } else {
-        newInstance = {obj: memberType, offset};
-      }
+      const newInstance = this.gameState.getMember(parent, member);
 
       const nodes = this.generateMembersForType(newInstance, node.level + 1);
       this.data.splice(index + 1, 0, ...nodes);
@@ -161,8 +152,7 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
   constructor(
     public gameState: GameStateService,
     private types: GameTypesService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private navService: MemoryObjectNavService) {
+    private changeDetectorRef: ChangeDetectorRef) {
     this.treeControl = new FlatTreeControl<DynamicFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new CompiledStructDataSource(this.treeControl, gameState, types);
   }
@@ -178,32 +168,20 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
     this.sub = null;
   }
 
-  goToChild(child: CompiledMember) {
-  }
-
-  readPrimitive(parent: MemoryObjectInstance, member: CompiledMember, memberType: MemoryObject): string {
-    if (memberType.type !== 'primitive') {
-      return 'bad type ' + memberType.type;
-    }
-    const view = this.gameState.memoryView;
-    let toRead = parent.offset + member.offset;
-    if (member.pointer) {
-      toRead = this.gameState.memoryView.u32(toRead);
-    }
-    let value = memberType.read(view, toRead);
-
-    if (member.bit != null && typeof(value) === 'number') {
-      value = (value >> (member.bit - 24)) & ((1 << member.bitLength) - 1);
-    }
-
+  readPrimitive(parent: MemoryObjectInstance, member: CompiledMember): string {
+    const value = this.gameState.readPrimitiveMember(parent, member);
+    let valueString: string;
     if (member.type === 'bool') {
-      value = (!!value).toString();
+      valueString = (!!value).toString();
+    } else if (member.type[0] === 'u') {
+      valueString = '0x' + value.toString(16);
+    } else {
+      valueString = value.toString();
     }
-
-    return value.toString();
+    return valueString;
   }
 
-  readEnum(parent: MemoryObjectInstance, member: CompiledMember, memberType: MemoryObject): String {
+  readEnum(parent: MemoryObjectInstance, member: CompiledMember, memberType: MemoryObject): string {
     if (memberType.type !== 'enum') {
       return 'bad type ' + memberType.type;
     }
@@ -226,7 +204,7 @@ export class MemoryObjectComponent implements OnInit, OnDestroy {
         break;
     }
     const enumValue = memberType.values
-      .find(v => v.value === value) || {value: '???'};
-    return `${enumValue.value}(${value})`;
+      .find(v => v.value === value) || {name: '???'};
+    return `${enumValue.name} (${value})`;
   }
 }

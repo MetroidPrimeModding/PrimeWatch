@@ -11,9 +11,10 @@ struct rstl::reserved_vector<T> {
 }
 
 struct rstl::autoptr<T> {
+    size 0x8
     u32 unknown 0x0
     u8 referenced 0x0
-    u32 data 0x4
+    // u32 data 0x4
     *T value 0x4
 }
 

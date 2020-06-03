@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CompiledEnum, CompiledStruct} from '@pwootage/bstruct/lib/BCompiler_JSON';
+import {CompiledEnum, CompiledMember, CompiledStruct} from '@pwootage/bstruct/lib/BCompiler_JSON';
 import {MemoryOffset, MemoryView} from './MemoryView';
 import * as PrimeDefs from '../../assets/prime-defs.json';
 
@@ -15,7 +15,7 @@ interface MemoryPrimitive {
   type: 'primitive';
   size: number;
   name: string;
-  read(view: MemoryView, offset: MemoryOffset): string | number;
+  read(view: MemoryView, offset: MemoryOffset): number;
 }
 
 export type MemoryObject = MemoryStruct | MemoryPrimitive | MemoryEnum;
@@ -61,5 +61,16 @@ export class GameTypesService {
 
   lookup(name: string): MemoryObject | null {
     return this.table.get(name);
+  }
+
+  lookupMember(obj: MemoryObject, member: string): CompiledMember | null {
+    // const type = this.table.get(name);
+    // if (!type) {
+    //   return null;
+    // }
+    if (obj.type !== 'struct') {
+      return null;
+    }
+    return obj.members.find(v => v.name === member) || null;
   }
 }

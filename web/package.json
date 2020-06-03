@@ -7,7 +7,7 @@
     "build": "ng build",
     "build:bstruct": "npm run build:bstruct:json && npm run build:bstruct:010",
     "build:bstruct:json": "npx bstructc -i 'src/prime_defs/**/*.bs' -o src/assets/prime-defs.json",
-    "build:bstruct:010": "npx bstructc --format 010 -i 'src/prime_defs/**/*.bs' -o src/assets/prime-defs.bt",
+    "build:bstruct:010": "npx bstructc --format 010 --suffix-file src/prime_defs/prime1/010suffix.bt -i 'src/prime_defs/**/*.bs' -o src/assets/prime-defs.bt",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -1,7 +1,7 @@
 <h3>
   <span class="class-name">{{this.memoryObject.obj.name}}</span>
-  <br/>
-  <span class="class-name">0x{{this.memoryObject.offset.toString(16)}}</span>
+  &nbsp;
+  <span class="offset">0x{{this.memoryObject.offset.toString(16)}}</span>
 </h3>
 
 <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
@@ -10,24 +10,24 @@
   </cdk-tree-node>
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isPrimitive" [style.margin-left]="node.level * 10 + 'px'">
     <button class="expand-button" disabled>&nbsp;</button>
-    {{node.member.name}} - {{readPrimitive(node.parent, node.member, node.memberType)}}
+    <span class="offset">{{node.member.type}}</span> {{node.member.name}}: {{readPrimitive(node.parent, node.member)}}
     <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}<ng-container *ngIf="node.member.bit">:{{node.member.bit}}</ng-container></span>
   </cdk-tree-node>
   <cdk-tree-node *cdkTreeNodeDef="let node; when: isEnum" [style.margin-left]="node.level * 10 + 'px'">
     <button class="expand-button" disabled>&nbsp;</button>
-    {{node.member.name}} - {{readEnum(node.parent, node.member, node.memberType)}}
+    <span class="offset">{{node.member.type}}</span> {{node.member.name}}: {{readEnum(node.parent, node.member, node.memberType)}}
     <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}</span>
   </cdk-tree-node>
   <cdk-tree-node class="clickable" *cdkTreeNodeDef="let node; when: isStruct" [style.margin-left]="node.level * 10 + 'px'" matTreeNodeToggle>
     <button class="expand-button" [attr.aria-label]="'toggle ' + node.filename">{{treeControl.isExpanded(node) ? '-' : '+'}}</button>
     <ng-container *ngIf="node.member.pointer">
-      *{{node.member.name}}
+      <span class="offset">{{node.member.type}}</span> *{{node.member.name}}
       <span class="offset">
-        {{(node.parent.offset + node.member.offset).toString(16)}}|{{gameState.memoryView.u32(node.parent.offset + node.member.offset).toString(16)}}
+        {{(node.parent.offset + node.member.offset).toString(16)}} -> {{gameState.memoryView.u32(node.parent.offset + node.member.offset).toString(16)}}
       </span>
     </ng-container>
     <ng-container *ngIf="!node.member.pointer">
-      *{{node.member.name}}
+      <span class="offset">{{node.member.type}}</span> {{node.member.name}}
       <span class="offset">{{(node.parent.offset + node.member.offset).toString(16)}}</span>
     </ng-container>
   </cdk-tree-node>

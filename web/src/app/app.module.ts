@@ -15,6 +15,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {CdkTreeModule} from "@angular/cdk/tree";
 import {MatTabsModule} from "@angular/material/tabs";
+import { WorldComponent } from './world/world.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {MatTabsModule} from "@angular/material/tabs";
     TopBarComponent,
     CanvasComponent,
     MemoryObjectComponent,
-    MemoryRootComponent
+    MemoryRootComponent,
+    WorldComponent
   ],
   imports: [
     BrowserModule,
