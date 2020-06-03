@@ -49,9 +49,17 @@ export class GameStateService {
     this.refreshSubject.next();
   }
 
+  getRawU16Buffer(offset: number, count: number): Uint16Array {
+    return new Uint16Array(this.memoryBuffer, offset & 0x7FFFFFFF, count);
+  }
+
+  getRawF32Buffer(offset: number, count: number): Float32Array {
+    return new Float32Array(this.memoryBuffer, offset & 0x7FFFFFFF, count);
+  }
+
   getMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): MemoryObjectInstance {
     let member: CompiledMember;
-    if (typeof(memberName) === 'string') {
+    if (typeof (memberName) === 'string') {
       member = this.types.lookupMember(obj.obj, memberName);
     } else {
       member = memberName;
@@ -68,7 +76,7 @@ export class GameStateService {
 
   readPrimitiveMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): number | null {
     let member: CompiledMember;
-    if (typeof(memberName) === 'string') {
+    if (typeof (memberName) === 'string') {
       member = this.types.lookupMember(obj.obj, memberName);
     } else {
       member = memberName;
@@ -84,7 +92,7 @@ export class GameStateService {
     }
     let value = memberType.read(this.memoryView, toRead);
 
-    if (member.bit != null && typeof(value) === 'number') {
+    if (member.bit != null && typeof (value) === 'number') {
       value = (value >> (member.bit - 24)) & ((1 << member.bitLength) - 1);
     }
     return value;
@@ -92,7 +100,7 @@ export class GameStateService {
 
   getMemberArray(obj: MemoryObjectInstance, memberName: CompiledMember | string, index: number): MemoryObjectInstance {
     let member: CompiledMember;
-    if (typeof(memberName) === 'string') {
+    if (typeof (memberName) === 'string') {
       member = this.types.lookupMember(obj.obj, memberName);
     } else {
       member = memberName;
