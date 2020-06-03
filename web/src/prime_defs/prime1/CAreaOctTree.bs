@@ -30,5 +30,6 @@ enum CAreaOctTree::Node::ETreeType {
 }
 
 struct CCollisionEdge {
-
+    u16 edge1 0x0
+    u16 edge2 0x2
 }
