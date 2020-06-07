@@ -1,3 +1,4 @@
 struct CScriptTrigger: CActor {
     vtable 0x803da4d8
+    CAABB bounds 0x130
 }

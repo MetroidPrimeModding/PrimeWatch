@@ -2,9 +2,13 @@ import {Injectable} from '@angular/core';
 import {StatsService} from '../canvas/stats.service';
 
 import * as BABYLON from 'babylonjs';
-// import {BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer} from 'three';
 import {GameStateService} from '../gameState/game-state.service';
-import {MemoryObjectInstance} from "../gameState/game-types.service";
+import {MemoryObjectInstance} from '../gameState/game-types.service';
+import {ROPostConstructed} from './ROPostConstructed';
+import {RenderObject} from './RenderObject';
+import {AssetsService} from './assets.service';
+import {CreateROEntity} from "./CreateROEntity";
+import {ROCPlayer} from "./ROCPlayer";
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +20,15 @@ export class RenderService {
   engine: BABYLON.Engine;
   active = true;
 
-  areaMeshes = new Map<number, BABYLON.Mesh>();
+  areaMeshes = new Map<number, ROPostConstructed>();
+  entities = new Map<number, RenderObject>();
   collisionMat: BABYLON.StandardMaterial;
 
-  constructor(private stats: StatsService, private state: GameStateService) {
+  constructor(
+    public stats: StatsService,
+    public state: GameStateService,
+    public assets: AssetsService
+  ) {
     // this.scene = new BABYLON.Scene();
 
     // const geometry = new BABYLON.BoxGeometry(1, 1, 1);
@@ -31,6 +40,10 @@ export class RenderService {
 
     this.state.onRefresh.subscribe(() => {
       this.updateSceneFromState();
+    });
+
+    this.state.entities.subscribe((entities) => {
+      this.updateEntities(entities);
     });
 
     this.render();
@@ -46,6 +59,8 @@ export class RenderService {
       stencil: true
     });
     this.scene = new BABYLON.Scene(this.engine);
+    this.assets.load(this.scene);
+
     this.camera = new BABYLON.ArcRotateCamera(
       'Camera',
       Math.PI / 2,
@@ -70,21 +85,8 @@ export class RenderService {
       this.scene
     );
 
-    // This is where you create and manipulate meshes
-    const sphere = BABYLON.MeshBuilder.CreateSphere(
-      'sphere',
-      {diameter: 1},
-      this.scene
-    );
-
     this.collisionMat = new BABYLON.StandardMaterial('collisionMat', this.scene);
-    this.collisionMat.backFaceCulling = false;
-
-    // window.addEventListener('resize', () => {
-    // this.engine.resize();
-    // });
-
-    // this.renderer.setSize(this.element.width, this.element.height);
+    // this.collisionMat.backFaceCulling = false;
   }
 
   private render() {
@@ -135,84 +137,38 @@ export class RenderService {
         if (this.areaMeshes.has(mrea)) {
           continue;
         }
-        const mesh = this.createMeshForPostConstructed(mrea, postconstructed);
-        this.areaMeshes.set(mrea, mesh);
+        const obj = new ROPostConstructed(mrea, this, postconstructed);
+        this.areaMeshes.set(mrea, obj);
       }
     }
   }
 
-  private createMeshForPostConstructed(mrea: number, postconstructed: MemoryObjectInstance): BABYLON.Mesh {
-    const octTreePtr = this.state.getMember(postconstructed, 'collision');
-    const octTree = this.state.getMember(octTreePtr, 'value');
-    const edgeCount = this.state.readPrimitiveMember(octTree, 'edgeCount');
-    const polyCount = this.state.readPrimitiveMember(octTree, 'polyCount');
-    const vertCount = this.state.readPrimitiveMember(octTree, 'vertCount');
-    const edgeOffset = this.state.getMember(octTree, 'edges').offset;
-    const polyOffset = this.state.getMember(octTree, 'polyEdges').offset;
-    const vertOffset = this.state.getMember(octTree, 'verts').offset;
-
-    // const edges = this.state.getRawU16Buffer(edgeOffset, edgeCount * 2); // 2 u16 each
-    // const poly = this.state.getRawU16Buffer(polyOffset, polyCount * 3); // 3 u16 each
-    // const verts = this.state.getRawF32Buffer(vertOffset, vertCount * 3); // 3 f32 each
-
-    const mem = this.state.memoryView;
-
-    const mesh = new BABYLON.Mesh('area 0x' + mrea.toString(16), this.scene);
-
-    const positions = new Float32Array(vertCount * 3);
-    for (let i = 0; i < vertCount * 3; i++) {
-      positions[i] = mem.f32(vertOffset + i * 4);
-    }
-    const indices = [];
-
-    for (let i = 0; i < polyCount; i++) {
-      const triEdges = [
-        mem.u16(polyOffset + (i * 3) * 2),
-        mem.u16(polyOffset + (i * 3 + 1) * 2),
-        mem.u16(polyOffset + (i * 3 + 2) * 2)
-      ];
-      const line1 = [
-        mem.u16(edgeOffset + (triEdges[0] * 2) * 2),
-        mem.u16(edgeOffset + (triEdges[0] * 2 + 1) * 2),
-      ];
-      const line2: [number, number] = [
-        mem.u16(edgeOffset + (triEdges[1] * 2) * 2),
-        mem.u16(edgeOffset + (triEdges[1] * 2 + 1) * 2),
-      ];
-      const line3: [number, number] = [
-        mem.u16(edgeOffset + (triEdges[2] * 2) * 2),
-        mem.u16(edgeOffset + (triEdges[2] * 2 + 1) * 2),
-      ];
-      const i1 = line1[0];
-      let i2: number;
-      let otherLine: [number, number];
-      let i3: number;
-      if (line1[0] === line2[0]) {
-        [i2, otherLine] = [line2[1], line3];
-      } else if (line1[0] === line2[1]) {
-        [i2, otherLine] = [line2[0], line3];
-      } else if (line1[0] === line3[0]) {
-        [i2, otherLine] = [line3[1], line2];
+  private updateEntities(entities: MemoryObjectInstance[]) {
+    const unknown = new Set<number>(this.entities.keys());
+    for (const entity of entities) {
+      const entitySuper = this.state.getSuper(entity, 'CEntity');
+      const uid = this.state.readPrimitiveMember(entitySuper, 'uniqueID');
+      unknown.delete(uid);
+      if (this.entities.has(uid)) {
+        this.entities.get(uid).update(entity);
       } else {
-        [i2, otherLine] = [line3[0], line2];
+        const newEntity = CreateROEntity(this, entity);
+        this.entities.set(uid, newEntity);
       }
-      if (i2 === otherLine[0]) {
-        i3 = otherLine[1];
-      } else {
-        i3 = otherLine[0];
-      }
-
-      indices.push(i1, i2, i3);
     }
 
-    const vertexData = new BABYLON.VertexData();
-
-    vertexData.positions = positions;
-    vertexData.indices = indices;
-
-    vertexData.applyToMesh(mesh);
-    mesh.material = this.collisionMat;
-
-    return mesh;
+    for (const id of unknown) {
+      const v = this.entities.get(id);
+      if (v) {
+        v.dispose();
+      }
+      this.entities.delete(id);
+    }
+    const player = this.entities.get(0x4000000);
+    if (player) {
+      const pos = this.state.readTransformPos(this.state.getMember(player.entity, 'transform'));
+      this.camera.target = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
+      this.camera.position = this.camera.target.add(new BABYLON.Vector3(0, 4, 1));
+    }
   }
 }

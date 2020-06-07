@@ -16,7 +16,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {CdkTreeModule} from "@angular/cdk/tree";
 import {MatTabsModule} from "@angular/material/tabs";
 import { WorldComponent } from './world/world.component';
-import { ActorsComponent } from './actors/actors.component';
+import { EntitiesComponent } from './entities/entities.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { ActorsComponent } from './actors/actors.component';
     MemoryObjectComponent,
     MemoryRootComponent,
     WorldComponent,
-    ActorsComponent
+    EntitiesComponent
   ],
   imports: [
     BrowserModule,

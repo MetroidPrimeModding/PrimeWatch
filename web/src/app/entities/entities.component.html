@@ -1,0 +1,8 @@
+<h3>There are currently {{entities.length}} entities of {{vtables.size}} types</h3>
+<pw-memory-object [memoryObject]="actor" *ngFor="let actor of entities" ></pw-memory-object>
+<!--<ul>-->
+<!--  <li *ngFor="let vt of vtables | keyvalue">-->
+<!--    {{vt.key.toString(16)}} - {{vt.value}}-->
+<!--  </li>-->
+<!--</ul>-->
+
