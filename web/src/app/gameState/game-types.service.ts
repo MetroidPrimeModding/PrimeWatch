@@ -45,11 +45,15 @@ const PRIMITIVE_TYPES: MemoryPrimitive[] = [
 export class GameTypesService {
   types: GameDefs;
   table = new Map<string, MemoryObject>();
+  vtable = new Map<number, MemoryObject>();
 
   constructor() {
     this.types = PrimeDefs;
     for (const s of PrimeDefs.structs) {
       this.table.set(s.name, {type: 'struct', ...s});
+      if (s.vtable) {
+        this.vtable.set(s.vtable, {type: 'struct', ...s});
+      }
     }
     for (const e of PrimeDefs.enums) {
       this.table.set(e.name, {type: 'enum', ...e});
@@ -61,6 +65,10 @@ export class GameTypesService {
 
   lookup(name: string): MemoryObject | null {
     return this.table.get(name);
+  }
+
+  lookupVtable(vtable: number): MemoryObject | null {
+    return this.vtable.get(vtable);
   }
 
   lookupMember(obj: MemoryObject, member: string): CompiledMember | null {

@@ -1,4 +1,5 @@
 struct CPhysicsActor: CActor {
+    bool standardCollider 0xF9
     CVector3f constantForce 0xFC
     CVector3f angularMomentum 0x108
     CVector3f velocity 0x138
