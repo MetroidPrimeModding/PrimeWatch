@@ -29,11 +29,11 @@ struct CGameArea {
   u32 areaID 0x88
   // TODO: bit struct
   u32 flags 0xF0
-  bool isPostConstructed 0xF0:24:1
-  bool active 0xF0:25:1
-  bool tokensReady 0xF0:26:1
-  bool loadPaused 0xF0:27:1
-  bool validated 0xF0:28:1
+  bool isPostConstructed 0xF0:7:1
+  bool active 0xF0:6:1
+  bool tokensReady 0xF0:5:1
+  bool loadPaused 0xF0:4:1
+  bool validated 0xF0:3:1
   EPhase phase 0xF4
   u32 loadTransactions 0xF8
   EChain curChain 0x138

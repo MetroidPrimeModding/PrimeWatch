@@ -6,10 +6,10 @@ struct CEntity {
     *u8 name 0x10
     rstl::vector<SConnection> connections 0x24
     u32 status 0x30
-    bool active 0x30:31:1
-    bool inGraveyard 0x30:25:1
-    bool scriptingBlocked 0x30:26:1
-    bool inUse 0x30:27:1
+    bool active 0x30:7:1
+    bool inGraveyard 0x30:6:1
+    bool scriptingBlocked 0x30:5:1
+    bool inUse 0x30:4:1
 }
 
 struct SConnection {

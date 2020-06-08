@@ -125,7 +125,7 @@ export class GameStateService {
     let value = memberType.read(this.memoryView, toRead);
 
     if (member.bit != null && typeof (value) === 'number') {
-      value = (value >> (member.bit - 24)) & ((1 << member.bitLength) - 1);
+      value = (value >> (member.bit)) & ((1 << member.bitLength) - 1);
     }
     return value;
   }
