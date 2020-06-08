@@ -1,11 +1,11 @@
-import {RenderObject} from './RenderObject';
+import {RenderObjectEntity} from './RenderObjectEntity';
 import {createAABB} from './RenderUtils';
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {RenderService} from './render.service';
 
-export class ROCScriptTrigger extends RenderObject {
+export class ROCScriptTrigger extends RenderObjectEntity {
   private mesh: BABYLON.Mesh;
   private mat: BABYLON.StandardMaterial;
   private hasConnections = true;
@@ -32,43 +32,31 @@ export class ROCScriptTrigger extends RenderObject {
     // this.mat.alphaMode = BABYLON.Material.MODE
     this.mesh.material = this.mat;
     this.mesh.actionManager = new BABYLON.ActionManager(render.scene);
-    this.mesh.actionManager.registerAction(new BABYLON.SetValueAction(
-      BABYLON.ActionManager.OnPointerOverTrigger,
-      this.nameText,
-      'isVisible',
-      true
-    ));
-    this.mesh.actionManager.registerAction(new BABYLON.SetValueAction(
-      BABYLON.ActionManager.OnPointerOverTrigger,
-      this.mat,
-      'alpha',
-      1
-    ));
-    this.mesh.actionManager.registerAction(new BABYLON.SetValueAction(
-      BABYLON.ActionManager.OnPointerOutTrigger,
-      this.mat,
-      'alpha',
-      0.4
-    ));
-    this.mesh.actionManager.registerAction(new BABYLON.SetValueAction(
-      BABYLON.ActionManager.OnPointerOutTrigger,
-      this.nameText,
-      'isVisible',
-      false
-    ));
-
-    this.mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
-      BABYLON.ActionManager.OnPickTrigger,
-      (event) => {
-        console.log(`PICKED ${this.nameText.text}`);
-      }
-    ));
+    this.mesh.metadata = this;
 
     this.nameText.linkWithMesh(this.mesh);
 
     // Force initial update
     this.updateColor(render, entity);
     this.update(render, entity);
+  }
+
+  get isPickable(): boolean {
+    return true;
+  }
+
+  onPick() {
+    console.log(`PICKED ${this.nameText.text}`);
+  }
+
+  onDeselect() {
+    this.nameText.isVisible = false;
+    this.mat.alpha = 0.4;
+  }
+
+  onSelect() {
+    this.nameText.isVisible = true;
+    this.mat.alpha = 1;
   }
 
   dispose(): void {

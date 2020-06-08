@@ -2,8 +2,9 @@ import {MemoryObjectInstance} from '../gameState/game-types.service';
 import * as BABYLON from 'babylonjs';
 import {GameStateService} from '../gameState/game-state.service';
 import {RenderService} from './render.service';
+import {RenderObject} from "./RenderObject";
 
-export class ROPostConstructed {
+export class ROPostConstructed extends RenderObject {
   private mesh: BABYLON.Mesh;
 
   constructor(
@@ -11,6 +12,7 @@ export class ROPostConstructed {
     render: RenderService,
     postconstructed: MemoryObjectInstance
   ) {
+    super();
     this.mesh = this.createMeshForPostConstructed(render, postconstructed);
   }
 

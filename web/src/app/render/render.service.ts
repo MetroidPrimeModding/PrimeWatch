@@ -6,9 +6,10 @@ import * as GUI from 'babylonjs-gui';
 import {GameStateService} from '../gameState/game-state.service';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {ROPostConstructed} from './ROPostConstructed';
-import {RenderObject} from './RenderObject';
+import {RenderObjectEntity} from './RenderObjectEntity';
 import {AssetsService} from './assets.service';
 import {CreateROEntity} from './CreateROEntity';
+import {RenderObject} from "./RenderObject";
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,9 @@ export class RenderService {
   active = true;
 
   areaMeshes = new Map<number, ROPostConstructed>();
-  entities = new Map<number, RenderObject>();
+  entities = new Map<number, RenderObjectEntity>();
   collisionMat: BABYLON.StandardMaterial;
+  selected: RenderObject | null;
 
   constructor(
     public stats: StatsService,
@@ -95,6 +97,41 @@ export class RenderService {
       this.scene
     );
 
+    this.scene.onPointerDown = () => {
+      const hit = this.pickCast();
+      console.log(hit);
+      if (hit.pickedMesh) {
+        const meta = hit.pickedMesh.metadata;
+        if (meta instanceof RenderObject) {
+          meta.onPick();
+          if (this.selected !== meta) {
+            if (this.selected != null) {
+              this.selected.onDeselect();
+            }
+            this.selected = meta;
+            meta.onSelect();
+          }
+        } else {
+          if (this.selected != null) {
+            this.selected.onDeselect();
+            this.selected = null;
+          }
+        }
+      } else {
+        if (this.selected != null) {
+          this.selected.onDeselect();
+          this.selected = null;
+        }
+      }
+    };
+  }
+
+  private pickCast() {
+    const ray = this.scene.createPickingRay(this.scene.pointerX, this.scene.pointerY, BABYLON.Matrix.Identity(), this.camera);
+
+    return this.scene.pickWithRay(ray, (mesh) => {
+      return mesh.isPickable && mesh.isVisible && mesh.metadata && mesh.metadata.isPickable;
+    }, false);
   }
 
   private render() {

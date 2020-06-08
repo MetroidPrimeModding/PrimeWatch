@@ -1,11 +1,11 @@
 import {RenderService} from './render.service';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {ROCPhysicsActor} from './ROCPhysicsActor';
-import {RenderObject, ROEntityUnknown} from './RenderObject';
+import {RenderObjectEntity, ROEntityUnknown} from './RenderObjectEntity';
 import {ROCScriptTrigger} from './ROCScriptTrigger';
 import {ROCPlayer} from "./ROCPlayer";
 
-export function CreateROEntity(render: RenderService, instance: MemoryObjectInstance): RenderObject {
+export function CreateROEntity(render: RenderService, instance: MemoryObjectInstance): RenderObjectEntity {
   if (instance.obj.name === 'CScriptTrigger') {
     return new ROCScriptTrigger(instance, render);
   }

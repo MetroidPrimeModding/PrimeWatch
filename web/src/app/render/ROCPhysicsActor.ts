@@ -1,10 +1,10 @@
-import {RenderObject} from './RenderObject';
+import {RenderObjectEntity} from './RenderObjectEntity';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {RenderService} from './render.service';
 import * as BABYLON from 'babylonjs';
 import {createAABB} from './RenderUtils';
 
-export class ROCPhysicsActor extends RenderObject {
+export class ROCPhysicsActor extends RenderObjectEntity {
   private mesh: BABYLON.Mesh;
   private mat: BABYLON.StandardMaterial;
 
@@ -26,6 +26,7 @@ export class ROCPhysicsActor extends RenderObject {
     this.mat.emissiveColor = this.mat.diffuseColor;
     this.mat.specularColor = this.mat.diffuseColor;
     this.mesh.material = this.mat;
+    this.mesh.metadata = this;
 
     this.nameText.linkWithMesh(this.mesh);
     this.nameText.isVisible = true;
