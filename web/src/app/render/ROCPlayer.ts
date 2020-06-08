@@ -2,7 +2,7 @@ import {RenderObjectEntity} from './RenderObjectEntity';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {RenderService} from './render.service';
 import * as BABYLON from 'babylonjs';
-import {createAABB} from './RenderUtils';
+import {createAABB, createTiledAABB} from './RenderUtils';
 import * as GUI from 'babylonjs-gui';
 
 export class ROCPlayer extends RenderObjectEntity {
@@ -46,7 +46,8 @@ export class ROCPlayer extends RenderObjectEntity {
     return true;
   }
 
-  onPick() {
+  onPick(render: RenderService) {
+    super.onPick(render);
     console.log(`PICKED ${this.nameText.text}`);
   }
 }

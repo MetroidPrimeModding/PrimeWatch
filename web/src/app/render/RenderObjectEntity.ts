@@ -29,7 +29,8 @@ export abstract class RenderObjectEntity extends RenderObject {
     const worldNames = NAMES[world] || {};
 
     this.nameText = new GUI.TextBlock();
-    this.nameText.text = worldNames[this.editorID] || this.name || this.editorID.toString(16);
+    const prettyName = worldNames[this.editorID] || this.name || this.editorID.toString(16);
+    this.nameText.text = prettyName + '\n' + this.entity.obj.name;
     this.nameText.color = 'white';
     this.nameText.outlineColor = 'black';
     this.nameText.outlineWidth = 2;
@@ -39,6 +40,10 @@ export abstract class RenderObjectEntity extends RenderObject {
   }
 
   abstract update(render: RenderService, entity: MemoryObjectInstance);
+
+  onPick(render: RenderService) {
+    render.state.selectedEntity.next(this.entity);
+  }
 
   dispose(): void {
     super.dispose();

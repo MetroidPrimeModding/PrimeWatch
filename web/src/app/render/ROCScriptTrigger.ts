@@ -1,5 +1,5 @@
 import {RenderObjectEntity} from './RenderObjectEntity';
-import {createAABB} from './RenderUtils';
+import {createTiledAABB} from './RenderUtils';
 import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
@@ -13,7 +13,7 @@ export class ROCScriptTrigger extends RenderObjectEntity {
   constructor(entity: MemoryObjectInstance, render: RenderService) {
     super(entity, render);
     const aabb = render.state.getMember(entity, 'bounds');
-    this.mesh = createAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb);
+    this.mesh = createTiledAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb);
     const pos = render.state.readTransformPos(render.state.getMember(entity, 'transform'));
     this.mesh.position = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
 
@@ -45,16 +45,19 @@ export class ROCScriptTrigger extends RenderObjectEntity {
     return true;
   }
 
-  onPick() {
+  onPick(render: RenderService) {
+    super.onPick(render);
     console.log(`PICKED ${this.nameText.text}`);
   }
 
-  onDeselect() {
+  onDeselect(render: RenderService) {
+    super.onDeselect(render);
     this.nameText.isVisible = false;
     this.mat.alpha = 0.4;
   }
 
-  onSelect() {
+  onSelect(render: RenderService) {
+    super.onSelect(render);
     this.nameText.isVisible = true;
     this.mat.alpha = 1;
   }
@@ -83,7 +86,11 @@ export class ROCScriptTrigger extends RenderObjectEntity {
       this.hasConnections = false;
     }
 
-    if (render.state.readPrimitiveMember(entity, 'detectPlayer')) {
+    if (
+      render.state.readPrimitiveMember(entity, 'detectPlayer') ||
+      render.state.readPrimitiveMember(entity, 'detectMorphedPlayer') ||
+      render.state.readPrimitiveMember(entity, 'detectUnmorphedPlayer')
+    ) {
       this.mat.diffuseColor = new BABYLON.Color3(0, 1, 0);
       this.mat.ambientColor = this.mat.diffuseColor;
       this.mat.emissiveColor = this.mat.diffuseColor;

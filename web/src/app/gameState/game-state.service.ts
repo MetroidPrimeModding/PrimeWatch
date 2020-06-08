@@ -13,6 +13,7 @@ export class GameStateService {
   private _memoryView = new MemoryView(this.memoryDataView);
   readonly globalObjects: MemoryObjectInstance;
   readonly stateManager: MemoryObjectInstance;
+  readonly selectedEntity = new ReplaySubject<MemoryObjectInstance>(1);
 
   private refreshSubject = new Subject<void>();
   private entitiesSubject = new ReplaySubject<MemoryObjectInstance[]>(1);

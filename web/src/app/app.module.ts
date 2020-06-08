@@ -17,6 +17,8 @@ import {CdkTreeModule} from "@angular/cdk/tree";
 import {MatTabsModule} from "@angular/material/tabs";
 import { WorldComponent } from './world/world.component';
 import { EntitiesComponent } from './entities/entities.component';
+import { InfoDisplayComponent } from './info-display/info-display.component';
+import { SelectedObjectComponent } from './selected-object/selected-object.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { EntitiesComponent } from './entities/entities.component';
     MemoryObjectComponent,
     MemoryRootComponent,
     WorldComponent,
-    EntitiesComponent
+    EntitiesComponent,
+    InfoDisplayComponent,
+    SelectedObjectComponent
   ],
   imports: [
     BrowserModule,

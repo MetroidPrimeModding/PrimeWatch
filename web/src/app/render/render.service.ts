@@ -32,15 +32,6 @@ export class RenderService {
     public state: GameStateService,
     public assets: AssetsService
   ) {
-    // this.scene = new BABYLON.Scene();
-
-    // const geometry = new BABYLON.BoxGeometry(1, 1, 1);
-    // const material = new MeshBasicMaterial({color: 0x00ff00});
-    // const cube = new Mesh(geometry, material);
-    // this.scene.add(cube);
-
-    // this.camera.position.z = 5;
-
     this.state.onRefresh.subscribe(() => {
       this.updateSceneFromState();
     });
@@ -103,23 +94,23 @@ export class RenderService {
       if (hit.pickedMesh) {
         const meta = hit.pickedMesh.metadata;
         if (meta instanceof RenderObject) {
-          meta.onPick();
+          meta.onPick(this);
           if (this.selected !== meta) {
             if (this.selected != null) {
-              this.selected.onDeselect();
+              this.selected.onDeselect(this);
             }
             this.selected = meta;
-            meta.onSelect();
+            meta.onSelect(this);
           }
         } else {
           if (this.selected != null) {
-            this.selected.onDeselect();
+            this.selected.onDeselect(this);
             this.selected = null;
           }
         }
       } else {
         if (this.selected != null) {
-          this.selected.onDeselect();
+          this.selected.onDeselect(this);
           this.selected = null;
         }
       }
