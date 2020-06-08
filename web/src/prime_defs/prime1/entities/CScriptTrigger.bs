@@ -1,4 +1,45 @@
 struct CScriptTrigger: CActor {
     vtable 0x803da4d8
     CAABB bounds 0x130
+    ETriggerFlags triggerFlags 0x12c
+    bool detectPlayer 0x12F:24:1
+    bool detectAI 0x12F:25:1
+    bool detectProjectiles1 0x12F:26:1
+    bool detectProjectiles2 0x12F:27:1
+    bool detectProjectiles3 0x12F:28:1
+    bool detectProjectiles4 0x12F:29:1
+    bool detectBombs 0x12F:30:1
+    bool detectPowerBombs 0x12F:31:1
+    bool detectProjectiles5 0x12E:24:1
+    bool detectProjectiles6 0x12E:25:1
+    bool detectProjectiles7 0x12E:26:1
+    bool killOnEnter 0x12E:27:1
+    bool detectMorphedPlayer 0x12E:28:1
+    bool useCollisionImpulses 0x12E:29:1
+    bool detectCamera 0x12E:30:1
+    bool useBooleanIntersection 0x12E:31:1
+    bool detectUnmorphedPlayer 0x12D:24:1
+    bool blockEnvironmentalEffects 0x12D:25:1
+}
+
+enum ETriggerFlags: u32 {
+  None = 0,
+  DetectPlayer = 0x1,
+  DetectAI = 0x2,
+  DetectProjectiles1 = 0x4,
+  DetectProjectiles2 = 0x8,
+  DetectProjectiles3 = 0x10,
+  DetectProjectiles4 = 0x20,
+  DetectBombs = 0x40,
+  DetectPowerBombs = 0x80,
+  DetectProjectiles5 = 0x100,
+  DetectProjectiles6 = 0x200,
+  DetectProjectiles7 = 0x400,
+  KillOnEnter = 0x800,
+  DetectMorphedPlayer = 0x1000,
+  UseCollisionImpulses = 0x2000,
+  DetectCamera = 0x4000,
+  UseBooleanIntersection = 0x8000,
+  DetectUnmorphedPlayer = 0x10000,
+  BlockEnvironmentalEffects = 0x20000
 }

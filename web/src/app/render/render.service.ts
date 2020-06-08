@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {StatsService} from '../canvas/stats.service';
 
 import * as BABYLON from 'babylonjs';
+import * as GUI from 'babylonjs-gui';
 import {GameStateService} from '../gameState/game-state.service';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {ROPostConstructed} from './ROPostConstructed';
 import {RenderObject} from './RenderObject';
 import {AssetsService} from './assets.service';
-import {CreateROEntity} from "./CreateROEntity";
-import {ROCPlayer} from "./ROCPlayer";
+import {CreateROEntity} from './CreateROEntity';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,7 @@ export class RenderService {
   scene: BABYLON.Scene;
   camera: BABYLON.ArcRotateCamera;
   engine: BABYLON.Engine;
+  gui: GUI.AdvancedDynamicTexture;
   active = true;
 
   areaMeshes = new Map<number, ROPostConstructed>();
@@ -87,6 +88,13 @@ export class RenderService {
 
     this.collisionMat = new BABYLON.StandardMaterial('collisionMat', this.scene);
     // this.collisionMat.backFaceCulling = false;
+
+    this.gui = GUI.AdvancedDynamicTexture.CreateFullscreenUI(
+      'mainGui',
+      true,
+      this.scene
+    );
+
   }
 
   private render() {
@@ -150,7 +158,7 @@ export class RenderService {
       const uid = this.state.readPrimitiveMember(entitySuper, 'uniqueID');
       unknown.delete(uid);
       if (this.entities.has(uid)) {
-        this.entities.get(uid).update(entity);
+        this.entities.get(uid).update(this, entity);
       } else {
         const newEntity = CreateROEntity(this, entity);
         this.entities.set(uid, newEntity);

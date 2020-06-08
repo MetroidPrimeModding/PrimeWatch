@@ -7,8 +7,11 @@
   "dependencies": {
     "binary": "^0.3.0",
     "binary-parser": "^1.6.2",
+    "glob": "^7.1.6",
+    "js-yaml": "^3.14.0",
     "nearley": "^2.19.3",
-    "smalltalk": "^4.0.6"
+    "smalltalk": "^4.0.6",
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "electron": "^9.0.0",

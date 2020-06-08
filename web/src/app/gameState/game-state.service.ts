@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, ReplaySubject, Subject} from 'rxjs';
 import {CompiledEnum, CompiledMember, CompiledStruct} from '@pwootage/bstruct/lib/BCompiler_JSON';
 import {MemoryView} from './MemoryView';
-import {MemoryObjectInstance, GameTypesService, MemoryObject} from "./game-types.service";
+import {MemoryObjectInstance, GameTypesService, MemoryObject} from './game-types.service';
 
 @Injectable({
   providedIn: 'root'
@@ -59,19 +59,7 @@ export class GameStateService {
   }
 
   getMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): MemoryObjectInstance {
-    let member: CompiledMember;
-    if (typeof (memberName) === 'string') {
-      let current = obj;
-      while (current) {
-        member = this.types.lookupMember(current.obj, memberName);
-        if (member != null) {
-          break;
-        }
-        current = this.getSuper(current);
-      }
-    } else {
-      member = memberName;
-    }
+    const member = this.recursiveMemberLookup(memberName, obj);
     if (member == null) {
       return null;
     }
@@ -124,12 +112,7 @@ export class GameStateService {
   }
 
   readPrimitiveMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): number | null {
-    let member: CompiledMember;
-    if (typeof (memberName) === 'string') {
-      member = this.types.lookupMember(obj.obj, memberName);
-    } else {
-      member = memberName;
-    }
+    const member = this.recursiveMemberLookup(memberName, obj);
     const memberType = this.types.lookup(member.type);
     if (memberType.type !== 'primitive') {
       return null;
@@ -222,5 +205,32 @@ export class GameStateService {
       this.readPrimitiveMember(instance, 'posY'),
       this.readPrimitiveMember(instance, 'posZ')
     ];
+  }
+
+  readString(instance: MemoryObjectInstance, length: number = -1): string | null {
+    if (instance.obj.name !== 'u8') {
+      throw new Error('Attempt to read a non-u8 as a string');
+    }
+    if (instance.offset === 0) {
+      return null;
+    }
+    return this.memoryView.string(instance.offset, length);
+  }
+
+  private recursiveMemberLookup(memberName: CompiledMember | string, obj: MemoryObjectInstance) {
+    let member: CompiledMember;
+    if (typeof (memberName) === 'string') {
+      let current = obj;
+      while (current) {
+        member = this.types.lookupMember(current.obj, memberName);
+        if (member != null) {
+          break;
+        }
+        current = this.getSuper(current);
+      }
+    } else {
+      member = memberName;
+    }
+    return member;
   }
 }

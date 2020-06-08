@@ -26,13 +26,17 @@ export class ROCPhysicsActor extends RenderObject {
     this.mat.emissiveColor = this.mat.diffuseColor;
     this.mat.specularColor = this.mat.diffuseColor;
     this.mesh.material = this.mat;
+
+    this.nameText.linkWithMesh(this.mesh);
+    this.nameText.isVisible = true;
   }
 
-  update(entity: MemoryObjectInstance) {
+  update(render: RenderService, entity: MemoryObjectInstance) {
     // Do nothing
   }
 
   dispose() {
+    super.dispose();
     this.mesh.dispose();
     this.mesh = null;
     this.mat.dispose();
