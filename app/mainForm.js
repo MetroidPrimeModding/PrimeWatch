@@ -5,6 +5,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const {ipcMain, Menu, MenuItem, dialog} = require('electron');
 const fs = require('fs');
+const processHandler = require('./processHandler');
 
 var mainWindow = null;
 var mapWindow = null;
@@ -277,17 +278,14 @@ app.on('ready', () => {
   setupMenu();
 });
 
-const areas = require("./areas");
-
-ipcMain.on('connectToWii', (event, ip, port) => {
-  if (currentClient != null) {
-    console.log('Disconnecting from existing connection');
-    currentClient.destroy();
-  }
-  console.log(`Connecting to ${ip}:${port}`);
-  currentClient = tcp.connect(ip, port);
-});
+processHandler.events.on('data', (data) => {
+  mapWindow.webContents.send('loadData', data);
+})
 
 ipcMain.on('loadTestData', (event) => {
-  mapWindow.webContents.send('loadTestData', testRamDump);
+  mapWindow.webContents.send('loadData', testRamDump);
+});
+
+ipcMain.on('forceLoad', (event) => {
+  processHandler.requestMemory();
 });

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {GameStateService} from "../gameState/game-state.service";
 
 @Component({
   selector: 'pw-top-bar',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TopBarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private state: GameStateService) { }
 
   ngOnInit() {
   }
 
+  loadFromGame() {
+    this.state.forceUpdate();
+  }
 }

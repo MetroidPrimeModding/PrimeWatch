@@ -29,7 +29,7 @@ export class GameStateService {
     };
 
     (window as any).require('electron').ipcRenderer.send('loadTestData');
-    (window as any).require('electron').ipcRenderer.on('loadTestData', (event, v) => {
+    (window as any).require('electron').ipcRenderer.on('loadData', (event, v) => {
       const input = v as Uint8Array;
       const out = new Uint8Array(this.memoryBuffer);
       out.set(input, 0);
@@ -59,6 +59,49 @@ export class GameStateService {
     this.refreshSubject.next();
   }
 
+  forceUpdate() {
+    (window as any).require('electron').ipcRenderer.send('forceLoad');
+  }
+
+  private parseEntities() {
+    const manager = this.stateManager;
+    const objects = this.getMember(manager, 'allObjects');
+    const first = this.readPrimitiveMember(objects, 'firstID');
+    // const size = this.readPrimitiveMember(objects, 'size');
+
+    let count = 0;
+    const entities: MemoryObjectInstance[] = [];
+    let next = first;
+    while (next !== 0xFFFF) {
+      const entry = this.getMemberArray(objects, 'list', next & 0x3FF);
+      let entity = this.getMember(entry, 'entity');
+      const vtable = this.readPrimitiveMember(entity, 'vtable');
+      const knownType = this.types.lookupVtable(vtable);
+      if (knownType != null) {
+        entity = {
+          obj: knownType,
+          offset: entity.offset
+        };
+      }
+      entities.push(entity);
+
+      count++;
+      if (count > 1000) {
+        console.log('EMERGENCY');
+        break;
+      }
+      const id = next;
+      next = this.readPrimitiveMember(entry, 'next');
+      if (next === id) {
+        console.log('next == id');
+        break;
+      }
+    }
+
+    this.entitiesSubject.next(entities);
+  }
+
+  // Memory methods. Maybe move these.
   getMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): MemoryObjectInstance {
     const member = this.recursiveMemberLookup(memberName, obj);
     if (member == null) {
@@ -157,44 +200,6 @@ export class GameStateService {
     } else {
       return {obj: memberType, offset: offset + memberType.size * index};
     }
-  }
-
-  private parseEntities() {
-    const manager = this.stateManager;
-    const objects = this.getMember(manager, 'allObjects');
-    const first = this.readPrimitiveMember(objects, 'firstID');
-    // const size = this.readPrimitiveMember(objects, 'size');
-
-    let count = 0;
-    const entities: MemoryObjectInstance[] = [];
-    let next = first;
-    while (next !== 0xFFFF) {
-      const entry = this.getMemberArray(objects, 'list', next & 0x3FF);
-      let entity = this.getMember(entry, 'entity');
-      const vtable = this.readPrimitiveMember(entity, 'vtable');
-      const knownType = this.types.lookupVtable(vtable);
-      if (knownType != null) {
-        entity = {
-          obj: knownType,
-          offset: entity.offset
-        };
-      }
-      entities.push(entity);
-
-      count++;
-      if (count > 1000) {
-        console.log('EMERGENCY');
-        break;
-      }
-      const id = next;
-      next = this.readPrimitiveMember(entry, 'next');
-      if (next === id) {
-        console.log('next == id');
-        break;
-      }
-    }
-
-    this.entitiesSubject.next(entities);
   }
 
   readTransformPos(instance: MemoryObjectInstance): [number, number, number] {
