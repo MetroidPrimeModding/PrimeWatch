@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import {RenderService} from "./render/render.service";
+import {RenderService} from './render/render.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'pw-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'web';
+  selectedTab = 0;
 
   constructor(private render: RenderService) {
   }
