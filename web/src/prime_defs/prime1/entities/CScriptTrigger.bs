@@ -1,6 +1,5 @@
 struct CScriptTrigger: CActor {
     vtable 0x803da4d8
-    CAABB bounds 0x130
     ETriggerFlags triggerFlags 0x12c
     bool detectPlayer 0x12F:0:1
     bool detectAI 0x12F:1:1
@@ -20,6 +19,7 @@ struct CScriptTrigger: CActor {
     bool useBooleanIntersection 0x12E:7:1
     bool detectUnmorphedPlayer 0x12D:0:1
     bool blockEnvironmentalEffects 0x12D:1:1
+    CAABB bounds 0x130
 }
 
 enum ETriggerFlags: u32 {

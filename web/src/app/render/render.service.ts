@@ -9,7 +9,7 @@ import {ROPostConstructed} from './ROPostConstructed';
 import {RenderObjectEntity} from './RenderObjectEntity';
 import {AssetsService} from './assets.service';
 import {CreateROEntity} from './CreateROEntity';
-import {RenderObject} from "./RenderObject";
+import {RenderObject} from './RenderObject';
 
 @Injectable({
   providedIn: 'root'
@@ -192,16 +192,14 @@ export class RenderService {
     const promises: Promise<void>[] = [];
     const unknown = new Set<number>(this.entities.keys());
     for (const entity of entities) {
-      const entitySuper = this.state.getSuper(entity, 'CEntity');
-      const entityView = await this.state.readObject(entitySuper);
-      const uid = entityView.readPrimitiveMember(entitySuper, 'uniqueID');
-      unknown.delete(uid);
-      if (this.entities.has(uid)) {
-        promises.push(this.entities.get(uid).update(this));
+      unknown.delete(entity.offset);
+      if (this.entities.has(entity.offset)) {
+        promises.push(this.entities.get(entity.offset).update(this));
+        // await this.entities.get(entity.offset).update(this); // todo: parallel?
       } else {
         // TODO: might be able to async this
         const newEntity = await CreateROEntity(this, entity);
-        this.entities.set(uid, newEntity);
+        this.entities.set(entity.offset, newEntity);
       }
     }
 
@@ -213,14 +211,15 @@ export class RenderService {
       this.entities.delete(id);
     }
 
-    const player = this.entities.get(0x4000000);
-    if (player) {
-      const entityView = await this.state.readObject(player.entity);
-      const pos = entityView.readTransformPos(entityView.getMember(player.entity, 'transform'));
-      this.camera.target = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
-      this.camera.position = this.camera.target.add(new BABYLON.Vector3(0, 4, 1));
-    }
-
     await Promise.all(promises);
+
+    // TODO: this
+    // const player = this.entities.get(0x4000000);
+    // if (player) {
+    //   const entityView = await this.state.readObject(player.entity);
+    //   const pos = entityView.readTransformPos(entityView.getMember(player.entity, 'transform'));
+    //   this.camera.target = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
+    //   this.camera.position = this.camera.target.add(new BABYLON.Vector3(0, 4, 1));
+    // }
   }
 }

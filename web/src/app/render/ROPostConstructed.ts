@@ -1,9 +1,7 @@
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import * as BABYLON from 'babylonjs';
-import {GameStateService} from '../gameState/game-state.service';
 import {RenderService} from './render.service';
-import {RenderObject} from "./RenderObject";
-import {MemoryView} from "../gameState/MemoryView";
+import {RenderObject} from './RenderObject';
 
 export class ROPostConstructed extends RenderObject {
   constructor(
@@ -14,7 +12,9 @@ export class ROPostConstructed extends RenderObject {
     super();
   }
 
-  static async createMeshForPostConstructed(mrea: number, render: RenderService, postconstructed: MemoryObjectInstance): Promise<BABYLON.Mesh> {
+  static async createMeshForPostConstructed(mrea: number,
+                                            render: RenderService,
+                                            postconstructed: MemoryObjectInstance): Promise<BABYLON.Mesh> {
     const postConstrcutedView = await render.state.readObject(postconstructed);
     const octTreePtr = postConstrcutedView.getMember(postconstructed, 'collision');
     const octTreePtrView = await render.state.readObject(octTreePtr);
@@ -39,7 +39,7 @@ export class ROPostConstructed extends RenderObject {
 
     const octTreeStart = materialOffset;
     const octTreeEnd = vertOffset + vertCount * 4 * 3;
-    const octTreeDataView = await render.state.readMemory(octTreeStart, octTreeEnd);
+    const octTreeDataView = await render.state.readMemory(octTreeStart, octTreeEnd - octTreeStart);
 
     const mesh = new BABYLON.Mesh('area 0x' + mrea.toString(16), render.scene);
 

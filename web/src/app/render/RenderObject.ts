@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs';
-import {RenderService} from "./render.service";
+import {RenderService} from './render.service';
 
 export class RenderObject implements BABYLON.IDisposable {
   dispose(): void {

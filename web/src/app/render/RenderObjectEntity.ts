@@ -4,8 +4,8 @@ import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import NAMES from '../../assets/editor_names.json';
 import {RenderObject} from './RenderObject';
-import {MemoryWatch} from "../gameState/MemoryWatcher";
-import {MemoryView} from "../gameState/MemoryView";
+import {MemoryWatch} from '../gameState/MemoryWatcher';
+import {MemoryView} from '../gameState/MemoryView';
 
 export abstract class RenderObjectEntity extends RenderObject {
   readonly uniqueID: number;
@@ -32,7 +32,8 @@ export abstract class RenderObjectEntity extends RenderObject {
 
     this.uniqueID = view.readPrimitiveMember(entitySuper, 'uniqueID');
     this.editorID = view.readPrimitiveMember(entitySuper, 'editorID');
-    this.name = view.readString(view.getMember(entitySuper, 'name'));
+    // THis name is never right anyway
+    // this.name = view.readString(view.getMember(entitySuper, 'name'));
 
     this.nameText = new GUI.TextBlock();
     // TODO: parse name and pass it in to constructor

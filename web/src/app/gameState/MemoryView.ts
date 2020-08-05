@@ -20,7 +20,7 @@ export class MemoryView {
       throw new Error(`Invalid address ${offset.toString(16)}`);
     }
     const fixedOffset = offset - this.offset;
-    if (fixedOffset > length) {
+    if (fixedOffset > this.length) {
       // return null;
       throw new Error(`Invalid address ${offset.toString(16)}`);
     }

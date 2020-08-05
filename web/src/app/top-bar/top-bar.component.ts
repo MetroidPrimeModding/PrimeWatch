@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {GameStateService} from "../gameState/game-state.service";
+import {GameStateService} from '../gameState/game-state.service';
 
 @Component({
   selector: 'pw-top-bar',

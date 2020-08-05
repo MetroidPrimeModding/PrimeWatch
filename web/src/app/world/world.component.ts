@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {GameStateService} from "../gameState/game-state.service";
-import {Subscription} from "rxjs";
-import {GameTypesService, MemoryObjectInstance} from "../gameState/game-types.service";
+import {GameStateService} from '../gameState/game-state.service';
+import {Subscription} from 'rxjs';
+import {GameTypesService, MemoryObjectInstance} from '../gameState/game-types.service';
 
 interface Worlds {
   name: string;

@@ -6,7 +6,7 @@ import {MemoryObjectInstance, GameTypesService, MemoryObject} from '../../gameSt
 import {CollectionViewer, DataSource, SelectionChange} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {map} from 'rxjs/operators';
-import {MemoryView} from "../../gameState/MemoryView";
+import {MemoryView} from '../../gameState/MemoryView';
 
 export class DynamicFlatNode {
   constructor(public parent: MemoryObjectInstance,

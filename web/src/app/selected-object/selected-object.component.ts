@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {GameStateService} from "../gameState/game-state.service";
-import {MemoryObjectInstance} from "../gameState/game-types.service";
-import {Subscription} from "rxjs";
+import {GameStateService} from '../gameState/game-state.service';
+import {MemoryObjectInstance} from '../gameState/game-types.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'pw-selected-object',

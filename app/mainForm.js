@@ -283,5 +283,8 @@ ipcMain.on('loadTestData', (event) => {
 });
 
 ipcMain.handle('readMemory', async (event, offset, length) => {
-  return processHandler.requestMemory(offset, length);
+  // console.log(`Requesting ${offset.toString(16)}:${length}`);
+  const res = await processHandler.requestMemory(offset, length);
+  // console.log(`Got ${offset.toString(16)}:${length}`);
+  return res;
 })

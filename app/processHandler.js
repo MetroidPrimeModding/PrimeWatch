@@ -29,7 +29,7 @@ const STATES = {
 
 function writeMessage(messageID, data) {
   startIfNeeded();
-  console.log(`Sending message ${messageID} len ${data.length}`);
+  // console.log(`Sending message ${messageID} len ${data.length}`);
   const msgBuffer = Buffer.alloc(8);
   msgBuffer.writeUInt32LE(data.length, 0);
   msgBuffer.writeUInt32LE(messageID, 4);
@@ -57,7 +57,7 @@ function handleData(stream) {
       }
       message_id = message.readUInt32LE(0);
       message_start = new Date();
-      console.log(`Received message ${message_id}`);
+      // console.log(`Received message ${message_id}`);
       if (message_id !== 0x1) {
         state = STATES.DYING;
         writeMessage(0x2, Buffer.alloc(0))
@@ -84,7 +84,7 @@ function handleData(stream) {
       if (message_read >= message_len) {
         const message_end = new Date();
         const message_duration = message_end - message_start;
-        console.log(`Got all the data after ${message_duration}ms`);
+        // console.log(`Got all the data after ${message_duration}ms`);
         outstanding_promise_resolves[0].resolve({
           offset: message_offset,
           size: message_len,
@@ -123,6 +123,10 @@ function startIfNeeded() {
 
   subProcess.on('exit', () => {
     console.log('Process died.');
+    for (const promise of outstanding_promise_resolves) {
+      promise.reject("Subprocess died");
+    }
+    outstanding_promise_resolves = [];
     subProcess = null;
     state = STATES.WAITING_FOR_MESSAGE;
   });

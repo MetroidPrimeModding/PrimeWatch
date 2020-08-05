@@ -10,11 +10,11 @@ import { MemoryRootComponent } from './memoryView/memory-root/memory-root.compon
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatTreeModule} from "@angular/material/tree";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {CdkTreeModule} from "@angular/cdk/tree";
-import {MatTabsModule} from "@angular/material/tabs";
+import {MatTreeModule} from '@angular/material/tree';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {CdkTreeModule} from '@angular/cdk/tree';
+import {MatTabsModule} from '@angular/material/tabs';
 import { WorldComponent } from './world/world.component';
 import { EntitiesComponent } from './entities/entities.component';
 import { InfoDisplayComponent } from './info-display/info-display.component';

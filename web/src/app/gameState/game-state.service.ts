@@ -35,8 +35,10 @@ export class GameStateService {
     this.memoryWatches.registerMemoryObject(this.stateManager);
 
     this.refreshSubject.subscribe(() => {
+      const start = new Date();
       this.parseEntities().then(() => {
-        console.log('Done updating');
+        const end = new Date();
+        console.log(`Done updating in ${+end - +start}ms`);
       });
     });
   }
@@ -54,7 +56,12 @@ export class GameStateService {
   }
 
   async readMemory(offset: number, length: number): Promise<MemoryView> {
+    if (offset + length > 0x81800000) {
+      throw new Error(`INVALID READ OFFSET + LEN ${offset.toString(16)}:${length}`);
+    }
+    // console.log(`Requesting ${offset.toString(16)}:${length}`);
     const result = await this.ipcRenderer.invoke('readMemory', offset, length);
+    // console.log(`Got ${offset.toString(16)}:${length}`);
     const input = result.data as Uint8Array;
     const res = new MemoryView(
       this,
@@ -66,7 +73,12 @@ export class GameStateService {
   }
 
   async readObject(instance: MemoryObjectInstance): Promise<MemoryView> {
-    return this.readMemory(instance.offset, instance.obj.size);
+    let size = instance.obj.size;
+    if (size === 0) {
+      console.error(`Attempt to load 0-size object, reading 64 bytes instead: ${JSON.stringify(instance, null, 2)}`);
+      size = 64;
+    }
+    return this.readMemory(instance.offset, size);
   }
 
   private async parseEntities() {

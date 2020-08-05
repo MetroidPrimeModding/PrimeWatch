@@ -1,4 +1,4 @@
-import {MemoryObjectInstance} from "./game-types.service";
+import {MemoryObjectInstance} from './game-types.service';
 
 export class MemoryWatcher {
   // TODO: tree?
