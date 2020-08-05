@@ -26,15 +26,19 @@ export class WorldComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  private update() {
+  private async update() {
     const stateManager = this.state.stateManager;
-    const world = this.state.getMember(stateManager, 'world');
-    const areas = this.state.getMember(world, 'areas');
-    const size = this.state.readPrimitiveMember(areas, 'end');
+    const stateManagerView = await this.state.readObject(stateManager);
+
+    const world = stateManagerView.getMember(stateManager, 'world');
+    const areas = stateManagerView.getMember(world, 'areas');
+    const size = stateManagerView.readPrimitiveMember(areas, 'end');
     this.areas = [];
     for (let i = 0; i < size; i++) {
-      const ptrToArea = this.state.getMemberArray(areas, 'first', i);
-      this.areas.push(this.state.getMember(ptrToArea, 'value'));
+      const ptrToArea = stateManagerView.getMemberArray(areas, 'first', i);
+      const ptrToAreaView = await this.state.readObject(ptrToArea);
+
+      this.areas.push(ptrToAreaView.getMember(ptrToArea, 'value'));
       // this.areas.push(ptrToArea);
     }
   }

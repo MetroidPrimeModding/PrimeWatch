@@ -4,20 +4,21 @@ import {RenderService} from './render.service';
 import * as BABYLON from 'babylonjs';
 import {createAABB, createTiledAABB} from './RenderUtils';
 import * as GUI from 'babylonjs-gui';
+import {MemoryView} from '../gameState/MemoryView';
 
 export class ROCPlayer extends RenderObjectEntity {
   private samusMesh: BABYLON.Mesh;
   private mat: BABYLON.StandardMaterial;
 
-  constructor(entity: MemoryObjectInstance, render: RenderService) {
-    super(entity, render);
+  constructor(entity: MemoryObjectInstance, view: MemoryView, render: RenderService) {
+    super(entity, view, render);
 
-    const aabbPrimitive = render.state.getMember(entity, 'collisionPrimitive');
-    const aabb = render.state.getMember(aabbPrimitive, 'aabb');
-    this.samusMesh = createAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb, true);
+    const aabbPrimitive = view.getMember(entity, 'collisionPrimitive');
+    const aabb = view.getMember(aabbPrimitive, 'aabb');
+    this.samusMesh = createAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb, view, true);
 
     // Move the mesh
-    const pos = render.state.readVector3(render.state.getMember(entity, 'translation'));
+    const pos = view.readVector3(view.getMember(entity, 'translation'));
     this.samusMesh.position = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
 
     this.mat = new BABYLON.StandardMaterial('collisionMat', render.scene);
@@ -29,8 +30,9 @@ export class ROCPlayer extends RenderObjectEntity {
     this.nameText.isVisible = true;
   }
 
-  update(render: RenderService, entity: MemoryObjectInstance) {
-    const pos = render.state.readVector3(render.state.getMember(entity, 'translation'));
+  async update(render: RenderService): Promise<void> {
+    const view = await render.state.readObject(this.entity);
+    const pos = view.readVector3(view.getMember(this.entity, 'translation'));
     this.samusMesh.position = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
   }
 

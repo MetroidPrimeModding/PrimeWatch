@@ -153,17 +153,25 @@ export class RenderService {
 
   }
 
-  private updateSceneFromState() {
+  private async updateSceneFromState() {
     const stateManager = this.state.stateManager;
-    const world = this.state.getMember(stateManager, 'world');
-    const areas = this.state.getMember(world, 'areas');
-    const size = this.state.readPrimitiveMember(areas, 'end');
+    const stateView = await this.state.readObject(this.state.stateManager);
+
+    const world = stateView.getMember(stateManager, 'world');
+    const worldView = await this.state.readObject(world);
+
+    const areas = worldView.getMember(world, 'areas');
+    const size = worldView.readPrimitiveMember(areas, 'end');
 
     for (let i = 0; i < size; i++) {
-      const ptrToArea = this.state.getMemberArray(areas, 'first', i);
-      const area = this.state.getMember(ptrToArea, 'value');
-      const mrea = this.state.readPrimitiveMember(area, 'mrea');
-      const postconstructed = this.state.getMember(area, 'postConstructed');
+      const ptrToArea = worldView.getMemberArray(areas, 'first', i);
+      const ptrToAreaView = await this.state.readObject(ptrToArea);
+
+      const area = ptrToAreaView.getMember(ptrToArea, 'value');
+      const areaView = await this.state.readObject(area);
+
+      const mrea = areaView.readPrimitiveMember(area, 'mrea');
+      const postconstructed = areaView.getMember(area, 'postConstructed');
       if (postconstructed.offset === 0) {
         if (this.areaMeshes.has(mrea)) {
           this.areaMeshes.get(mrea).dispose();
@@ -173,22 +181,26 @@ export class RenderService {
         if (this.areaMeshes.has(mrea)) {
           continue;
         }
-        const obj = new ROPostConstructed(mrea, this, postconstructed);
+        const mesh = await ROPostConstructed.createMeshForPostConstructed(mrea, this, postconstructed);
+        const obj = new ROPostConstructed(mrea, this, mesh);
         this.areaMeshes.set(mrea, obj);
       }
     }
   }
 
-  private updateEntities(entities: MemoryObjectInstance[]) {
+  private async updateEntities(entities: MemoryObjectInstance[]) {
+    const promises: Promise<void>[] = [];
     const unknown = new Set<number>(this.entities.keys());
     for (const entity of entities) {
       const entitySuper = this.state.getSuper(entity, 'CEntity');
-      const uid = this.state.readPrimitiveMember(entitySuper, 'uniqueID');
+      const entityView = await this.state.readObject(entitySuper);
+      const uid = entityView.readPrimitiveMember(entitySuper, 'uniqueID');
       unknown.delete(uid);
       if (this.entities.has(uid)) {
-        this.entities.get(uid).update(this, entity);
+        promises.push(this.entities.get(uid).update(this));
       } else {
-        const newEntity = CreateROEntity(this, entity);
+        // TODO: might be able to async this
+        const newEntity = await CreateROEntity(this, entity);
         this.entities.set(uid, newEntity);
       }
     }
@@ -200,11 +212,15 @@ export class RenderService {
       }
       this.entities.delete(id);
     }
+
     const player = this.entities.get(0x4000000);
     if (player) {
-      const pos = this.state.readTransformPos(this.state.getMember(player.entity, 'transform'));
+      const entityView = await this.state.readObject(player.entity);
+      const pos = entityView.readTransformPos(entityView.getMember(player.entity, 'transform'));
       this.camera.target = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
       this.camera.position = this.camera.target.add(new BABYLON.Vector3(0, 4, 1));
     }
+
+    await Promise.all(promises);
   }
 }

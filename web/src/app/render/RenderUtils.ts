@@ -1,10 +1,14 @@
 import {RenderService} from './render.service';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import * as BABYLON from 'babylonjs';
+import {MemoryView} from '../gameState/MemoryView';
 
-export function createTiledAABB(name: string, render: RenderService, aabb: MemoryObjectInstance, setOrginToMin?: boolean): BABYLON.Mesh {
-  const min = render.state.readVector3(render.state.getMember(aabb, 'min'));
-  const max = render.state.readVector3(render.state.getMember(aabb, 'max'));
+export function createTiledAABB(name: string,
+                                render: RenderService,
+                                aabb: MemoryObjectInstance,
+                                view: MemoryView, setOrginToMin?: boolean): BABYLON.Mesh {
+  const min = view.readVector3(view.getMember(aabb, 'min'));
+  const max = view.readVector3(view.getMember(aabb, 'max'));
 
   const size = [
     max[0] - min[0],
@@ -36,9 +40,13 @@ export function createTiledAABB(name: string, render: RenderService, aabb: Memor
   return mesh;
 }
 
-export function createAABB(name: string, render: RenderService, aabb: MemoryObjectInstance, setOrginToMin?: boolean): BABYLON.Mesh {
-  const min = render.state.readVector3(render.state.getMember(aabb, 'min'));
-  const max = render.state.readVector3(render.state.getMember(aabb, 'max'));
+export function createAABB(name: string,
+                           render: RenderService,
+                           aabb: MemoryObjectInstance,
+                           view: MemoryView,
+                           setOrginToMin?: boolean): BABYLON.Mesh {
+  const min = view.readVector3(view.getMember(aabb, 'min'));
+  const max = view.readVector3(view.getMember(aabb, 'max'));
 
   const size = [
     max[0] - min[0],

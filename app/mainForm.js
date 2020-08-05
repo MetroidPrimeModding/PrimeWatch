@@ -278,14 +278,10 @@ app.on('ready', () => {
   setupMenu();
 });
 
-processHandler.events.on('data', (data) => {
-  mapWindow.webContents.send('loadData', data);
-})
-
 ipcMain.on('loadTestData', (event) => {
   mapWindow.webContents.send('loadData', testRamDump);
 });
 
-ipcMain.on('forceLoad', (event) => {
-  processHandler.requestMemory();
-});
+ipcMain.handle('read', async (event, offset, length) => {
+  return await processHandler.requestMemory(offset, length)
+})

@@ -23,7 +23,8 @@
     <ng-container *ngIf="node.member.pointer">
       <span class="offset">{{node.member.type}}</span> *{{node.member.name}}
       <span class="offset">
-        {{(node.parent.offset + node.member.offset).toString(16)}} -> {{gameState.memoryView.u32(node.parent.offset + node.member.offset).toString(16)}}
+<!--        TODO: maybe figure out this ptr-->
+        {{(node.parent.offset + node.member.offset).toString(16)}} -> <!--{{gameState.memoryView.u32(node.parent.offset + node.member.offset).toString(16)}}-->
       </span>
     </ng-container>
     <ng-container *ngIf="!node.member.pointer">

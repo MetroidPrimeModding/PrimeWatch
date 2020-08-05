@@ -4,17 +4,18 @@ import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {RenderService} from './render.service';
+import {MemoryView} from '../gameState/MemoryView';
 
 export class ROCScriptTrigger extends RenderObjectEntity {
   private mesh: BABYLON.Mesh;
   private mat: BABYLON.StandardMaterial;
   private hasConnections = true;
 
-  constructor(entity: MemoryObjectInstance, render: RenderService) {
-    super(entity, render);
-    const aabb = render.state.getMember(entity, 'bounds');
-    this.mesh = createTiledAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb);
-    const pos = render.state.readTransformPos(render.state.getMember(entity, 'transform'));
+  constructor(entity: MemoryObjectInstance, view: MemoryView, render: RenderService) {
+    super(entity, view, render);
+    const aabb = view.getMember(entity, 'bounds');
+    this.mesh = createTiledAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb, view);
+    const pos = view.readTransformPos(view.getMember(entity, 'transform'));
     this.mesh.position = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
 
     this.mat = new BABYLON.StandardMaterial(`Entity 0x${this.uniqueID.toString(16)} material`, render.scene);
@@ -37,8 +38,8 @@ export class ROCScriptTrigger extends RenderObjectEntity {
     this.nameText.linkWithMesh(this.mesh);
 
     // Force initial update
-    this.updateColor(render, entity);
-    this.update(render, entity);
+    this.updateColor(render, view);
+    this.update(render);
   }
 
   get isPickable(): boolean {
@@ -70,26 +71,27 @@ export class ROCScriptTrigger extends RenderObjectEntity {
     this.mat = null;
   }
 
-  update(render: RenderService, entity: MemoryObjectInstance) {
+  async update(render: RenderService): Promise<void> {
     if (!this.hasConnections) {
       return;
     }
-    const active = render.state.readPrimitiveMember(entity, 'active');
+    const view = await render.state.readObject(this.entity);
+    const active = view.readPrimitiveMember(this.entity, 'active');
     this.mesh.isVisible = !!active;
   }
 
-  private updateColor(render: RenderService, entity: MemoryObjectInstance) {
-    const connections = render.state.getMember(entity, 'connections');
-    const connCount = render.state.readPrimitiveMember(connections, 'end');
+  private updateColor(render: RenderService, view: MemoryView) {
+    const connections = view.getMember(this.entity, 'connections');
+    const connCount = view.readPrimitiveMember(connections, 'end');
     if (connCount === 0) {
       this.mesh.isVisible = false;
       this.hasConnections = false;
     }
 
     if (
-      render.state.readPrimitiveMember(entity, 'detectPlayer') ||
-      render.state.readPrimitiveMember(entity, 'detectMorphedPlayer') ||
-      render.state.readPrimitiveMember(entity, 'detectUnmorphedPlayer')
+      view.readPrimitiveMember(this.entity, 'detectPlayer') ||
+      view.readPrimitiveMember(this.entity, 'detectMorphedPlayer') ||
+      view.readPrimitiveMember(this.entity, 'detectUnmorphedPlayer')
     ) {
       this.mat.diffuseColor = new BABYLON.Color3(0, 1, 0);
       this.mat.ambientColor = this.mat.diffuseColor;

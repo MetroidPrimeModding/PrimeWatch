@@ -4,32 +4,39 @@ import * as BABYLON from 'babylonjs';
 import * as GUI from 'babylonjs-gui';
 import NAMES from '../../assets/editor_names.json';
 import {RenderObject} from './RenderObject';
+import {MemoryWatch} from "../gameState/MemoryWatcher";
+import {MemoryView} from "../gameState/MemoryView";
 
 export abstract class RenderObjectEntity extends RenderObject {
   readonly uniqueID: number;
   readonly editorID: number;
   readonly name: string;
-
   nameText: GUI.TextBlock;
 
-  constructor(
+  private readonly watch: MemoryWatch;
+
+  protected constructor(
     public entity: MemoryObjectInstance,
-    render: RenderService
+    view: MemoryView,
+    private render: RenderService
   ) {
     super();
+    this.watch = render.state.memoryWatches.registerMemoryObject(entity);
+
     const entitySuper = render.state.getSuper(entity, 'CEntity');
-    const gameState = render.state.getMember(render.state.globalObjects, 'gameState');
-    const world = render.state.readPrimitiveMember(gameState, 'mlvlID');
+    // TODO: parse name and pass it in to constructor
+    // const gameState = view.getMember(render.state.globalObjects, 'gameState');
+    // const world = render.state.readPrimitiveMember(gameState, 'mlvlID');
+    // const names = NAMES;
+    // const worldNames = NAMES[world] || {};
 
-    this.uniqueID = render.state.readPrimitiveMember(entitySuper, 'uniqueID');
-    this.editorID = render.state.readPrimitiveMember(entitySuper, 'editorID');
-    this.name = render.state.readString(render.state.getMember(entitySuper, 'name'));
-
-    const names = NAMES;
-    const worldNames = NAMES[world] || {};
+    this.uniqueID = view.readPrimitiveMember(entitySuper, 'uniqueID');
+    this.editorID = view.readPrimitiveMember(entitySuper, 'editorID');
+    this.name = view.readString(view.getMember(entitySuper, 'name'));
 
     this.nameText = new GUI.TextBlock();
-    const prettyName = worldNames[this.editorID] || this.name || this.editorID.toString(16);
+    // TODO: parse name and pass it in to constructor
+    const prettyName = /*worldNames[this.editorID] ||*/ this.name || this.editorID.toString(16);
     this.nameText.text = prettyName + '\n' + this.entity.obj.name;
     this.nameText.color = 'white';
     this.nameText.outlineColor = 'black';
@@ -39,7 +46,7 @@ export abstract class RenderObjectEntity extends RenderObject {
     this.nameText.isVisible = false;
   }
 
-  abstract update(render: RenderService, entity: MemoryObjectInstance);
+  abstract async update(render: RenderService): Promise<void>;
 
   onPick(render: RenderService) {
     render.state.selectedEntity.next(this.entity);
@@ -47,20 +54,21 @@ export abstract class RenderObjectEntity extends RenderObject {
 
   dispose(): void {
     super.dispose();
+    this.render.state.memoryWatches.deregister(this.watch);
     this.nameText.dispose();
     this.nameText = null;
   }
 }
 
 export class ROEntityUnknown extends RenderObjectEntity {
-  constructor(entity: MemoryObjectInstance, render: RenderService) {
-    super(entity, render);
+  constructor(entity: MemoryObjectInstance, view: MemoryView, render: RenderService) {
+    super(entity, view, render);
   }
 
   dispose(): void {
     super.dispose();
   }
 
-  update(render: RenderService, entity: MemoryObjectInstance) {
+  async update(render: RenderService): Promise<void> {
   }
 }

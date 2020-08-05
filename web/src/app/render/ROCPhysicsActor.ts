@@ -3,21 +3,22 @@ import {MemoryObjectInstance} from '../gameState/game-types.service';
 import {RenderService} from './render.service';
 import * as BABYLON from 'babylonjs';
 import {createAABB} from './RenderUtils';
+import {MemoryView} from '../gameState/MemoryView';
 
 export class ROCPhysicsActor extends RenderObjectEntity {
   private mesh: BABYLON.Mesh;
   private mat: BABYLON.StandardMaterial;
 
-  constructor(entity: MemoryObjectInstance, render: RenderService) {
-    super(entity, render);
+  constructor(entity: MemoryObjectInstance, view: MemoryView, render: RenderService) {
+    super(entity, view, render);
     const physicsActor = render.state.getSuper(entity, 'CPhysicsActor');
 
-    const translation = render.state.getMember(physicsActor, 'translation');
-    const pos = render.state.readVector3(translation);
+    const translation = view.getMember(physicsActor, 'translation');
+    const pos = view.readVector3(translation);
 
-    const aabbPrimitive = render.state.getMember(physicsActor, 'collisionPrimitive');
-    const aabb = render.state.getMember(aabbPrimitive, 'aabb');
-    this.mesh = createAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb);
+    const aabbPrimitive = view.getMember(physicsActor, 'collisionPrimitive');
+    const aabb = view.getMember(aabbPrimitive, 'aabb');
+    this.mesh = createAABB(`Entity 0x${this.uniqueID.toString(16)} box`, render, aabb, view);
     this.mesh.position = new BABYLON.Vector3(pos[0], pos[1], pos[2]);
 
     this.mat = new BABYLON.StandardMaterial('collisionMat', render.scene);
@@ -33,7 +34,7 @@ export class ROCPhysicsActor extends RenderObjectEntity {
     this.nameText.isVisible = true;
   }
 
-  update(render: RenderService, entity: MemoryObjectInstance) {
+  async update(render: RenderService): Promise<void> {
     // Do nothing
   }
 

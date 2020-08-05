@@ -1,18 +1,28 @@
+import {MemoryObjectInstance} from './game-types.service';
+import {CompiledMember} from '@pwootage/bstruct/lib/BCompiler_JSON';
+import {GameStateService} from './game-state.service';
+
 export type MemoryOffset = number;
 
 export class MemoryView {
-  constructor(readonly memory: DataView) {
+  constructor(
+    private state: GameStateService,
+    readonly memory: DataView,
+    readonly offset: number,
+    readonly length: number
+  ) {
   }
 
   fixOffset(offset: MemoryOffset): number | null {
-    if (offset < 0x8000_0000) {
-      return null;
-      // throw new Error(`Invalid address ${offset.toString(16)}`);
+    if (offset < this.offset) {
+      // TODO: return null
+      // return null;
+      throw new Error(`Invalid address ${offset.toString(16)}`);
     }
-    const fixedOffset = offset & 0x7FFF_FFFF;
-    if (fixedOffset > 0x1800000) {
-      return null;
-      // throw new Error(`Invalid address ${offset.toString(16)}`);
+    const fixedOffset = offset - this.offset;
+    if (fixedOffset > length) {
+      // return null;
+      throw new Error(`Invalid address ${offset.toString(16)}`);
     }
     return fixedOffset;
   }
@@ -100,5 +110,92 @@ export class MemoryView {
         }
       }
     }
+  }
+
+  getMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): MemoryObjectInstance {
+    const member = this.state.recursiveMemberLookup(memberName, obj);
+    if (member == null) {
+      return null;
+    }
+    const memberType = this.state.types.lookup(member.type);
+    if (memberType == null) {
+      return null;
+    }
+    const offset = obj.offset + member.offset;
+    if (member.pointer) {
+      const ptr = this.u32(offset);
+      return {obj: memberType, offset: ptr};
+    } else {
+      return {obj: memberType, offset};
+    }
+  }
+
+  readPrimitiveMember(obj: MemoryObjectInstance, memberName: CompiledMember | string): number | null {
+    const member = this.state.recursiveMemberLookup(memberName, obj);
+    const memberType = this.state.types.lookup(member.type);
+    if (memberType.type !== 'primitive') {
+      return null;
+    }
+
+    let toRead = obj.offset + member.offset;
+    if (member.pointer) {
+      toRead = this.u32(toRead);
+    }
+    // TODO: this will fail if it's a pointer. Need to call an async read.
+    let value = memberType.read(this, toRead);
+
+    if (member.bit != null && typeof (value) === 'number') {
+      value = (value >> (member.bit)) & ((1 << member.bitLength) - 1);
+    }
+    return value;
+  }
+
+  readVector3(instance: MemoryObjectInstance): [number, number, number] {
+    if (instance.obj.name !== 'CVector3f') {
+      throw new Error('Attempt to read a non-vector as a vector');
+    }
+    return [
+      this.readPrimitiveMember(instance, 'x'),
+      this.readPrimitiveMember(instance, 'y'),
+      this.readPrimitiveMember(instance, 'z')
+    ];
+  }
+
+  getMemberArray(obj: MemoryObjectInstance, memberName: CompiledMember | string, index: number): MemoryObjectInstance {
+    let member: CompiledMember;
+    if (typeof (memberName) === 'string') {
+      member = this.state.types.lookupMember(obj.obj, memberName);
+    } else {
+      member = memberName;
+    }
+    const memberType = this.state.types.lookup(member.type);
+    const offset = obj.offset + member.offset;
+    if (member.pointer) {
+      const ptr = this.u32(offset);
+      return {obj: memberType, offset: ptr + memberType.size * index};
+    } else {
+      return {obj: memberType, offset: offset + memberType.size * index};
+    }
+  }
+
+  readTransformPos(instance: MemoryObjectInstance): [number, number, number] {
+    if (instance.obj.name !== 'CTransform') {
+      throw new Error('Attempt to read a non-vector as a vector');
+    }
+    return [
+      this.readPrimitiveMember(instance, 'posX'),
+      this.readPrimitiveMember(instance, 'posY'),
+      this.readPrimitiveMember(instance, 'posZ')
+    ];
+  }
+
+  readString(instance: MemoryObjectInstance, length: number = -1): string | null {
+    if (instance.obj.name !== 'u8') {
+      throw new Error('Attempt to read a non-u8 as a string');
+    }
+    if (instance.offset === 0) {
+      return null;
+    }
+    return this.string(instance.offset, length);
   }
 }
