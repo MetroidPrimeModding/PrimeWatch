@@ -64,7 +64,7 @@ function handleData(stream) {
       } else {
         state = STATES.WAITING_FOR_DATA;
         message_read = 0;
-        message = message.read(8)
+        message = stream.read(8)
         message_offset = message.readUInt32LE(0);
         message_len = message.readUInt32LE(4);
         message_buffer = Buffer.alloc(message_len);
@@ -133,10 +133,9 @@ function requestMemory(start, size) {
   data.writeUInt32LE(start, 0);
   data.writeUInt32LE(size, 4);
   writeMessage(0, data);
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     outstanding_promise_resolves.push({resolve, reject});
   });
-  return promise;
 }
 
 module.exports = {

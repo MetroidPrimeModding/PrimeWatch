@@ -14,7 +14,7 @@ export class TopBarComponent implements OnInit {
   }
 
   loadFromGame() {
-    this.state.forceUpdate();
+    this.state.refresh();
   }
 
   printMemoryStats() {

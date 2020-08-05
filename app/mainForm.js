@@ -282,6 +282,6 @@ ipcMain.on('loadTestData', (event) => {
   mapWindow.webContents.send('loadData', testRamDump);
 });
 
-ipcMain.handle('read', async (event, offset, length) => {
-  return await processHandler.requestMemory(offset, length)
+ipcMain.handle('readMemory', async (event, offset, length) => {
+  return processHandler.requestMemory(offset, length);
 })

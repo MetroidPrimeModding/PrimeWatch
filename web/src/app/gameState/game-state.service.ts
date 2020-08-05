@@ -35,7 +35,9 @@ export class GameStateService {
     this.memoryWatches.registerMemoryObject(this.stateManager);
 
     this.refreshSubject.subscribe(() => {
-      this.parseEntities();
+      this.parseEntities().then(() => {
+        console.log('Done updating');
+      });
     });
   }
 
@@ -51,20 +53,16 @@ export class GameStateService {
     this.refreshSubject.next();
   }
 
-  forceUpdate() {
-    (window as any).require('electron').ipcRenderer.send('forceLoad');
-  }
-
   async readMemory(offset: number, length: number): Promise<MemoryView> {
-    return this.ipcRenderer.invoke(offset, length).map((v) => {
-      const input = v as Uint8Array;
-      return new MemoryView(
-        this,
-        new DataView(input),
-        offset,
-        length
-      );
-    });
+    const result = await this.ipcRenderer.invoke('readMemory', offset, length);
+    const input = result.data as Uint8Array;
+    const res = new MemoryView(
+      this,
+      new DataView(input.buffer),
+      offset,
+      length
+    );
+    return res;
   }
 
   async readObject(instance: MemoryObjectInstance): Promise<MemoryView> {
